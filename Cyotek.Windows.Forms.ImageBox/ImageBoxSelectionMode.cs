@@ -1,5 +1,4 @@
-﻿
-namespace Cyotek.Windows.Forms
+﻿namespace Cyotek.Windows.Forms
 {
   // Cyotek ImageBox
   // Copyright (c) 2010-2012 Cyotek. All Rights Reserved.
@@ -10,6 +9,7 @@ namespace Cyotek.Windows.Forms
   public enum ImageBoxSelectionMode
   {
     None,
-    Rectangle
+    Rectangle,
+    Zoom
   }
 }

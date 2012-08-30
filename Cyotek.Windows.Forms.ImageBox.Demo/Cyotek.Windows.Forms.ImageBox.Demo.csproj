@@ -38,6 +38,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>cyopublic.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,18 +64,26 @@
     <Compile Include="PropertyGrid.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="AboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutDialog.designer.cs">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ImageBox.bmp" />
-    <Content Include="Resources\Abstract.png" />
+    <None Include="Resources\sample.png" />
+    <Content Include="..\icon.ico">
+      <Link>icon.ico</Link>
+    </Content>
     <Content Include="Resources\cursor.png" />
+    <None Include="Resources\icon-32.png" />
     <Content Include="Resources\image-resize-actual.png" />
     <Content Include="Resources\magnifier-zoom-in.png" />
     <Content Include="Resources\magnifier-zoom-out.png" />
     <Content Include="Resources\magnifier-zoom.png" />
     <Content Include="Resources\Object Position.ico" />
     <Content Include="Resources\Object Size.ico" />
-    <Content Include="Resources\sample.png" />
     <Content Include="Resources\selection-select.png" />
     <Content Include="Resources\selection.png" />
     <Content Include="Resources\zone.png" />
@@ -84,6 +95,10 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AboutDialog.resx">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -93,7 +108,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="cyopublic.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

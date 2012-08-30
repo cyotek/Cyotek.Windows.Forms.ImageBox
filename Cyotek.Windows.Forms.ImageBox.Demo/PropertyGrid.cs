@@ -5,8 +5,6 @@ namespace Cyotek.Windows.Forms
 {
   internal class PropertyGrid : System.Windows.Forms.PropertyGrid
   {
-    #region  Public Methods
-
     public GridItem FindItem(string itemLabel)
     {
       // http://www.vb-helper.com/howto_net_select_propertygrid_item.html
@@ -41,7 +39,5 @@ namespace Cyotek.Windows.Forms
 
       return matchingItem;
     }
-
-    #endregion  Public Methods
   }
 }

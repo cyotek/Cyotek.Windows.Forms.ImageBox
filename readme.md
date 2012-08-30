@@ -1,6 +1,6 @@
 # Cyotek.Windows.Forms.ImageBox
 
-The `ImageBox` is custom control for displaying images. It supports zooming, scrolling, panning, region selection and much more!
+The `ImageBox` is a custom control for displaying images. It supports zooming, scrolling, panning, region selection and much more!
 
 ![ImageBox control demonstration](http://static.cyotek.com/files/articleimages/imgbox-5a-thumbnail.png)
 

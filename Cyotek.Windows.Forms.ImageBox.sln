@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyotek.Windows.Forms.ImageB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{7E34AEC6-0EF4-4B37-B0DE-E28096960FA0}"
 	ProjectSection(SolutionItems) = preProject
+		changelog.md = changelog.md
 		readme.md = readme.md
 	EndProjectSection
 EndProject

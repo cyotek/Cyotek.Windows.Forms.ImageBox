@@ -7,11 +7,12 @@
     <ProjectGuid>{4159C8D3-C18D-4BED-8BE6-9BAD1B0CA4F6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cyotek.Windows.Forms.ImageBox</RootNamespace>
+    <RootNamespace>Cyotek.Windows.Forms</RootNamespace>
     <AssemblyName>Cyotek.Windows.Forms.ImageBox</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,21 +47,29 @@
     <Compile Include="ImageBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ImageBox.Designer.cs">
-      <DependentUpon>ImageBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="ImageBoxBorderStyle.cs" />
     <Compile Include="ImageBoxGridDisplayMode.cs" />
     <Compile Include="ImageBoxGridScale.cs" />
     <Compile Include="ImageBoxSelectionMode.cs" />
+    <Compile Include="ImageBoxNativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScrollControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ScrollProperties.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="VirtualScrollableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ZoomLevelCollection.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ImageBox.bmp" />
+    <None Include="cyopublic.snk" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cyopublic.snk" />
+    <EmbeddedResource Include="ImageBox.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

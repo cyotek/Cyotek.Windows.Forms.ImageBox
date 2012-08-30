@@ -63,9 +63,9 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Abstract {
+        internal static System.Drawing.Bitmap ActualSize {
             get {
-                object obj = ResourceManager.GetObject("Abstract", resourceCulture);
+                object obj = ResourceManager.GetObject("ActualSize", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap image_resize_actual {
+        internal static System.Drawing.Bitmap icon_32 {
             get {
-                object obj = ResourceManager.GetObject("image-resize-actual", resourceCulture);
+                object obj = ResourceManager.GetObject("icon-32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,49 +93,9 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap magnifier_zoom {
+        internal static System.Drawing.Bitmap Position {
             get {
-                object obj = ResourceManager.GetObject("magnifier-zoom", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap magnifier_zoom_in {
-            get {
-                object obj = ResourceManager.GetObject("magnifier-zoom-in", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap magnifier_zoom_out {
-            get {
-                object obj = ResourceManager.GetObject("magnifier-zoom-out", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Object_Position {
-            get {
-                object obj = ResourceManager.GetObject("Object Position", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Object_Size {
-            get {
-                object obj = ResourceManager.GetObject("Object Size", resourceCulture);
+                object obj = ResourceManager.GetObject("Position", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,9 +113,9 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap selection {
+        internal static System.Drawing.Bitmap SelectAll {
             get {
-                object obj = ResourceManager.GetObject("selection", resourceCulture);
+                object obj = ResourceManager.GetObject("SelectAll", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,9 +123,19 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap selection_select {
+        internal static System.Drawing.Bitmap SelectNone {
             get {
-                object obj = ResourceManager.GetObject("selection-select", resourceCulture);
+                object obj = ResourceManager.GetObject("SelectNone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Size {
+            get {
+                object obj = ResourceManager.GetObject("Size", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -176,6 +146,36 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         internal static System.Drawing.Bitmap zone {
             get {
                 object obj = ResourceManager.GetObject("zone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Zoom {
+            get {
+                object obj = ResourceManager.GetObject("Zoom", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ZoomIn {
+            get {
+                object obj = ResourceManager.GetObject("ZoomIn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ZoomOut {
+            get {
+                object obj = ResourceManager.GetObject("ZoomOut", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
