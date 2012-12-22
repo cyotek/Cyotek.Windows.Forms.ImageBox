@@ -1,10 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms
 {
-  internal class PropertyGrid : System.Windows.Forms.PropertyGrid
+  internal class PropertyGrid 
+    : System.Windows.Forms.PropertyGrid
   {
+    public void SelectItem(string itemLabel)
+    {
+      GridItem selection;
+
+      selection = this.FindItem(itemLabel);
+      if (selection != null)
+        this.SelectedGridItem = selection;
+    }
+
     public GridItem FindItem(string itemLabel)
     {
       // http://www.vb-helper.com/howto_net_select_propertygrid_item.html
@@ -33,8 +44,7 @@ namespace Cyotek.Windows.Forms
         if (checkItem.Label == itemLabel)
           matchingItem = checkItem;
 
-        foreach (GridItem childItem in checkItem.GridItems)
-          searchItems.Add(childItem);
+        searchItems.AddRange(checkItem.GridItems.Cast<GridItem>());
       }
 
       return matchingItem;

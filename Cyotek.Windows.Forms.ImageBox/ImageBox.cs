@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
@@ -16,13 +15,15 @@ namespace Cyotek.Windows.Forms
   /// <summary>
   /// Component for displaying images with support for scrolling and zooming.
   /// </summary>
-  [DefaultProperty("Image"), ToolboxBitmap(typeof(ImageBox), "Cyotek.Windows.Forms.ImageBox.bmp"), ToolboxItem(true)]
+  [DefaultProperty("Image"), ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp"), ToolboxItem(true)]
+// ReSharper disable PartialTypeWithSinglePart
   public partial class ImageBox
+// ReSharper restore PartialTypeWithSinglePart
     : VirtualScrollableControl
   {
-    private static readonly int MaxZoom = 3500;
-    private static readonly int MinZoom = 1;
-    private static readonly int SelectionDeadZone = 5;
+    private const int MaxZoom = 3500;
+    private const int MinZoom = 1;
+    private const int SelectionDeadZone = 5;
     private bool _allowClickZoom;
     private bool _allowZoom;
     private bool _autoCenter;
@@ -64,6 +65,7 @@ namespace Cyotek.Windows.Forms
       this.UpdateStyles();
 
       this.WheelScrollsControl = false;
+// ReSharper disable DoNotCallOverridableMethodsInConstructor
       this.AllowZoom = true;
       this.LimitSelectionToImage = true;
       this.DropShadowSize = 3;
@@ -83,6 +85,7 @@ namespace Cyotek.Windows.Forms
       this.ActualSize();
       this.ShortcutsEnabled = true;
       this.ZoomLevels = ZoomLevelCollection.Default;
+      // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
 
     /// <summary>
@@ -346,7 +349,7 @@ namespace Cyotek.Windows.Forms
     /// Specifies if the control should auto size to fit the image contents.
     /// </summary>
     /// <value></value>
-    /// <returns><c>true</c> if enabled; otherwise, <c>false</c>.
+    /// <returns><c>true</c> if enabled; otherwise, <c>false</c></returns>.
     [Browsable(false), EditorBrowsable(EditorBrowsableState.Always), DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), DefaultValue(true)]
     public override bool AutoSize
     {
@@ -867,19 +870,22 @@ namespace Cyotek.Windows.Forms
     protected virtual bool AllowPainting
     { get { return _updateCount == 0; } }
 
+    protected virtual Size ViewSize
+    { get { return this.VirtualMode ? this.VirtualSize : this.Image != null ? this.Image.Size : Size.Empty; } }
+
     /// <summary>
     /// Gets the height of the scaled image.
     /// </summary>
     /// <value>The height of the scaled image.</value>
     protected virtual int ScaledImageHeight
-    { get { return this.Image != null ? (int)(this.Image.Size.Height * this.ZoomFactor) : 0; } }
+    { get { return Convert.ToInt32(this.ViewSize.Height * this.ZoomFactor); } }
 
     /// <summary>
     /// Gets the width of the scaled image.
     /// </summary>
     /// <value>The width of the scaled image.</value>
     protected virtual int ScaledImageWidth
-    { get { return this.Image != null ? (int)(this.Image.Size.Width * this.ZoomFactor) : 0; } }
+    { get { return Convert.ToInt32(this.ViewSize.Width * this.ZoomFactor); } }
 
     /// <summary>
     /// Creates a bitmap image containing a 2x2 grid using the specified cell size and colors.
@@ -983,20 +989,17 @@ namespace Cyotek.Windows.Forms
       w = rectangle.Width;
       h = rectangle.Height;
 
-      if (this.Image != null)
-      {
-        if (x < 0)
-          x = 0;
+      if (x < 0)
+        x = 0;
 
-        if (y < 0)
-          y = 0;
+      if (y < 0)
+        y = 0;
 
-        if (x + w > this.Image.Width)
-          w = this.Image.Width - x;
+      if (x + w > this.ViewSize.Width)
+        w = this.ViewSize.Width - x;
 
-        if (y + h > this.Image.Height)
-          h = this.Image.Height - y;
-      }
+      if (y + h > this.ViewSize.Height)
+        h = this.ViewSize.Height - y;
 
       return new Rectangle(x, y, w, h);
     }
@@ -1018,20 +1021,17 @@ namespace Cyotek.Windows.Forms
       w = rectangle.Width;
       h = rectangle.Height;
 
-      if (this.Image != null)
-      {
-        if (x < 0)
-          x = 0;
+      if (x < 0)
+        x = 0;
 
-        if (y < 0)
-          y = 0;
+      if (y < 0)
+        y = 0;
 
-        if (x + w > this.Image.Width)
-          w = this.Image.Width - x;
+      if (x + w > this.ViewSize.Width)
+        w = this.ViewSize.Width - x;
 
-        if (y + h > this.Image.Height)
-          h = this.Image.Height - y;
-      }
+      if (y + h > this.ViewSize.Height)
+        h = this.ViewSize.Height - y;
 
       return new RectangleF(x, y, w, h);
     }
@@ -1044,7 +1044,7 @@ namespace Cyotek.Windows.Forms
     {
       Rectangle viewPort;
 
-      if (this.Image != null)
+      if (!this.ViewSize.IsEmpty)
       {
         Rectangle innerRectangle;
         Point offset;
@@ -1067,7 +1067,7 @@ namespace Cyotek.Windows.Forms
         else
           offset = Point.Empty;
 
-        viewPort = new Rectangle(offset.X + innerRectangle.Left + this.Padding.Left, offset.Y + innerRectangle.Top + this.Padding.Top, innerRectangle.Width - (this.Padding.Horizontal + (offset.X * 2)), innerRectangle.Height - (this.Padding.Vertical + (offset.Y * 2)));
+        viewPort = new Rectangle(offset.X + innerRectangle.Left + this.Padding.Left, offset.Y + innerRectangle.Top + this.Padding.Top, this.ScaledImageWidth, this.ScaledImageHeight);
       }
       else
         viewPort = Rectangle.Empty;
@@ -1177,7 +1177,7 @@ namespace Cyotek.Windows.Forms
     {
       Size size;
 
-      if (this.Image != null)
+      if (!this.ViewSize.IsEmpty)
       {
         int width;
         int height;
@@ -1324,7 +1324,7 @@ namespace Cyotek.Windows.Forms
     {
       RectangleF region;
 
-      if (this.Image != null)
+      if (!this.ViewSize.IsEmpty)
       {
         float sourceLeft;
         float sourceTop;
@@ -1452,7 +1452,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     public virtual void ZoomToFit()
     {
-      if (this.Image != null)
+      if (!this.ViewSize.IsEmpty)
       {
         Rectangle innerRectangle;
         double zoom;
@@ -1464,23 +1464,23 @@ namespace Cyotek.Windows.Forms
 
         if (this.Image.Width > this.Image.Height)
         {
-          aspectRatio = ((double)innerRectangle.Width) / ((double)this.Image.Width);
+          aspectRatio = (double)innerRectangle.Width / this.Image.Width;
           zoom = aspectRatio * 100.0;
 
           if (innerRectangle.Height < ((this.Image.Height * zoom) / 100.0))
           {
-            aspectRatio = ((double)innerRectangle.Height) / ((double)this.Image.Height);
+            aspectRatio = (double)innerRectangle.Height / this.Image.Height;
             zoom = aspectRatio * 100.0;
           }
         }
         else
         {
-          aspectRatio = ((double)innerRectangle.Height) / ((double)this.Image.Height);
+          aspectRatio = (double)innerRectangle.Height / this.Image.Height;
           zoom = aspectRatio * 100.0;
 
           if (innerRectangle.Width < ((this.Image.Width * zoom) / 100.0))
           {
-            aspectRatio = ((double)innerRectangle.Width) / ((double)this.Image.Width);
+            aspectRatio = (double)innerRectangle.Width / this.Image.Width;
             zoom = aspectRatio * 100.0;
           }
         }
@@ -1554,7 +1554,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     protected virtual void AdjustViewPort()
     {
-      if (this.AutoScroll && this.Image != null)
+      if (this.AutoScroll && !this.ViewSize.IsEmpty)
         this.AutoScrollMinSize = new Size(this.ScaledImageWidth + this.Padding.Horizontal, this.ScaledImageHeight + this.Padding.Vertical);
     }
 
@@ -1635,8 +1635,12 @@ namespace Cyotek.Windows.Forms
     /// <param name="g">The g.</param>
     protected virtual void DrawImage(Graphics g)
     {
+      InterpolationMode currentMode;
+
+      currentMode = g.InterpolationMode;
       g.InterpolationMode = this.InterpolationMode;
       g.DrawImage(this.Image, this.GetImageViewPort(), this.GetSourceImageRegion(), GraphicsUnit.Pixel);
+      g.InterpolationMode = currentMode;
     }
 
     /// <summary>
@@ -2129,11 +2133,12 @@ namespace Cyotek.Windows.Forms
         }
 
         // draw the image
-        if (this.Image != null)
-        {
+        if (!this.ViewSize.IsEmpty)
           this.DrawImageBorder(e.Graphics);
+        if (this.VirtualMode)
+          this.OnVirtualDraw(e);
+        else if (this.Image != null)
           this.DrawImage(e.Graphics);
-        }
 
         // draw the selection
         if (this.SelectionRegion != Rectangle.Empty)
@@ -2408,7 +2413,7 @@ namespace Cyotek.Windows.Forms
     /// <param name="e">The <see cref="MouseEventArgs" /> instance containing the event data.</param>
     protected virtual void ProcessPanning(MouseEventArgs e)
     {
-      if (this.AutoPan && this.Image != null && this.SelectionMode == ImageBoxSelectionMode.None)
+      if (this.AutoPan && !this.ViewSize.IsEmpty && this.SelectionMode == ImageBoxSelectionMode.None)
       {
         if (!this.IsPanning && (this.HScroll | this.VScroll))
         {
@@ -2560,5 +2565,104 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
     }
+
+    private bool _virtualMode;
+
+    [Category("Behavior"), DefaultValue(false)]
+    public virtual bool VirtualMode
+    {
+      get { return _virtualMode; }
+      set
+      {
+        if (this.VirtualMode != value)
+        {
+          _virtualMode = value;
+
+          this.OnVirtualModeChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Occurs when the VirtualMode property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler VirtualModeChanged;
+
+    /// <summary>
+    /// Raises the <see cref="E:VirtualModeChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnVirtualModeChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      this.AdjustLayout();
+
+      handler = this.VirtualModeChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+    private Size _virtualSize;
+
+    [Category("Appearance"), DefaultValue(typeof(Size), "0, 0")]
+    public virtual Size VirtualSize
+    {
+      get { return _virtualSize; }
+      set
+      {
+        if (this.VirtualSize != value)
+        {
+          _virtualSize = value;
+
+          this.OnVirtualSizeChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Occurs when the VirtualSize property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler VirtualSizeChanged;
+
+    /// <summary>
+    /// Raises the <see cref="E:VirtualSizeChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnVirtualSizeChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      this.AdjustLayout();
+
+      handler = this.VirtualSizeChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+    /// <summary>
+    /// Occurs when virtual painting should occur
+    /// </summary>
+    [Category("Appearance")]
+    public event PaintEventHandler VirtualDraw;
+
+    /// <summary>
+    /// Raises the <see cref="E:VirtualDraw" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="PaintEventArgs" /> instance containing the event data.</param>
+    protected virtual void OnVirtualDraw(PaintEventArgs e)
+    {
+      PaintEventHandler handler;
+
+      handler = this.VirtualDraw;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
   }
 }

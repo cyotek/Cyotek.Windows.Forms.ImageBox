@@ -5,7 +5,8 @@ using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  public partial class AboutDialog : Form
+  public partial class AboutDialog
+    : BaseForm
   {
     public AboutDialog()
     {

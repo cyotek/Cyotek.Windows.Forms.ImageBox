@@ -1,5 +1,12 @@
 # ImageBox Change Log
 
+## 1.1.1.0
+### Changes and new features
+* Added `VirtualMode` and `VirtualSize` properties. These new properties allow you to use all functionality of the ImageBox control without having to set the `Image` property. You can also use the new `VirtualDraw` event to provide custom drawing without having to override existing drawing functionality.
+
+### Bug Fixes
+* Fixed the image viewport sometimes being the incorrect size when zoomed in. Thanks to WMJ for the fix.
+
 ## 1.1.0.0
 ### Changes and new features
 * Zooming with the mouse is now smoother, and the control attempts to keep the area under the mouse before the zoom in the same area after the zoon.

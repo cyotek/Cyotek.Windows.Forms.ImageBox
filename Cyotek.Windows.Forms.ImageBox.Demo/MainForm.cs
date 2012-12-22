@@ -22,7 +22,8 @@ namespace Cyotek.Windows.Forms.Demo
   // Large preview image from http://www.crazythemes.com/colorful-abstract-widescreen-wallpapers-vol2/2153
   // Toolbar icons from Fugue Icons - http://p.yusukekamiyamane.com/
 
-  public partial class MainForm : Form
+  public partial class MainForm
+    : BaseForm
   {
     private Image _previewImage;
 
@@ -204,10 +205,7 @@ namespace Cyotek.Windows.Forms.Demo
 
       point = imageBox.PointToImage(location);
 
-      if (point != Point.Empty)
-        cursorToolStripStatusLabel.Text = this.FormatPoint(point);
-      else
-        cursorToolStripStatusLabel.Text = string.Empty;
+      cursorToolStripStatusLabel.Text = point != Point.Empty ? this.FormatPoint(point) : string.Empty;
     }
 
     private void UpdatePreviewImage()
@@ -245,6 +243,12 @@ namespace Cyotek.Windows.Forms.Demo
     private void zoomOutToolStripButton_Click(object sender, EventArgs e)
     {
       imageBox.ZoomOut();
+    }
+
+    private void virtualModeToolStripButton_Click(object sender, EventArgs e)
+    {
+      using (VirtualModeDemonstrationForm form = new VirtualModeDemonstrationForm())
+        form.ShowDialog(this);
     }
   }
 }

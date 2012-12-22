@@ -44,10 +44,18 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BaseForm.Designer.cs">
+      <DependentUpon>BaseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +78,12 @@
     <Compile Include="AboutDialog.designer.cs">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="VirtualModeDemonstrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VirtualModeDemonstrationForm.Designer.cs">
+      <DependentUpon>VirtualModeDemonstrationForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\sample.png" />
@@ -78,6 +92,7 @@
     </Content>
     <Content Include="Resources\cursor.png" />
     <None Include="Resources\icon-32.png" />
+    <Content Include="Resources\image-crop.png" />
     <Content Include="Resources\image-resize-actual.png" />
     <Content Include="Resources\magnifier-zoom-in.png" />
     <Content Include="Resources\magnifier-zoom-out.png" />
@@ -89,6 +104,9 @@
     <Content Include="Resources\zone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="BaseForm.resx">
+      <DependentUpon>BaseForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -99,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AboutDialog.resx">
       <DependentUpon>AboutDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VirtualModeDemonstrationForm.resx">
+      <DependentUpon>VirtualModeDemonstrationForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
