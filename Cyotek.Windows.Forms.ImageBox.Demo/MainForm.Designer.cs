@@ -60,18 +60,19 @@
       this.zoomLevelsToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
       this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
       this.virtualModeToolStripButton = new System.Windows.Forms.ToolStripButton();
+      this.pixelGridToolStripButton = new System.Windows.Forms.ToolStripButton();
       this.menuStrip = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
       this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
       this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.selectNoneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.viewSplitContainer.Panel1.SuspendLayout();
       this.viewSplitContainer.Panel2.SuspendLayout();
       this.viewSplitContainer.SuspendLayout();
@@ -98,7 +99,7 @@
       // 
       this.viewSplitContainer.Panel2.Controls.Add(this.propertyGrid);
       this.viewSplitContainer.Size = new System.Drawing.Size(1060, 536);
-      this.viewSplitContainer.SplitterDistance = 759;
+      this.viewSplitContainer.SplitterDistance = 755;
       this.viewSplitContainer.SplitterWidth = 5;
       this.viewSplitContainer.TabIndex = 0;
       // 
@@ -117,8 +118,8 @@
       // selectionSplitContainer.Panel2
       // 
       this.selectionSplitContainer.Panel2.Controls.Add(this.previewImageBox);
-      this.selectionSplitContainer.Size = new System.Drawing.Size(759, 536);
-      this.selectionSplitContainer.SplitterDistance = 385;
+      this.selectionSplitContainer.Size = new System.Drawing.Size(755, 536);
+      this.selectionSplitContainer.SplitterDistance = 381;
       this.selectionSplitContainer.SplitterWidth = 5;
       this.selectionSplitContainer.TabIndex = 1;
       // 
@@ -128,7 +129,7 @@
       this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
-      this.imageBox.Size = new System.Drawing.Size(759, 385);
+      this.imageBox.Size = new System.Drawing.Size(755, 381);
       this.imageBox.TabIndex = 0;
       this.imageBox.Selected += new System.EventHandler<System.EventArgs>(this.imageBox_Selected);
       this.imageBox.SelectionRegionChanged += new System.EventHandler(this.imageBox_SelectionRegionChanged);
@@ -151,7 +152,7 @@
       this.previewImageBox.ImageBorderStyle = Cyotek.Windows.Forms.ImageBoxBorderStyle.FixedSingle;
       this.previewImageBox.Location = new System.Drawing.Point(0, 0);
       this.previewImageBox.Name = "previewImageBox";
-      this.previewImageBox.Size = new System.Drawing.Size(759, 146);
+      this.previewImageBox.Size = new System.Drawing.Size(755, 150);
       this.previewImageBox.TabIndex = 0;
       // 
       // propertyGrid
@@ -162,17 +163,17 @@
       this.propertyGrid.Location = new System.Drawing.Point(0, 0);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(296, 536);
+      this.propertyGrid.Size = new System.Drawing.Size(300, 536);
       this.propertyGrid.TabIndex = 0;
       // 
       // statusStrip
       // 
       this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cursorToolStripStatusLabel,
             this.toolStripStatusLabel1,
             this.autoScrollPositionToolStripStatusLabel,
             this.imageSizeToolStripStatusLabel,
             this.zoomToolStripStatusLabel,
-            this.cursorToolStripStatusLabel,
             this.selectionToolStripStatusLabel});
       this.statusStrip.Location = new System.Drawing.Point(0, 585);
       this.statusStrip.Name = "statusStrip";
@@ -237,7 +238,8 @@
             this.selectNoneToolStripButton,
             this.zoomLevelsToolStripComboBox,
             this.toolStripSeparator4,
-            this.virtualModeToolStripButton});
+            this.virtualModeToolStripButton,
+            this.pixelGridToolStripButton});
       this.toolStrip.Location = new System.Drawing.Point(0, 24);
       this.toolStrip.Name = "toolStrip";
       this.toolStrip.Size = new System.Drawing.Size(1060, 25);
@@ -362,6 +364,16 @@
       this.virtualModeToolStripButton.Text = "Virtual Mode";
       this.virtualModeToolStripButton.Click += new System.EventHandler(this.virtualModeToolStripButton_Click);
       // 
+      // pixelGridToolStripButton
+      // 
+      this.pixelGridToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.pixelGridToolStripButton.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.grid_dot;
+      this.pixelGridToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.pixelGridToolStripButton.Name = "pixelGridToolStripButton";
+      this.pixelGridToolStripButton.Size = new System.Drawing.Size(23, 22);
+      this.pixelGridToolStripButton.Text = "Pixel Grid";
+      this.pixelGridToolStripButton.Click += new System.EventHandler(this.pixelGridToolStripButton_Click);
+      // 
       // menuStrip
       // 
       this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -407,21 +419,6 @@
       this.exitToolStripMenuItem.Text = "E&xit";
       this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
       // 
-      // helpToolStripMenuItem
-      // 
-      this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
-      this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-      this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-      this.helpToolStripMenuItem.Text = "&Help";
-      // 
-      // aboutToolStripMenuItem
-      // 
-      this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.aboutToolStripMenuItem.Text = "&About...";
-      this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-      // 
       // editToolStripMenuItem
       // 
       this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -466,6 +463,21 @@
       this.selectNoneToolStripMenuItem.Text = "Select &None";
       this.selectNoneToolStripMenuItem.Click += new System.EventHandler(this.selectNoneToolStripMenuItem_Click);
       // 
+      // helpToolStripMenuItem
+      // 
+      this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+      this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+      this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+      this.helpToolStripMenuItem.Text = "&Help";
+      // 
+      // aboutToolStripMenuItem
+      // 
+      this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+      this.aboutToolStripMenuItem.Text = "&About...";
+      this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -478,7 +490,10 @@
       this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MainMenuStrip = this.menuStrip;
+      this.MinimizeBox = true;
       this.Name = "MainForm";
+      this.ShowIcon = true;
+      this.ShowInTaskbar = true;
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "Cyotek ImageBox Demonstration";
       this.viewSplitContainer.Panel1.ResumeLayout(false);
@@ -539,6 +554,7 @@
     private System.Windows.Forms.ToolStripMenuItem selectNoneToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     private System.Windows.Forms.ToolStripButton virtualModeToolStripButton;
+    private System.Windows.Forms.ToolStripButton pixelGridToolStripButton;
   }
 }
 

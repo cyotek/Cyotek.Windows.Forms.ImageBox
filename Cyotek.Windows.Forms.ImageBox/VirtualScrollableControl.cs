@@ -8,9 +8,10 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms
 {
   [ToolboxItem(false)]
-  public class VirtualScrollableControl
-    : ScrollControl
+  public class VirtualScrollableControl : ScrollControl
   {
+    #region Instance Fields
+
     private bool _autoScroll;
 
     private Size _autoScrollMargin;
@@ -19,8 +20,12 @@ namespace Cyotek.Windows.Forms
 
     private Point _autoScrollPosition;
 
+    #endregion
+
+    #region Constructors
+
     /// <summary>
-    /// Initializes a new instance of the <see cref="VirtualScrollableControl" /> class.
+    ///   Initializes a new instance of the <see cref="VirtualScrollableControl" /> class.
     /// </summary>
     public VirtualScrollableControl()
     {
@@ -32,34 +37,44 @@ namespace Cyotek.Windows.Forms
       base.SetStyle(ControlStyles.ContainerControl, true);
     }
 
+    #endregion
+
+    #region Events
+
     /// <summary>
-    /// Occurs when the AutoScroll property value changes
+    ///   Occurs when the AutoScroll property value changes
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler AutoScrollChanged;
 
     /// <summary>
-    /// Occurs when the AutoScrollMargin property value changes
+    ///   Occurs when the AutoScrollMargin property value changes
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler AutoScrollMarginChanged;
 
     /// <summary>
-    /// Occurs when the AutoScrollMinSize property value changes
+    ///   Occurs when the AutoScrollMinSize property value changes
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler AutoScrollMinSizeChanged;
 
     /// <summary>
-    /// Occurs when the AutoScrollPosition property value changes
+    ///   Occurs when the AutoScrollPosition property value changes
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler AutoScrollPositionChanged;
 
+    #endregion
+
+    #region Properties
+
     /// <summary>
-    /// Gets or sets a value indicating whether the container enables the user to scroll to any controls placed outside of its visible boundaries.
+    ///   Gets or sets a value indicating whether the container enables the user to scroll to any controls placed outside of its visible boundaries.
     /// </summary>
-    /// <value><c>true</c> if the container enables auto-scrolling; otherwise, <c>false</c>.</value>
+    /// <value>
+    ///   <c>true</c> if the container enables auto-scrolling; otherwise, <c>false</c>.
+    /// </value>
     [Category("Layout"), DefaultValue(true)]
     public virtual bool AutoScroll
     {
@@ -76,9 +91,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets the size of the auto-scroll margin.
+    ///   Gets or sets the size of the auto-scroll margin.
     /// </summary>
-    /// <value>A <see cref="T:System.Drawing.Size"/> that represents the height and width of the auto-scroll margin in pixels.</value>
+    /// <value>
+    ///   A <see cref="T:System.Drawing.Size" /> that represents the height and width of the auto-scroll margin in pixels.
+    /// </value>
     /// <exception cref="System.ArgumentOutOfRangeException"></exception>
     [Category("Layout"), DefaultValue(typeof(Size), "0, 0")]
     public virtual Size AutoScrollMargin
@@ -101,9 +118,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets the minimum size of the auto-scroll.
+    ///   Gets or sets the minimum size of the auto-scroll.
     /// </summary>
-    /// <value>A <see cref="T:System.Drawing.Size"/> that determines the minimum size of the virtual area through which the user can scroll.</value>
+    /// <value>
+    ///   A <see cref="T:System.Drawing.Size" /> that determines the minimum size of the virtual area through which the user can scroll.
+    /// </value>
     [Category("Layout"), DefaultValue(typeof(Size), "0, 0")]
     public virtual Size AutoScrollMinSize
     {
@@ -120,9 +139,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets the location of the auto-scroll position.
+    ///   Gets or sets the location of the auto-scroll position.
     /// </summary>
-    /// <value>A <see cref="T:System.Drawing.Point"/> that represents the auto-scroll position in pixels.</value>
+    /// <value>
+    ///   A <see cref="T:System.Drawing.Point" /> that represents the auto-scroll position in pixels.
+    /// </value>
     [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual Point AutoScrollPosition
     {
@@ -144,8 +165,8 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Total area of all visible controls which are scrolled with this container
-    ///</summary>
+    ///   Total area of all visible controls which are scrolled with this container
+    /// </summary>
     protected Rectangle ScrollArea
     {
       get
@@ -165,14 +186,20 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets the view port rectangle.
+    ///   Gets the view port rectangle.
     /// </summary>
     /// <value>The view port rectangle.</value>
     protected Rectangle ViewPortRectangle
-    { get { return new Rectangle(-_autoScrollPosition.X, -_autoScrollPosition.Y, this.DisplayRectangle.Width, this.DisplayRectangle.Height); } }
+    {
+      get { return new Rectangle(-_autoScrollPosition.X, -_autoScrollPosition.Y, this.DisplayRectangle.Width, this.DisplayRectangle.Height); }
+    }
+
+    #endregion
+
+    #region Members
 
     /// <summary>
-    /// Scrolls the specified child control into view on an auto-scroll enabled control.
+    ///   Scrolls the specified child control into view on an auto-scroll enabled control.
     /// </summary>
     /// <param name="activeControl">The child control to scroll into view.</param>
     public void ScrollControlIntoView(Control activeControl)
@@ -189,7 +216,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Adjusts the given Point according to the scroll size
+    ///   Adjusts the given Point according to the scroll size
     /// </summary>
     /// <param name="position">The position.</param>
     /// <returns></returns>
@@ -214,9 +241,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:AutoScrollChanged" /> event.
+    ///   Raises the <see cref="AutoScrollChanged" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnAutoScrollChanged(EventArgs e)
     {
       EventHandler handler;
@@ -228,9 +257,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:AutoScrollMarginChanged" /> event.
+    ///   Raises the <see cref="AutoScrollMarginChanged" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnAutoScrollMarginChanged(EventArgs e)
     {
       EventHandler handler;
@@ -242,9 +273,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:AutoScrollMinSizeChanged" /> event.
+    ///   Raises the <see cref="AutoScrollMinSizeChanged" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnAutoScrollMinSizeChanged(EventArgs e)
     {
       EventHandler handler;
@@ -259,9 +292,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:AutoScrollPositionChanged" /> event.
+    ///   Raises the <see cref="AutoScrollPositionChanged" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnAutoScrollPositionChanged(EventArgs e)
     {
       EventHandler handler;
@@ -273,9 +308,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:System.Windows.Forms.Control.Resize" /> event.
+    ///   Raises the <see cref="System.Windows.Forms.Control.Resize" /> event.
     /// </summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
     protected override void OnResize(EventArgs e)
     {
       base.OnResize(e);
@@ -307,9 +344,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:Scroll" /> event.
+    ///   Raises the <see cref="Scroll" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="ScrollEventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="ScrollEventArgs" /> instance containing the event data.
+    /// </param>
     protected override void OnScroll(ScrollEventArgs e)
     {
       if (e.Type != ScrollEventType.EndScroll)
@@ -324,9 +363,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:System.Windows.Forms.Control.VisibleChanged" /> event.
+    ///   Raises the <see cref="System.Windows.Forms.Control.VisibleChanged" /> event.
     /// </summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
     protected override void OnVisibleChanged(EventArgs e)
     {
       if (base.Visible)
@@ -336,7 +377,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Adjusts the scrollbars.
+    ///   Adjusts the scrollbars.
     /// </summary>
     private void AdjustScrollbars()
     {
@@ -395,7 +436,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Scrolls child controls by the given offset
+    ///   Scrolls child controls by the given offset
     /// </summary>
     /// <param name="offset">The offset.</param>
     private void ScrollByOffset(Size offset)
@@ -414,5 +455,7 @@ namespace Cyotek.Windows.Forms
         this.Invalidate();
       }
     }
+
+    #endregion
   };
-};
+} ;

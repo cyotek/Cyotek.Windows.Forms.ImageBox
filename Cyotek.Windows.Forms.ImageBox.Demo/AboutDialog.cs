@@ -5,9 +5,10 @@ using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  public partial class AboutDialog
-    : BaseForm
+  public partial class AboutDialog : BaseForm
   {
+    #region Constructors
+
     public AboutDialog()
     {
       FileVersionInfo info;
@@ -26,6 +27,10 @@ namespace Cyotek.Windows.Forms.Demo
       copyrightLabel.Text = info.LegalCopyright;
     }
 
+    #endregion
+
+    #region Event Handlers
+
     private void closeButton_Click(object sender, EventArgs e)
     {
       this.Close();
@@ -42,5 +47,7 @@ namespace Cyotek.Windows.Forms.Demo
         MessageBox.Show(string.Format("Unable to start the specified URI.\n\n{0}", ex.Message), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
       }
     }
+
+    #endregion
   }
 }

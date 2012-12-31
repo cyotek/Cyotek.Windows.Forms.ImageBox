@@ -6,21 +6,37 @@ namespace Cyotek.Windows.Forms
 {
   partial class ScrollControl
   {
+    #region Nested Types
+
     public class HScrollProperties : ScrollProperties
     {
+      #region Constructors
+
       public HScrollProperties(ScrollControl container)
         : base(container)
       { }
+
+      #endregion
     }
 
     public abstract class ScrollProperties
     {
-      private ScrollControl _container;
+      #region Instance Fields
+
+      private readonly ScrollControl _container;
+
+      #endregion
+
+      #region Constructors
 
       protected ScrollProperties(ScrollControl container)
       {
         _container = container;
       }
+
+      #endregion
+
+      #region Properties
 
       [DefaultValue(true)]
       public bool Enabled { get; set; }
@@ -37,22 +53,31 @@ namespace Cyotek.Windows.Forms
       [DefaultValue(1)]
       public int SmallChange { get; set; }
 
-      [Bindable(true)]
-      [DefaultValue(0)]
+      [Bindable(true), DefaultValue(0)]
       public int Value { get; set; }
 
       [DefaultValue(false)]
       public bool Visible { get; set; }
 
       protected ScrollControl ParentControl
-      { get { return _container; } }
+      {
+        get { return _container; }
+      }
+
+      #endregion
     }
 
     public class VScrollProperties : ScrollProperties
     {
+      #region Constructors
+
       public VScrollProperties(ScrollControl container)
         : base(container)
       { }
+
+      #endregion
     }
+
+    #endregion
   }
 }

@@ -83,9 +83,39 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap grid_dot {
+            get {
+                object obj = ResourceManager.GetObject("grid-dot", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icon_32 {
             get {
                 object obj = ResourceManager.GetObject("icon-32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_32a {
+            get {
+                object obj = ResourceManager.GetObject("icon-32a", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap monitor_sidebar {
+            get {
+                object obj = ResourceManager.GetObject("monitor-sidebar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

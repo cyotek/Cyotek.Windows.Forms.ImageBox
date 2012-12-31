@@ -5,8 +5,10 @@ namespace Cyotek.Windows.Forms.Demo
 {
   internal static class Program
   {
+    #region Class Members
+
     /// <summary>
-    /// The main entry point for the application.
+    ///   The main entry point for the application.
     /// </summary>
     [STAThread]
     private static void Main()
@@ -15,5 +17,7 @@ namespace Cyotek.Windows.Forms.Demo
       Application.SetCompatibleTextRenderingDefault(false);
       Application.Run(new MainForm());
     }
+
+    #endregion
   }
 }

@@ -6,31 +6,36 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2012 Cyotek. All Rights Reserved.
+  // Copyright (c) 2010-2013 Cyotek. All Rights Reserved.
   // http://cyotek.com
 
   // If you use this control in your applications, attribution or donations are welcome.
 
   // ImageBox sample project
-  // http://cyotek.com/article/display/creating-a-scrollable-and-zoomable-image-viewer-in-csharp-part-1
-  // http://cyotek.com/article/display/creating-a-scrollable-and-zoomable-image-viewer-in-csharp-part-2
-  // http://cyotek.com/article/display/creating-a-scrollable-and-zoomable-image-viewer-in-csharp-part-3
-  // http://cyotek.com/article/display/creating-a-scrollable-and-zoomable-image-viewer-in-csharp-part-4
-  // http://cyotek.com/article/display/creating-an-image-viewer-in-csharp-part-5-selecting-part-of-an-image
+  // http://cyotek.com/blog/tag/imagebox
 
   // Preview image based on Glyfz sampler - http://www.glyfz.com/sampler.htm
   // Large preview image from http://www.crazythemes.com/colorful-abstract-widescreen-wallpapers-vol2/2153
   // Toolbar icons from Fugue Icons - http://p.yusukekamiyamane.com/
 
-  public partial class MainForm
-    : BaseForm
+  public partial class MainForm : BaseForm
   {
+    #region Instance Fields
+
     private Image _previewImage;
+
+    #endregion
+
+    #region Constructors
 
     public MainForm()
     {
       InitializeComponent();
     }
+
+    #endregion
+
+    #region Members
 
     protected override void OnLoad(EventArgs e)
     {
@@ -42,6 +47,80 @@ namespace Cyotek.Windows.Forms.Demo
       imageBox.SelectionMode = ImageBoxSelectionMode.Zoom;
       imageBox.AllowClickZoom = true;
     }
+
+    private void DrawBox(Graphics graphics, Color color, RectangleF rectangle, double scale)
+    {
+      float penWidth;
+
+      penWidth = 2 * (float)scale;
+
+      using (SolidBrush brush = new SolidBrush(Color.FromArgb(64, color)))
+        graphics.FillRectangle(brush, rectangle);
+
+      using (Pen pen = new Pen(color, penWidth) {DashStyle = DashStyle.Dot, DashCap = DashCap.Round})
+        graphics.DrawRectangle(pen, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+    }
+
+    private void FillZoomLevels()
+    {
+      zoomLevelsToolStripComboBox.Items.Clear();
+
+      foreach (int zoom in imageBox.ZoomLevels)
+        zoomLevelsToolStripComboBox.Items.Add(string.Format("{0}%", zoom));
+    }
+
+    private string FormatPoint(Point point)
+    {
+      return string.Format("X:{0}, Y:{1}", point.X, point.Y);
+    }
+
+    private string FormatRectangle(RectangleF rect)
+    {
+      return string.Format("X:{0}, Y:{1}, W:{2}, H:{3}", (int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+    }
+
+    private void OpenImage(Image image)
+    {
+      imageBox.Image = image;
+      imageBox.ZoomToFit();
+
+      this.UpdateStatusBar();
+      this.UpdatePreviewImage();
+    }
+
+    private void UpdateCursorPosition(Point location)
+    {
+      if (imageBox.IsPointInImage(location))
+      {
+        Point point;
+        point = imageBox.PointToImage(location);
+        cursorToolStripStatusLabel.Text = this.FormatPoint(point);
+      }
+      else
+        cursorToolStripStatusLabel.Text = string.Empty;
+    }
+
+    private void UpdatePreviewImage()
+    {
+      if (_previewImage != null)
+        _previewImage.Dispose();
+
+      _previewImage = imageBox.GetSelectedImage();
+
+      previewImageBox.Image = _previewImage;
+    }
+
+    private void UpdateStatusBar()
+    {
+      zoomLevelsToolStripComboBox.Text = string.Format("{0}%", imageBox.Zoom);
+      autoScrollPositionToolStripStatusLabel.Text = this.FormatPoint(imageBox.AutoScrollPosition);
+      imageSizeToolStripStatusLabel.Text = this.FormatRectangle(imageBox.GetImageViewPort());
+      zoomToolStripStatusLabel.Text = string.Format("{0}%", imageBox.Zoom);
+    }
+
+    #endregion
+
+    #region Event Handlers
 
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -67,40 +146,9 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void DrawBox(Graphics graphics, Color color, RectangleF rectangle, double scale)
-    {
-      float penWidth;
-
-      penWidth = 2 * (float)scale;
-
-      using (SolidBrush brush = new SolidBrush(Color.FromArgb(64, color)))
-        graphics.FillRectangle(brush, rectangle);
-
-      using (Pen pen = new Pen(color, penWidth) { DashStyle = DashStyle.Dot, DashCap = DashCap.Round })
-        graphics.DrawRectangle(pen, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
-    }
-
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
     {
       this.Close();
-    }
-
-    private void FillZoomLevels()
-    {
-      zoomLevelsToolStripComboBox.Items.Clear();
-
-      foreach (int zoom in imageBox.ZoomLevels)
-        zoomLevelsToolStripComboBox.Items.Add(string.Format("{0}%", zoom));
-    }
-
-    private string FormatPoint(Point point)
-    {
-      return string.Format("X:{0}, Y:{1}", point.X, point.Y);
-    }
-
-    private string FormatRectangle(RectangleF rect)
-    {
-      return string.Format("X:{0}, Y:{1}, W:{2}, H:{3}", (int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
     }
 
     private void imageBox_MouseLeave(object sender, EventArgs e)
@@ -154,15 +202,6 @@ namespace Cyotek.Windows.Forms.Demo
       this.FillZoomLevels();
     }
 
-    private void OpenImage(Image image)
-    {
-      imageBox.Image = image;
-      imageBox.ZoomToFit();
-
-      this.UpdateStatusBar();
-      this.UpdatePreviewImage();
-    }
-
     private void openToolStripMenuItem_Click(object sender, EventArgs e)
     {
       using (FileDialog dialog = new OpenFileDialog())
@@ -184,6 +223,12 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
+    private void pixelGridToolStripButton_Click(object sender, EventArgs e)
+    {
+      using (PixelGridForm dialog = new PixelGridForm())
+        dialog.ShowDialog(this);
+    }
+
     private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
     {
       imageBox.SelectAll();
@@ -199,31 +244,10 @@ namespace Cyotek.Windows.Forms.Demo
       imageBox.Invalidate();
     }
 
-    private void UpdateCursorPosition(Point location)
+    private void virtualModeToolStripButton_Click(object sender, EventArgs e)
     {
-      Point point;
-
-      point = imageBox.PointToImage(location);
-
-      cursorToolStripStatusLabel.Text = point != Point.Empty ? this.FormatPoint(point) : string.Empty;
-    }
-
-    private void UpdatePreviewImage()
-    {
-      if (_previewImage != null)
-        _previewImage.Dispose();
-
-      _previewImage = imageBox.GetSelectedImage();
-
-      previewImageBox.Image = _previewImage;
-    }
-
-    private void UpdateStatusBar()
-    {
-      zoomLevelsToolStripComboBox.Text = string.Format("{0}%", imageBox.Zoom);
-      autoScrollPositionToolStripStatusLabel.Text = this.FormatPoint(imageBox.AutoScrollPosition);
-      imageSizeToolStripStatusLabel.Text = this.FormatRectangle(imageBox.GetImageViewPort());
-      zoomToolStripStatusLabel.Text = string.Format("{0}%", imageBox.Zoom);
+      using (VirtualModeDemonstrationForm form = new VirtualModeDemonstrationForm())
+        form.ShowDialog(this);
     }
 
     private void zoomInToolStripButton_Click(object sender, EventArgs e)
@@ -245,10 +269,6 @@ namespace Cyotek.Windows.Forms.Demo
       imageBox.ZoomOut();
     }
 
-    private void virtualModeToolStripButton_Click(object sender, EventArgs e)
-    {
-      using (VirtualModeDemonstrationForm form = new VirtualModeDemonstrationForm())
-        form.ShowDialog(this);
-    }
+    #endregion
   }
 }

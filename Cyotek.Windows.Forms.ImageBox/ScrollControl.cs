@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+
 #if USEWIN32PINVOKELIB
 using Cyotek.Win32; // use Cyotek.Win32.dll instead of ImageBoxNativeMethods.cs when linking into other assemblies
 #endif
@@ -12,66 +13,79 @@ using Cyotek.Win32; // use Cyotek.Win32.dll instead of ImageBoxNativeMethods.cs 
 namespace Cyotek.Windows.Forms
 {
   [ToolboxItem(false)]
-  public partial class ScrollControl
-    : Control
+  public partial class ScrollControl : Control
   {
+    #region Instance Fields
+
     private bool _alwaysShowHScroll;
     private bool _alwaysShowVScroll;
     private BorderStyle _borderStyle;
-    private HScrollProperties _horizontalScroll;
     private Size _pageSize;
     private Size _scrollSize;
     private Size _stepSize;
 
-    private VScrollProperties _verticalScroll;
+    #endregion
+
+    #region Constructors
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ScrollControl" /> class.
+    ///   Initializes a new instance of the <see cref="ScrollControl" /> class.
     /// </summary>
     public ScrollControl()
-      : base()
     {
+      // ReSharper disable DoNotCallOverridableMethodsInConstructor
       this.BorderStyle = BorderStyle.Fixed3D;
       this.ScrollSize = Size.Empty;
       this.PageSize = Size.Empty;
       this.StepSize = new Size(10, 10);
       this.HorizontalScroll = new HScrollProperties(this);
       this.VerticalScroll = new VScrollProperties(this);
+      // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
 
+    #endregion
+
+    #region Events
+
     /// <summary>
-    /// Occurs when the BorderStyle property value changes
+    ///   Occurs when the BorderStyle property value changes
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler BorderStyleChanged;
 
     /// <summary>
-    /// Occurs when the PageSize property value changes
+    ///   Occurs when the PageSize property value changes
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler PageSizeChanged;
 
     /// <summary>
-    /// Occurs when the user or code scrolls through the client area.
+    ///   Occurs when the user or code scrolls through the client area.
     /// </summary>
     public event ScrollEventHandler Scroll;
 
     /// <summary>
-    /// Occurs when the ScrollSize property value changes
+    ///   Occurs when the ScrollSize property value changes
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler ScrollSizeChanged;
 
     /// <summary>
-    /// Occurs when the StepSize property value changes
+    ///   Occurs when the StepSize property value changes
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler StepSizeChanged;
 
+    #endregion
+
+    #region Properties
+
     /// <summary>
-    /// Gets or sets a value indicating whether the horizontal scrollbar should always be displayed, even when not required.
+    ///   Gets or sets a value indicating whether the horizontal scrollbar should always be displayed, even when not required.
     /// </summary>
-    /// <value><c>true</c> if the horizontal scrollbar should always be displayed; otherwise, <c>false</c>.</value>
+    /// <value>
+    ///   <c>true</c> if the horizontal scrollbar should always be displayed; otherwise, <c>false</c>.
+    /// </value>
     [Category("Layout"), DefaultValue(false)]
     public bool AlwaysShowHScroll
     {
@@ -102,9 +116,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the vertical scrollbar should always be displayed, even when not required.
+    ///   Gets or sets a value indicating whether the vertical scrollbar should always be displayed, even when not required.
     /// </summary>
-    /// <value><c>true</c> if the vertical scrollbar should always be displayed; otherwise, <c>false</c>.</value>
+    /// <value>
+    ///   <c>true</c> if the vertical scrollbar should always be displayed; otherwise, <c>false</c>.
+    /// </value>
     [Category("Layout"), DefaultValue(false)]
     public bool AlwaysShowVScroll
     {
@@ -126,14 +142,12 @@ namespace Cyotek.Windows.Forms
             scrollInfo.nMin = 0;
             scrollInfo.nMax = 0;
             scrollInfo.nPage = 1;
-            SetScrollInfo(ScrollOrientation.VerticalScroll, scrollInfo, false);
+            this.SetScrollInfo(ScrollOrientation.VerticalScroll, scrollInfo, false);
 
             this.Invalidate();
           }
           else
-          {
             this.UpdateVerticalScrollbar();
-          }
         }
       }
     }
@@ -154,18 +168,14 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets the horizontal scrollbar properties.
+    ///   Gets the horizontal scrollbar properties.
     /// </summary>
     /// <value>The horizontal scrollbar properties.</value>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
-    public HScrollProperties HorizontalScroll
-    {
-      get { return _horizontalScroll; }
-      protected set { _horizontalScroll = value; }
-    }
+    public HScrollProperties HorizontalScroll { get; protected set; }
 
     /// <summary>
-    /// Gets or sets the size of the scroll pages.
+    ///   Gets or sets the size of the scroll pages.
     /// </summary>
     /// <value>The size of the page.</value>
     /// <exception cref="System.ArgumentOutOfRangeException"></exception>
@@ -177,7 +187,8 @@ namespace Cyotek.Windows.Forms
       {
         if (value.Width < 0)
           throw new ArgumentOutOfRangeException("value", "Width must be a positive integer.");
-        else if (value.Height < 0)
+
+        if (value.Height < 0)
           throw new ArgumentOutOfRangeException("value", "Height must be a positive integer.");
 
         if (this.PageSize != value)
@@ -190,7 +201,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets the size of the scroll area.
+    ///   Gets or sets the size of the scroll area.
     /// </summary>
     /// <value>The size of the scroll.</value>
     /// <exception cref="System.ArgumentOutOfRangeException"></exception>
@@ -202,7 +213,8 @@ namespace Cyotek.Windows.Forms
       {
         if (value.Width < 0)
           throw new ArgumentOutOfRangeException("value", "Width must be a positive integer.");
-        else if (value.Height < 0)
+
+        if (value.Height < 0)
           throw new ArgumentOutOfRangeException("value", "Height must be a positive integer.");
 
         if (this.ScrollSize != value)
@@ -215,7 +227,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets the size of scrollbar stepping.
+    ///   Gets or sets the size of scrollbar stepping.
     /// </summary>
     /// <value>The size of the step.</value>
     /// <exception cref="System.ArgumentOutOfRangeException"></exception>
@@ -227,7 +239,8 @@ namespace Cyotek.Windows.Forms
       {
         if (value.Width < 0)
           throw new ArgumentOutOfRangeException("value", "Width must be a positive integer.");
-        else if (value.Height < 0)
+
+        if (value.Height < 0)
           throw new ArgumentOutOfRangeException("value", "Height must be a positive integer.");
 
         if (this.StepSize != value)
@@ -240,21 +253,19 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets the vertical scrollbar properties.
+    ///   Gets the vertical scrollbar properties.
     /// </summary>
     /// <value>The vertical scrollbar properties.</value>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
-    public VScrollProperties VerticalScroll
-    {
-      get { return _verticalScroll; }
-      protected set { _verticalScroll = value; }
-    }
+    public VScrollProperties VerticalScroll { get; protected set; }
 
     /// <summary>
-    /// Gets the required creation parameters when the control handle is created.
+    ///   Gets the required creation parameters when the control handle is created.
     /// </summary>
     /// <value>The create params.</value>
-    /// <returns>A <see cref="T:System.Windows.Forms.CreateParams" /> that contains the required creation parameters when the handle to the control is created.</returns>
+    /// <returns>
+    ///   A <see cref="T:System.Windows.Forms.CreateParams" /> that contains the required creation parameters when the handle to the control is created.
+    /// </returns>
     protected override CreateParams CreateParams
     {
       get
@@ -279,9 +290,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the horizontal scrollbar is displayed
+    ///   Gets or sets a value indicating whether the horizontal scrollbar is displayed
     /// </summary>
-    /// <value><c>true</c> if the horizontal scrollbar is displayed; otherwise, <c>false</c>.</value>
+    /// <value>
+    ///   <c>true</c> if the horizontal scrollbar is displayed; otherwise, <c>false</c>.
+    /// </value>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
     protected bool HScroll
     {
@@ -291,9 +304,7 @@ namespace Cyotek.Windows.Forms
         uint longValue = NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_STYLE);
 
         if (value)
-        {
           longValue |= NativeMethods.WS_HSCROLL;
-        }
         else
         {
           unchecked
@@ -306,9 +317,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the vertical scrollbar is displayed
+    ///   Gets or sets a value indicating whether the vertical scrollbar is displayed
     /// </summary>
-    /// <value><c>true</c> if the vertical scrollbar is displayed; otherwise, <c>false</c>.</value>
+    /// <value>
+    ///   <c>true</c> if the vertical scrollbar is displayed; otherwise, <c>false</c>.
+    /// </value>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
     protected bool VScroll
     {
@@ -318,9 +331,7 @@ namespace Cyotek.Windows.Forms
         uint longValue = NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_STYLE);
 
         if (value)
-        {
           longValue |= NativeMethods.WS_VSCROLL;
-        }
         else
         {
           unchecked
@@ -333,14 +344,20 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the control is scrolled when the mouse wheel is spun
+    ///   Gets or sets a value indicating whether the control is scrolled when the mouse wheel is spun
     /// </summary>
-    /// <value><c>true</c> if the mouse wheel scrolls the control; otherwise, <c>false</c>.</value>
+    /// <value>
+    ///   <c>true</c> if the mouse wheel scrolls the control; otherwise, <c>false</c>.
+    /// </value>
     [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     protected bool WheelScrollsControl { get; set; }
 
+    #endregion
+
+    #region Members
+
     /// <summary>
-    /// Scrolls both scrollbars to the given values
+    ///   Scrolls both scrollbars to the given values
     /// </summary>
     /// <param name="x">The x.</param>
     /// <param name="y">The y.</param>
@@ -351,7 +368,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets the type of scrollbar event.
+    ///   Gets the type of scrollbar event.
     /// </summary>
     /// <param name="wparam">The wparam value from a window proc.</param>
     /// <returns></returns>
@@ -384,9 +401,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:BorderStyleChanged" /> event.
+    ///   Raises the <see cref="BorderStyleChanged" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnBorderStyleChanged(EventArgs e)
     {
       EventHandler handler;
@@ -400,9 +419,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:System.Windows.Forms.Control.EnabledChanged" /> event.
+    ///   Raises the <see cref="System.Windows.Forms.Control.EnabledChanged" /> event.
     /// </summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
     protected override void OnEnabledChanged(EventArgs e)
     {
       base.OnEnabledChanged(e);
@@ -411,9 +432,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:System.Windows.Forms.Control.MouseDown" /> event.
+    ///   Raises the <see cref="System.Windows.Forms.Control.MouseDown" /> event.
     /// </summary>
-    /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.</param>
+    /// <param name="e">
+    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+    /// </param>
     protected override void OnMouseDown(MouseEventArgs e)
     {
       base.OnMouseDown(e);
@@ -423,9 +446,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:System.Windows.Forms.Control.MouseWheel" /> event.
+    ///   Raises the <see cref="System.Windows.Forms.Control.MouseWheel" /> event.
     /// </summary>
-    /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.</param>
+    /// <param name="e">
+    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+    /// </param>
     protected override void OnMouseWheel(MouseEventArgs e)
     {
       if (this.WheelScrollsControl)
@@ -464,9 +489,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:PageSizeChanged" /> event.
+    ///   Raises the <see cref="PageSizeChanged" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnPageSizeChanged(EventArgs e)
     {
       EventHandler handler;
@@ -480,9 +507,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:Scroll" /> event.
+    ///   Raises the <see cref="Scroll" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="ScrollEventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="ScrollEventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnScroll(ScrollEventArgs e)
     {
       ScrollEventHandler handler;
@@ -497,9 +526,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:ScrollSizeChanged" /> event.
+    ///   Raises the <see cref="ScrollSizeChanged" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnScrollSizeChanged(EventArgs e)
     {
       EventHandler handler;
@@ -513,9 +544,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="E:StepSizeChanged" /> event.
+    ///   Raises the <see cref="StepSizeChanged" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnStepSizeChanged(EventArgs e)
     {
       EventHandler handler;
@@ -527,7 +560,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Set the given scrollbar's tracking position to the specified value
+    ///   Set the given scrollbar's tracking position to the specified value
     /// </summary>
     /// <param name="scrollbar">The scrollbar.</param>
     /// <param name="value">The value.</param>
@@ -537,8 +570,8 @@ namespace Cyotek.Windows.Forms
 
       oldInfo = this.GetScrollInfo(scrollbar);
 
-      if (value > ((oldInfo.nMax - oldInfo.nMin) + 1) - (int)oldInfo.nPage)
-        value = ((oldInfo.nMax - oldInfo.nMin) + 1) - (int)oldInfo.nPage;
+      if (value > ((oldInfo.nMax - oldInfo.nMin) + 1) - oldInfo.nPage)
+        value = ((oldInfo.nMax - oldInfo.nMin) + 1) - oldInfo.nPage;
       if (value < oldInfo.nMin)
         value = oldInfo.nMin;
 
@@ -549,14 +582,14 @@ namespace Cyotek.Windows.Forms
         scrollInfo = new NativeMethods.SCROLLINFO();
         scrollInfo.fMask = NativeMethods.SIF.SIF_POS;
         scrollInfo.nPos = value;
-        SetScrollInfo(scrollbar, scrollInfo, true);
+        this.SetScrollInfo(scrollbar, scrollInfo, true);
 
-        this.OnScroll(new ScrollEventArgs(ScrollEventType.ThumbPosition, oldInfo.nPos, value, (ScrollOrientation)scrollbar));
+        this.OnScroll(new ScrollEventArgs(ScrollEventType.ThumbPosition, oldInfo.nPos, value, scrollbar));
       }
     }
 
     /// <summary>
-    /// Updates the properties of the horizontal scrollbar.
+    ///   Updates the properties of the horizontal scrollbar.
     /// </summary>
     protected virtual void UpdateHorizontalScroll()
     {
@@ -600,7 +633,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Updates the scrollbars.
+    ///   Updates the scrollbars.
     /// </summary>
     protected void UpdateScrollbars()
     {
@@ -609,12 +642,10 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Updates the properties of the vertical scrollbar.
+    ///   Updates the properties of the vertical scrollbar.
     /// </summary>
     protected virtual void UpdateVerticalScroll()
     {
-      VScrollProperties verticalScrollProperties = new VScrollProperties(this);
-
       NativeMethods.SCROLLINFO scrollInfo;
 
       scrollInfo = this.GetScrollInfo(ScrollOrientation.VerticalScroll);
@@ -655,9 +686,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Processes the WM_HSCROLL and WM_VSCROLL Windows messages.
+    ///   Processes the WM_HSCROLL and WM_VSCROLL Windows messages.
     /// </summary>
-    /// <param name="msg">The Windows <see cref="T:System.Windows.Forms.Message"/> to process.</param>
+    /// <param name="msg">
+    ///   The Windows <see cref="T:System.Windows.Forms.Message" /> to process.
+    /// </param>
     protected virtual void WmScroll(ref Message msg)
     {
       ScrollOrientation scrollbar;
@@ -666,20 +699,14 @@ namespace Cyotek.Windows.Forms
       ScrollEventType eventType;
 
       eventType = this.GetEventType(msg.WParam);
-      if (msg.Msg == NativeMethods.WM_HSCROLL)
-        scrollbar = ScrollOrientation.HorizontalScroll;
-      else
-        scrollbar = ScrollOrientation.VerticalScroll;
+      scrollbar = msg.Msg == NativeMethods.WM_HSCROLL ? ScrollOrientation.HorizontalScroll : ScrollOrientation.VerticalScroll;
 
       if (eventType != ScrollEventType.EndScroll)
       {
         int step;
         NativeMethods.SCROLLINFO scrollInfo;
 
-        if (scrollbar == ScrollOrientation.HorizontalScroll)
-          step = this.StepSize.Width;
-        else
-          step = this.StepSize.Height;
+        step = scrollbar == ScrollOrientation.HorizontalScroll ? this.StepSize.Width : this.StepSize.Height;
 
         scrollInfo = this.GetScrollInfo(scrollbar);
         scrollInfo.fMask = NativeMethods.SIF.SIF_POS;
@@ -701,11 +728,11 @@ namespace Cyotek.Windows.Forms
             break;
 
           case ScrollEventType.LargeDecrement:
-            scrollInfo.nPos = oldValue - (int)scrollInfo.nPage;
+            scrollInfo.nPos = oldValue - scrollInfo.nPage;
             break;
 
           case ScrollEventType.LargeIncrement:
-            scrollInfo.nPos = oldValue + (int)scrollInfo.nPage;
+            scrollInfo.nPos = oldValue + scrollInfo.nPage;
             break;
 
           case ScrollEventType.First:
@@ -739,9 +766,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Processes Windows messages.
+    ///   Processes Windows messages.
     /// </summary>
-    /// <param name="msg">The Windows <see cref="T:System.Windows.Forms.Message"/> to process.</param>
+    /// <param name="msg">
+    ///   The Windows <see cref="T:System.Windows.Forms.Message" /> to process.
+    /// </param>
     [DebuggerStepThrough]
     protected override void WndProc(ref Message msg)
     {
@@ -758,7 +787,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets scrollbar properties
+    ///   Gets scrollbar properties
     /// </summary>
     /// <param name="scrollbar">The bar.</param>
     /// <returns></returns>
@@ -775,15 +804,20 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Sets scrollbar properties.
+    ///   Sets scrollbar properties.
     /// </summary>
     /// <param name="scrollbar">The scrollbar.</param>
     /// <param name="scrollInfo">The scrollbar properties.</param>
-    /// <param name="refresh">if set to <c>true</c> the scrollbar will be repainted.</param>
+    /// <param name="refresh">
+    ///   if set to <c>true</c> the scrollbar will be repainted.
+    /// </param>
     /// <returns></returns>
-    private int SetScrollInfo(ScrollOrientation scrollbar, NativeMethods.SCROLLINFO scrollInfo, bool refresh)
+    // ReSharper disable UnusedMethodReturnValue.Local
+    private int SetScrollInfo(ScrollOrientation scrollbar, NativeMethods.SCROLLINFO scrollInfo, bool refresh) // ReSharper restore UnusedMethodReturnValue.Local
     {
       return NativeMethods.SetScrollInfo(this.Handle, (int)scrollbar, scrollInfo, refresh);
     }
+
+    #endregion
   }
 }

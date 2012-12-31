@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  public partial class BaseForm : Form
+  public partial class PixelGridForm : BaseForm
   {
     #region Constructors
 
-    public BaseForm()
+    public PixelGridForm()
     {
       this.InitializeComponent();
     }
@@ -19,9 +17,9 @@ namespace Cyotek.Windows.Forms.Demo
 
     protected override void OnLoad(EventArgs e)
     {
-      this.Font = SystemFonts.MessageBoxFont;
-
       base.OnLoad(e);
+
+      propertyGrid.SelectItem("ShowPixelGrid");
     }
 
     #endregion

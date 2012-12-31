@@ -1,10 +1,35 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+// ReSharper disable NotAccessedField.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable FieldCanBeMadeReadOnly.Global
+
 namespace Cyotek.Windows.Forms
 {
-  internal partial class NativeMethods // partial for when linking this file into other assemblies
+  // ReSharper disable ClassNeverInstantiated.Global
+  internal class NativeMethods // partial for when linking this file into other assemblies
+    // ReSharper restore ClassNeverInstantiated.Global
   {
+    #region Enums
+
+    [Flags]
+    public enum SIF
+    {
+      SIF_RANGE = 0x0001,
+      SIF_PAGE = 0x0002,
+      SIF_POS = 0x0004,
+      SIF_DISABLENOSCROLL = 0x0008,
+      SIF_TRACKPOS = 0x0010,
+      SIF_ALL = SIF_PAGE | SIF_POS | SIF_RANGE | SIF_TRACKPOS
+    }
+
+    #endregion
+
+    // ReSharper disable InconsistentNaming
+
+    #region Constants
+
     public const int GWL_STYLE = (-16);
     public const int SB_BOTH = 3;
     public const int SB_BOTTOM = 7;
@@ -30,22 +55,20 @@ namespace Cyotek.Windows.Forms
     public const int WS_BORDER = 0x00800000;
     public const int WS_EX_CLIENTEDGE = 0x200;
     public const int WS_HSCROLL = 0x00100000;
-
     public const int WS_VSCROLL = 0x00200000;
+
+    #endregion
+
+    // ReSharper restore InconsistentNaming
+
+    #region Constructors
 
     private NativeMethods()
     { }
 
-    [Flags]
-    public enum SIF
-    {
-      SIF_RANGE = 0x0001,
-      SIF_PAGE = 0x0002,
-      SIF_POS = 0x0004,
-      SIF_DISABLENOSCROLL = 0x0008,
-      SIF_TRACKPOS = 0x0010,
-      SIF_ALL = SIF_PAGE | SIF_POS | SIF_RANGE | SIF_TRACKPOS
-    }
+    #endregion
+
+    #region Class Members
 
     [DllImport("user32.dll", SetLastError = true)]
     public static extern int GetScrollInfo(IntPtr hwnd, int bar, [MarshalAs(UnmanagedType.LPStruct)] SCROLLINFO scrollInfo);
@@ -58,6 +81,10 @@ namespace Cyotek.Windows.Forms
 
     [DllImport("user32.dll")]
     public static extern int SetWindowLong(IntPtr hwnd, int index, UInt32 newLong);
+
+    #endregion
+
+    #region Nested Types
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class SCROLLINFO
@@ -81,5 +108,11 @@ namespace Cyotek.Windows.Forms
         fMask = 0;
       }
     }
+
+    #endregion
   }
+
+  // ReSharper restore NotAccessedField.Global
+  // ReSharper restore FieldCanBeMadeReadOnly.Global
+  // ReSharper restore InconsistentNaming
 }

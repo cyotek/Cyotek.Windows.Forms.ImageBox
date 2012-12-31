@@ -1,6 +1,6 @@
 ﻿namespace Cyotek.Windows.Forms.Demo
 {
-  partial class VirtualModeDemonstrationForm
+  partial class PixelGridForm
   {
     /// <summary>
     /// Required designer variable.
@@ -28,25 +28,13 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.splitContainer = new System.Windows.Forms.SplitContainer();
       this.propertyGrid = new Cyotek.Windows.Forms.PropertyGrid();
+      this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.splitContainer.Panel1.SuspendLayout();
       this.splitContainer.Panel2.SuspendLayout();
       this.splitContainer.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // imageBox
-      // 
-      this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.imageBox.Location = new System.Drawing.Point(0, 0);
-      this.imageBox.Name = "imageBox";
-      this.imageBox.SelectionMode = Cyotek.Windows.Forms.ImageBoxSelectionMode.Rectangle;
-      this.imageBox.Size = new System.Drawing.Size(543, 373);
-      this.imageBox.TabIndex = 0;
-      this.imageBox.VirtualMode = true;
-      this.imageBox.VirtualSize = new System.Drawing.Size(300, 200);
-      this.imageBox.VirtualDraw += new System.Windows.Forms.PaintEventHandler(this.imageBox_VirtualDraw);
       // 
       // splitContainer
       // 
@@ -62,7 +50,7 @@
       // splitContainer.Panel2
       // 
       this.splitContainer.Panel2.Controls.Add(this.imageBox);
-      this.splitContainer.Size = new System.Drawing.Size(847, 373);
+      this.splitContainer.Size = new System.Drawing.Size(989, 618);
       this.splitContainer.SplitterDistance = 300;
       this.splitContainer.TabIndex = 0;
       // 
@@ -72,18 +60,29 @@
       this.propertyGrid.Location = new System.Drawing.Point(0, 0);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(300, 373);
+      this.propertyGrid.Size = new System.Drawing.Size(300, 618);
       this.propertyGrid.TabIndex = 0;
       // 
-      // VirtualModeDemonstrationForm
+      // imageBox
+      // 
+      this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.imageBox.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.monitor_sidebar;
+      this.imageBox.Location = new System.Drawing.Point(0, 0);
+      this.imageBox.Name = "imageBox";
+      this.imageBox.ShowPixelGrid = true;
+      this.imageBox.Size = new System.Drawing.Size(685, 618);
+      this.imageBox.TabIndex = 0;
+      this.imageBox.Zoom = 1600;
+      // 
+      // PixelGridForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(847, 373);
+      this.ClientSize = new System.Drawing.Size(989, 618);
       this.Controls.Add(this.splitContainer);
       this.Font = new System.Drawing.Font("Segoe UI", 9F);
-      this.Name = "VirtualModeDemonstrationForm";
-      this.Text = "Virtual Mode Demonstration";
+      this.Name = "PixelGridForm";
+      this.Text = "Pixel Grid";
       this.splitContainer.Panel1.ResumeLayout(false);
       this.splitContainer.Panel2.ResumeLayout(false);
       this.splitContainer.ResumeLayout(false);
@@ -93,8 +92,8 @@
 
     #endregion
 
-    private ImageBox imageBox;
     private System.Windows.Forms.SplitContainer splitContainer;
     private PropertyGrid propertyGrid;
+    private ImageBox imageBox;
   }
 }

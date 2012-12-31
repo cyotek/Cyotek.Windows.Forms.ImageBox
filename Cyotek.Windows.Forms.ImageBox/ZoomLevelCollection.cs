@@ -6,15 +6,16 @@ using System.Linq;
 namespace Cyotek.Windows.Forms
 {
   //[TypeConverter(typeof(ZoomLevelCollectionConverter))]
-  public class ZoomLevelCollection
-    : IList<int>
+  public class ZoomLevelCollection : IList<int>
   {
+    #region Constructors
+
     public ZoomLevelCollection()
     {
       this.List = new SortedList<int, int>();
     }
 
-    public ZoomLevelCollection(IList<int> collection)
+    public ZoomLevelCollection(IEnumerable<int> collection)
       : this()
     {
       if (collection == null)
@@ -23,16 +24,28 @@ namespace Cyotek.Windows.Forms
       this.AddRange(collection);
     }
 
+    #endregion
+
+    #region Class Properties
+
     public static ZoomLevelCollection Default
-    { get { return new ZoomLevelCollection(new int[] { 7, 10, 15, 20, 25, 30, 50, 70, 100, 150, 200, 300, 400, 500, 600, 700, 800, 1200, 1600 }); } }
+    {
+      get { return new ZoomLevelCollection(new[] {7, 10, 15, 20, 25, 30, 50, 70, 100, 150, 200, 300, 400, 500, 600, 700, 800, 1200, 1600}); }
+    }
+
+    #endregion
+
+    #region Properties
 
     public int Count
-    { get { return this.List.Count; } }
+    {
+      get { return this.List.Count; }
+    }
 
     public bool IsReadOnly
-    { get { return false; } }
-
-    protected SortedList<int, int> List { get; set; }
+    {
+      get { return false; }
+    }
 
     public int this[int index]
     {
@@ -44,17 +57,18 @@ namespace Cyotek.Windows.Forms
       }
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return this.GetEnumerator();
-    }
+    protected SortedList<int, int> List { get; set; }
+
+    #endregion
+
+    #region Members
 
     public void Add(int item)
     {
       this.List.Add(item, item);
     }
 
-    public void AddRange(IList<int> collection)
+    public void AddRange(IEnumerable<int> collection)
     {
       if (collection == null)
         throw new ArgumentNullException("collection");
@@ -140,5 +154,16 @@ namespace Cyotek.Windows.Forms
 
       return results;
     }
+
+    #endregion
+
+    #region IList<int> Members
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return this.GetEnumerator();
+    }
+
+    #endregion
   }
 }

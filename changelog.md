@@ -1,5 +1,22 @@
 # ImageBox Change Log
 
+## 1.1.2.0
+### Changes and new features
+* Added `IsPointInImage` method. This function returns if a given point is within the image viewport, and is useful for combining with `PointToImage`.
+* Added `ImageBorderColor` property, allowing you to customize the color of the image border
+* Added a new `ImageBoxBorderStyle`, `FixedSingleGlowShadow`. This style allows for a more smoother outer glow shadow instead of the existing clunky drop shadow.
+* Added  `ShowPixelGrid` and `PixelGridColor` properties. When set, a dotted grid is displayed around pixels when zooming in on an image.
+* Added new overload to `PointToImage` which allows you to specify if the function should map the given point to the nearest available edge(s) if the point is outside the image boundaries
+* Added `AllowDoubleClick` property. When set, the normal double click events and overrides work as expected.
+* Additional documentation added via XML comments
+
+### Bug Fixes
+* If the `GridDisplayMode` property is set to `Image` an explicit image border is no longer drawn, instead the `ImageBorder` property is correctly honoured.
+* Fixes a problem where half the pixels of the first row/column were lost when zooming. Thanks to Rotem for the fix.
+* The `GetImageViewport` method now correctly returns a width and height that accounts for control size, padding and zoom levels.
+* Fixed incorrect attributes on `AutoSize` property
+* Fixes "see also" documentation errors for events
+
 ## 1.1.1.0
 ### Changes and new features
 * Added `VirtualMode` and `VirtualSize` properties. These new properties allow you to use all functionality of the ImageBox control without having to set the `Image` property. You can also use the new `VirtualDraw` event to provide custom drawing without having to override existing drawing functionality.

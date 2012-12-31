@@ -4,17 +4,9 @@ using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms
 {
-  internal class PropertyGrid 
-    : System.Windows.Forms.PropertyGrid
+  internal class PropertyGrid : System.Windows.Forms.PropertyGrid
   {
-    public void SelectItem(string itemLabel)
-    {
-      GridItem selection;
-
-      selection = this.FindItem(itemLabel);
-      if (selection != null)
-        this.SelectedGridItem = selection;
-    }
+    #region Members
 
     public GridItem FindItem(string itemLabel)
     {
@@ -49,5 +41,16 @@ namespace Cyotek.Windows.Forms
 
       return matchingItem;
     }
+
+    public void SelectItem(string itemLabel)
+    {
+      GridItem selection;
+
+      selection = this.FindItem(itemLabel);
+      if (selection != null)
+        this.SelectedGridItem = selection;
+    }
+
+    #endregion
   }
 }
