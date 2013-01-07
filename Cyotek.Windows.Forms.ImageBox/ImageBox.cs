@@ -1407,6 +1407,26 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    ///   Returns the source <see cref="T:System.Drawing.Rectangle" /> scaled according to the current zoom level and repositioned to include the current image offset
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <returns>A Rectangle which has been resized and repositioned to match the current zoom level and image offset</returns>
+    public virtual Rectangle GetOffsetRectangle(Rectangle source)
+    {
+      Rectangle viewport;
+      Rectangle scaled;
+      int offsetX;
+      int offsetY;
+
+      viewport = this.GetImageViewPort();
+      scaled = this.GetScaledRectangle(source);
+      offsetX = viewport.Left + this.Padding.Left + this.AutoScrollPosition.X;
+      offsetY = viewport.Top + this.Padding.Top + this.AutoScrollPosition.Y;
+
+      return new Rectangle(new Point(scaled.Left + offsetX, scaled.Top + offsetY), scaled.Size);
+    }
+
+    /// <summary>
     ///   Retrieves the size of a rectangular area into which a control can be fitted.
     /// </summary>
     /// <param name="proposedSize">The custom-sized area for a control.</param>
@@ -1710,25 +1730,25 @@ namespace Cyotek.Windows.Forms
 
         innerRectangle = this.GetInsideViewPort(true);
 
-        if (this.Image.Width > this.Image.Height)
+        if (this.ViewSize.Width > this.ViewSize.Height)
         {
-          aspectRatio = (double)innerRectangle.Width / this.Image.Width;
+          aspectRatio = (double)innerRectangle.Width / this.ViewSize.Width;
           zoom = aspectRatio * 100.0;
 
-          if (innerRectangle.Height < ((this.Image.Height * zoom) / 100.0))
+          if (innerRectangle.Height < ((this.ViewSize.Height * zoom) / 100.0))
           {
-            aspectRatio = (double)innerRectangle.Height / this.Image.Height;
+            aspectRatio = (double)innerRectangle.Height / this.ViewSize.Height;
             zoom = aspectRatio * 100.0;
           }
         }
         else
         {
-          aspectRatio = (double)innerRectangle.Height / this.Image.Height;
+          aspectRatio = (double)innerRectangle.Height / this.ViewSize.Height;
           zoom = aspectRatio * 100.0;
 
-          if (innerRectangle.Width < ((this.Image.Width * zoom) / 100.0))
+          if (innerRectangle.Width < ((this.ViewSize.Width * zoom) / 100.0))
           {
-            aspectRatio = (double)innerRectangle.Width / this.Image.Width;
+            aspectRatio = (double)innerRectangle.Width / this.ViewSize.Width;
             zoom = aspectRatio * 100.0;
           }
         }

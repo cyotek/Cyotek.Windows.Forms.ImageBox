@@ -1,5 +1,12 @@
 # ImageBox Change Log
 
+## 1.1.2.1
+### Changes and new features
+* Added missing `GetOffsetRectangle` overload which supports `Rectangle` structs.
+
+### Bug Fixes
+* The `ZoomToFit` method didn't support virtual mode and crashed if called.
+
 ## 1.1.2.0
 ### Changes and new features
 * Added `IsPointInImage` method. This function returns if a given point is within the image viewport, and is useful for combining with `PointToImage`.

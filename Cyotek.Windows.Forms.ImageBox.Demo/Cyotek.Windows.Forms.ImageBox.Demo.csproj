@@ -92,7 +92,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\sample.png" />
     <Content Include="..\icon.ico">
       <Link>icon.ico</Link>
     </Content>
@@ -108,6 +107,7 @@
     <None Include="Resources\monitor-sidebar.png" />
     <Content Include="Resources\Object Position.ico" />
     <Content Include="Resources\Object Size.ico" />
+    <Content Include="Resources\sample.jpg" />
     <Content Include="Resources\selection-select.png" />
     <Content Include="Resources\selection.png" />
     <Content Include="Resources\zone.png" />
