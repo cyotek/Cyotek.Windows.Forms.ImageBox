@@ -1,5 +1,18 @@
 # ImageBox Change Log
 
+## 1.1.3.0
+### Changes and new features
+* The `Selecting` event now uses `ImageBoxCancelEventArgs` in order to provide further information.
+* Added new `DragTestForm` demo
+* Added new `Tiny` setting for `ImageBoxGridScale` which is half the size of `Small`.
+
+### Bug Fixes
+* If the `Selecting` event was cancelled, it would continue to be re-raised with every movement of the mouse while the button was pressed. Now the event is only raised once, and if cancelled will not be raised again until the button is released and a new drag initiated.
+
+## 1.1.2.2
+### Changes and new features
+* Changed `PixelGridThreshold` into an instance property, and changed default value to `5`.
+
 ## 1.1.2.1
 ### Changes and new features
 * Added missing `GetOffsetRectangle` overload which supports `Rectangle` structs.

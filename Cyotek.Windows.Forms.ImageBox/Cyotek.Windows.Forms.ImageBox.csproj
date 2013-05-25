@@ -49,6 +49,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ImageBoxBorderStyle.cs" />
+    <Compile Include="ImageBoxCancelEventArgs.cs" />
     <Compile Include="ImageBoxGridDisplayMode.cs" />
     <Compile Include="ImageBoxGridScale.cs" />
     <Compile Include="ImageBoxSelectionMode.cs" />

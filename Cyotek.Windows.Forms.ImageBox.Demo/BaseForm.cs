@@ -15,7 +15,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Members
+    #region Overridden Members
 
     protected override void OnLoad(EventArgs e)
     {

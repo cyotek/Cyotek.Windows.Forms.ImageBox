@@ -53,7 +53,8 @@ namespace Cyotek.Windows.Forms
       [DefaultValue(1)]
       public int SmallChange { get; set; }
 
-      [Bindable(true), DefaultValue(0)]
+      [Bindable(true)]
+      [DefaultValue(0)]
       public int Value { get; set; }
 
       [DefaultValue(false)]

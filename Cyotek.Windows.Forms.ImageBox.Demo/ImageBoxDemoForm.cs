@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Cyotek.Windows.Forms.Demo.Properties;
 
 namespace Cyotek.Windows.Forms.Demo
 {
@@ -18,7 +19,7 @@ namespace Cyotek.Windows.Forms.Demo
   // Large preview image from http://www.crazythemes.com/colorful-abstract-widescreen-wallpapers-vol2/2153
   // Toolbar icons from Fugue Icons - http://p.yusukekamiyamane.com/
 
-  public partial class MainForm : BaseForm
+  public partial class ImageBoxDemoForm : BaseForm
   {
     #region Instance Fields
 
@@ -28,25 +29,29 @@ namespace Cyotek.Windows.Forms.Demo
 
     #region Constructors
 
-    public MainForm()
+    public ImageBoxDemoForm()
     {
       InitializeComponent();
     }
 
     #endregion
 
-    #region Members
+    #region Overridden Members
 
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
 
       this.FillZoomLevels();
-      this.OpenImage(Properties.Resources.Sample);
+      this.OpenImage(Resources.Sample);
 
       imageBox.SelectionMode = ImageBoxSelectionMode.Zoom;
       imageBox.AllowClickZoom = true;
     }
+
+    #endregion
+
+    #region Members
 
     private void DrawBox(Graphics graphics, Color color, RectangleF rectangle, double scale)
     {
@@ -57,7 +62,11 @@ namespace Cyotek.Windows.Forms.Demo
       using (SolidBrush brush = new SolidBrush(Color.FromArgb(64, color)))
         graphics.FillRectangle(brush, rectangle);
 
-      using (Pen pen = new Pen(color, penWidth) {DashStyle = DashStyle.Dot, DashCap = DashCap.Round})
+      using (Pen pen = new Pen(color, penWidth)
+      {
+        DashStyle = DashStyle.Dot,
+        DashCap = DashCap.Round
+      })
         graphics.DrawRectangle(pen, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
     }
 

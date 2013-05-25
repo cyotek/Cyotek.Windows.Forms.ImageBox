@@ -6,6 +6,11 @@
   public enum ImageBoxGridScale
   {
     /// <summary>
+    ///   Half of size.
+    /// </summary>
+    Tiny,
+
+    /// <summary>
     ///   Default size.
     /// </summary>
     Small,

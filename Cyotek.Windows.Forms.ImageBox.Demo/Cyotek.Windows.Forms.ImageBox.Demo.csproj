@@ -56,11 +56,26 @@
     <Compile Include="BaseForm.Designer.cs">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.cs">
+    <Compile Include="DragTestForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="DragTestForm.Designer.cs">
+      <DependentUpon>DragTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ImageBoxDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImageBoxDemoForm.Designer.cs">
+      <DependentUpon>ImageBoxDemoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainMenuForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainMenuForm.designer.cs">
+      <DependentUpon>MainMenuForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PixelGridForm.cs">
       <SubType>Form</SubType>
@@ -116,8 +131,14 @@
     <EmbeddedResource Include="BaseForm.resx">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="DragTestForm.resx">
+      <DependentUpon>DragTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImageBoxDemoForm.resx">
+      <DependentUpon>ImageBoxDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainMenuForm.resx">
+      <DependentUpon>MainMenuForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PixelGridForm.resx">
       <DependentUpon>PixelGridForm.cs</DependentUpon>

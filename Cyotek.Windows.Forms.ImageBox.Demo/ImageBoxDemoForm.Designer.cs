@@ -1,6 +1,6 @@
 ﻿namespace Cyotek.Windows.Forms.Demo
 {
-  partial class MainForm
+  partial class ImageBoxDemoForm
   {
     /// <summary>
     /// Required designer variable.
@@ -32,18 +32,18 @@
     /// </summary>
     private void InitializeComponent()
     {
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageBoxDemoForm));
       this.viewSplitContainer = new System.Windows.Forms.SplitContainer();
       this.selectionSplitContainer = new System.Windows.Forms.SplitContainer();
       this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.previewImageBox = new Cyotek.Windows.Forms.ImageBox();
       this.propertyGrid = new Cyotek.Windows.Forms.PropertyGrid();
       this.statusStrip = new System.Windows.Forms.StatusStrip();
+      this.cursorToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
       this.autoScrollPositionToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.imageSizeToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.zoomToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-      this.cursorToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.selectionToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolStrip = new System.Windows.Forms.ToolStrip();
       this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -99,7 +99,7 @@
       // 
       this.viewSplitContainer.Panel2.Controls.Add(this.propertyGrid);
       this.viewSplitContainer.Size = new System.Drawing.Size(1060, 536);
-      this.viewSplitContainer.SplitterDistance = 755;
+      this.viewSplitContainer.SplitterDistance = 754;
       this.viewSplitContainer.SplitterWidth = 5;
       this.viewSplitContainer.TabIndex = 0;
       // 
@@ -118,18 +118,17 @@
       // selectionSplitContainer.Panel2
       // 
       this.selectionSplitContainer.Panel2.Controls.Add(this.previewImageBox);
-      this.selectionSplitContainer.Size = new System.Drawing.Size(755, 536);
-      this.selectionSplitContainer.SplitterDistance = 381;
+      this.selectionSplitContainer.Size = new System.Drawing.Size(754, 536);
+      this.selectionSplitContainer.SplitterDistance = 380;
       this.selectionSplitContainer.SplitterWidth = 5;
       this.selectionSplitContainer.TabIndex = 1;
       // 
       // imageBox
       // 
-      this.imageBox.AutoSize = false;
       this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
-      this.imageBox.Size = new System.Drawing.Size(755, 381);
+      this.imageBox.Size = new System.Drawing.Size(754, 380);
       this.imageBox.TabIndex = 0;
       this.imageBox.Selected += new System.EventHandler<System.EventArgs>(this.imageBox_Selected);
       this.imageBox.SelectionRegionChanged += new System.EventHandler(this.imageBox_SelectionRegionChanged);
@@ -145,14 +144,13 @@
       // 
       this.previewImageBox.AllowZoom = false;
       this.previewImageBox.AutoPan = false;
-      this.previewImageBox.AutoSize = false;
       this.previewImageBox.BackColor = System.Drawing.SystemColors.Control;
       this.previewImageBox.Dock = System.Windows.Forms.DockStyle.Fill;
       this.previewImageBox.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.Image;
       this.previewImageBox.ImageBorderStyle = Cyotek.Windows.Forms.ImageBoxBorderStyle.FixedSingle;
       this.previewImageBox.Location = new System.Drawing.Point(0, 0);
       this.previewImageBox.Name = "previewImageBox";
-      this.previewImageBox.Size = new System.Drawing.Size(755, 150);
+      this.previewImageBox.Size = new System.Drawing.Size(754, 151);
       this.previewImageBox.TabIndex = 0;
       // 
       // propertyGrid
@@ -163,7 +161,7 @@
       this.propertyGrid.Location = new System.Drawing.Point(0, 0);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(300, 536);
+      this.propertyGrid.Size = new System.Drawing.Size(301, 536);
       this.propertyGrid.TabIndex = 0;
       // 
       // statusStrip
@@ -181,6 +179,13 @@
       this.statusStrip.ShowItemToolTips = true;
       this.statusStrip.Size = new System.Drawing.Size(1060, 22);
       this.statusStrip.TabIndex = 1;
+      // 
+      // cursorToolStripStatusLabel
+      // 
+      this.cursorToolStripStatusLabel.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.cursor;
+      this.cursorToolStripStatusLabel.Name = "cursorToolStripStatusLabel";
+      this.cursorToolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
+      this.cursorToolStripStatusLabel.ToolTipText = "Current Cursor Position";
       // 
       // toolStripStatusLabel1
       // 
@@ -208,13 +213,6 @@
       this.zoomToolStripStatusLabel.Name = "zoomToolStripStatusLabel";
       this.zoomToolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
       this.zoomToolStripStatusLabel.ToolTipText = "Zoom";
-      // 
-      // cursorToolStripStatusLabel
-      // 
-      this.cursorToolStripStatusLabel.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.cursor;
-      this.cursorToolStripStatusLabel.Name = "cursorToolStripStatusLabel";
-      this.cursorToolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
-      this.cursorToolStripStatusLabel.ToolTipText = "Current Cursor Position";
       // 
       // selectionToolStripStatusLabel
       // 
@@ -478,7 +476,7 @@
       this.aboutToolStripMenuItem.Text = "&About...";
       this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
       // 
-      // MainForm
+      // ImageBoxDemoForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -488,12 +486,8 @@
       this.Controls.Add(this.toolStrip);
       this.Controls.Add(this.menuStrip);
       this.Font = new System.Drawing.Font("Segoe UI", 9F);
-      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MainMenuStrip = this.menuStrip;
-      this.MinimizeBox = true;
-      this.Name = "MainForm";
-      this.ShowIcon = true;
-      this.ShowInTaskbar = true;
+      this.Name = "ImageBoxDemoForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "Cyotek ImageBox Demonstration";
       this.viewSplitContainer.Panel1.ResumeLayout(false);

@@ -16,53 +16,89 @@ namespace Cyotek.Windows.Forms
   /// <summary>
   ///   Component for displaying images with support for scrolling and zooming.
   /// </summary>
-  [DefaultProperty("Image"), ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp"), ToolboxItem(true)]
+  [DefaultProperty("Image")]
+  [ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp")]
+  [ToolboxItem(true)]
   public class ImageBox : VirtualScrollableControl
   {
     #region Constants
 
     private const int MaxZoom = 3500;
+
     private const int MinZoom = 1;
+
     private const int SelectionDeadZone = 5;
-    public const int PixelGridThreshold = 2;
 
     #endregion
 
     #region Instance Fields
 
     private bool _allowClickZoom;
+
     private bool _allowDoubleClick;
+
     private bool _allowZoom;
+
     private bool _autoCenter;
+
     private bool _autoPan;
+
     private int _dropShadowSize;
+
     private int _gridCellSize;
+
     private Color _gridColor;
+
     private Color _gridColorAlternate;
+
     private ImageBoxGridDisplayMode _gridDisplayMode;
+
     private ImageBoxGridScale _gridScale;
+
     private Bitmap _gridTile;
-    private System.Drawing.Image _image;
+
+    private Image _image;
+
     private Color _imageBorderColor;
+
     private ImageBoxBorderStyle _imageBorderStyle;
+
     private InterpolationMode _interpolationMode;
+
     private bool _invertMouse;
+
     private bool _isPanning;
-    private bool _isSelecting;
+
     private bool _limitSelectionToImage;
+
     private Color _pixelGridColor;
+
+    private int _pixelGridThreshold;
+
     private Color _selectionColor;
+
     private ImageBoxSelectionMode _selectionMode;
+
     private RectangleF _selectionRegion;
+
     private bool _shortcutsEnabled;
+
     private bool _showPixelGrid;
+
     private bool _sizeToFit;
+
     private Point _startMousePosition;
+
     private Point _startScrollPosition;
+
     private TextureBrush _texture;
+
     private int _updateCount;
+
     private bool _virtualMode;
+
     private Size _virtualSize;
+
     private int _zoom;
 
     private ZoomLevelCollection _zoomLevels;
@@ -103,6 +139,7 @@ namespace Cyotek.Windows.Forms
       this.ZoomLevels = ZoomLevelCollection.Default;
       this.ImageBorderColor = SystemColors.ControlDark;
       this.PixelGridColor = Color.DimGray;
+      this.PixelGridThreshold = 5;
       // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
 
@@ -231,6 +268,12 @@ namespace Cyotek.Windows.Forms
     public event EventHandler PixelGridColorChanged;
 
     /// <summary>
+    /// Occurs when the PixelGridThreshold property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler PixelGridThresholdChanged;
+
+    /// <summary>
     ///   Occurs when a selection region has been defined
     /// </summary>
     [Category("Action")]
@@ -240,7 +283,7 @@ namespace Cyotek.Windows.Forms
     ///   Occurs when the user starts to define a selection region.
     /// </summary>
     [Category("Action")]
-    public event EventHandler<CancelEventArgs> Selecting;
+    public event EventHandler<ImageBoxCancelEventArgs> Selecting;
 
     /// <summary>
     ///   Occurs when the SelectionColor property is changed.
@@ -354,112 +397,12 @@ namespace Cyotek.Windows.Forms
     /// <returns></returns>
     public static Bitmap CreateCheckerBoxTile()
     {
-      return ImageBox.CreateCheckerBoxTile(8, Color.Gainsboro, Color.WhiteSmoke);
+      return CreateCheckerBoxTile(8, Color.Gainsboro, Color.WhiteSmoke);
     }
 
     #endregion
 
-    #region Properties
-
-    /// <summary>
-    ///   Gets or sets a value indicating whether clicking the control with the mouse will automatically zoom in or out.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if clicking the control allows zooming; otherwise, <c>false</c>.
-    /// </value>
-    [DefaultValue(false), Category("Behavior")]
-    public virtual bool AllowClickZoom
-    {
-      get { return _allowClickZoom; }
-      set
-      {
-        if (_allowClickZoom != value)
-        {
-          _allowClickZoom = value;
-          this.OnAllowClickZoomChanged(EventArgs.Empty);
-        }
-      }
-    }
-
-    [Category("Behavior"), DefaultValue(false)]
-    public virtual bool AllowDoubleClick
-    {
-      get { return _allowDoubleClick; }
-      set
-      {
-        if (this.AllowDoubleClick != value)
-        {
-          _allowDoubleClick = value;
-
-          this.OnAllowDoubleClickChanged(EventArgs.Empty);
-        }
-      }
-    }
-
-    /// <summary>
-    ///   Gets or sets a value indicating whether the user can change the zoom level.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if the zoom level can be changed; otherwise, <c>false</c>.
-    /// </value>
-    [Category("Behavior"), DefaultValue(true)]
-    public virtual bool AllowZoom
-    {
-      get { return _allowZoom; }
-      set
-      {
-        if (this.AllowZoom != value)
-        {
-          _allowZoom = value;
-
-          this.OnAllowZoomChanged(EventArgs.Empty);
-        }
-      }
-    }
-
-    /// <summary>
-    ///   Gets or sets a value indicating whether the image is centered where possible.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if the image should be centered where possible; otherwise, <c>false</c>.
-    /// </value>
-    [DefaultValue(true), Category("Appearance")]
-    public virtual bool AutoCenter
-    {
-      get { return _autoCenter; }
-      set
-      {
-        if (_autoCenter != value)
-        {
-          _autoCenter = value;
-          this.OnAutoCenterChanged(EventArgs.Empty);
-        }
-      }
-    }
-
-    /// <summary>
-    ///   Gets or sets if the mouse can be used to pan the control.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if the control can be auto panned; otherwise, <c>false</c>.
-    /// </value>
-    /// <remarks>If this property is set, the SizeToFit property cannot be used.</remarks>
-    [DefaultValue(true), Category("Behavior")]
-    public virtual bool AutoPan
-    {
-      get { return _autoPan; }
-      set
-      {
-        if (_autoPan != value)
-        {
-          _autoPan = value;
-          this.OnAutoPanChanged(EventArgs.Empty);
-
-          if (value)
-            this.SizeToFit = false;
-        }
-      }
-    }
+    #region Overridden Properties
 
     /// <summary>
     ///   Gets or sets a value indicating whether the container enables the user to scroll to any content placed outside of its visible boundaries.
@@ -475,27 +418,16 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   Gets or sets the minimum size of the auto-scroll.
-    /// </summary>
-    /// <value></value>
-    /// <returns>
-    ///   A <see cref="T:System.Drawing.Size" /> that determines the minimum size of the virtual area through which the user can scroll.
-    /// </returns>
-    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public new Size AutoScrollMinSize
-    {
-      get { return base.AutoScrollMinSize; }
-      set { base.AutoScrollMinSize = value; }
-    }
-
-    /// <summary>
     ///   Specifies if the control should auto size to fit the image contents.
     /// </summary>
     /// <value></value>
     /// <returns>
     ///   <c>true</c> if enabled; otherwise, <c>false</c>
     /// </returns>
-    [Browsable(true), EditorBrowsable(EditorBrowsableState.Always), DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), DefaultValue(false)]
+    [Browsable(true)]
+    [EditorBrowsable(EditorBrowsableState.Always)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    [DefaultValue(false)]
     public override bool AutoSize
     {
       get { return base.AutoSize; }
@@ -533,7 +465,9 @@ namespace Cyotek.Windows.Forms
     /// <returns>
     ///   An <see cref="T:System.Drawing.Image" /> that represents the image to display in the background of the control.
     /// </returns>
-    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public override Image BackgroundImage
     {
       get { return base.BackgroundImage; }
@@ -556,7 +490,9 @@ namespace Cyotek.Windows.Forms
     ///     cref="F:System.Windows.Forms.ImageLayout.Zoom" />
     ///   ). <see cref="F:System.Windows.Forms.ImageLayout.Tile" /> is the default value.
     /// </returns>
-    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public override ImageLayout BackgroundImageLayout
     {
       get { return base.BackgroundImageLayout; }
@@ -564,10 +500,498 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    ///   Gets or sets the font of the text displayed by the control.
+    /// </summary>
+    /// <value></value>
+    /// <returns>
+    ///   The <see cref="T:System.Drawing.Font" /> to apply to the text displayed by the control. The default is the value of the
+    ///   <see
+    ///     cref="P:System.Windows.Forms.Control.DefaultFont" />
+    ///   property.
+    /// </returns>
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public override Font Font
+    {
+      get { return base.Font; }
+      set { base.Font = value; }
+    }
+
+    /// <summary>
+    ///   This property is not relevant for this class.
+    /// </summary>
+    /// <value></value>
+    /// <returns>
+    ///   The text associated with this control.
+    /// </returns>
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public override string Text
+    {
+      get { return base.Text; }
+      set { base.Text = value; }
+    }
+
+    #endregion
+
+    #region Overridden Members
+
+    /// <summary>
+    ///   Retrieves the size of a rectangular area into which a control can be fitted.
+    /// </summary>
+    /// <param name="proposedSize">The custom-sized area for a control.</param>
+    /// <returns>
+    ///   An ordered pair of type <see cref="T:System.Drawing.Size" /> representing the width and height of a rectangle.
+    /// </returns>
+    public override Size GetPreferredSize(Size proposedSize)
+    {
+      Size size;
+
+      if (!this.ViewSize.IsEmpty)
+      {
+        int width;
+        int height;
+
+        // get the size of the image
+        width = this.ScaledImageWidth;
+        height = this.ScaledImageHeight;
+
+        // add an offset based on padding
+        width += this.Padding.Horizontal;
+        height += this.Padding.Vertical;
+
+        // add an offset based on the border style
+        width += this.GetImageBorderOffset();
+        height += this.GetImageBorderOffset();
+
+        size = new Size(width, height);
+      }
+      else
+        size = base.GetPreferredSize(proposedSize);
+
+      return size;
+    }
+
+    /// <summary>
+    ///   Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        if (_texture != null)
+        {
+          _texture.Dispose();
+          _texture = null;
+        }
+
+        if (_gridTile != null)
+        {
+          _gridTile.Dispose();
+          _gridTile = null;
+        }
+      }
+      base.Dispose(disposing);
+    }
+
+    /// <summary>
+    ///   Determines whether the specified key is a regular input key or a special key that requires preprocessing.
+    /// </summary>
+    /// <param name="keyData">
+    ///   One of the <see cref="T:System.Windows.Forms.Keys" /> values.
+    /// </param>
+    /// <returns>
+    ///   true if the specified key is a regular input key; otherwise, false.
+    /// </returns>
+    protected override bool IsInputKey(Keys keyData)
+    {
+      bool result;
+
+      if ((keyData & Keys.Right) == Keys.Right | (keyData & Keys.Left) == Keys.Left | (keyData & Keys.Up) == Keys.Up | (keyData & Keys.Down) == Keys.Down)
+        result = true;
+      else
+        result = base.IsInputKey(keyData);
+
+      return result;
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.BackColorChanged" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnBackColorChanged(EventArgs e)
+    {
+      base.OnBackColorChanged(e);
+
+      this.Invalidate();
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="ScrollControl.BorderStyleChanged" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
+    protected override void OnBorderStyleChanged(EventArgs e)
+    {
+      base.OnBorderStyleChanged(e);
+
+      this.AdjustLayout();
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.DockChanged" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnDockChanged(EventArgs e)
+    {
+      base.OnDockChanged(e);
+
+      if (this.Dock != DockStyle.None)
+        this.AutoSize = false;
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.KeyDown" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   A <see cref="T:System.Windows.Forms.KeyEventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+      base.OnKeyDown(e);
+
+      this.ProcessScrollingShortcuts(e);
+
+      if (this.ShortcutsEnabled)
+        this.ProcessImageShortcuts(e);
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.MouseDown" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+      base.OnMouseDown(e);
+
+      if (!this.Focused)
+        this.Focus();
+
+      if (e.Button == MouseButtons.Left && this.SelectionMode != ImageBoxSelectionMode.None)
+        this.SelectionRegion = Rectangle.Empty;
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.MouseMove" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+      base.OnMouseMove(e);
+
+      if (e.Button == MouseButtons.Left)
+      {
+        this.ProcessPanning(e);
+        this.ProcessSelection(e);
+      }
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.MouseUp" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+      bool doNotProcessClick;
+
+      base.OnMouseUp(e);
+
+      doNotProcessClick = this.IsPanning || this.IsSelecting;
+
+      if (this.IsPanning)
+        this.IsPanning = false;
+
+      if (this.IsSelecting)
+        this.EndDrag();
+      this.WasDragCancelled = false;
+
+      if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && !this.IsPanning && !this.SizeToFit)
+      {
+        if (e.Button == MouseButtons.Left && ModifierKeys == Keys.None)
+          this.ProcessMouseZoom(true, e.Location);
+        else if (e.Button == MouseButtons.Right || (e.Button == MouseButtons.Left && ModifierKeys != Keys.None))
+          this.ProcessMouseZoom(false, e.Location);
+      }
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.MouseWheel" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnMouseWheel(MouseEventArgs e)
+    {
+      base.OnMouseWheel(e);
+
+      if (this.AllowZoom && !this.SizeToFit)
+        this.ProcessMouseZoom(e.Delta > 0, e.Location);
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.PaddingChanged" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnPaddingChanged(EventArgs e)
+    {
+      base.OnPaddingChanged(e);
+      this.AdjustLayout();
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.Paint" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   A <see cref="T:System.Windows.Forms.PaintEventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnPaint(PaintEventArgs e)
+    {
+      if (this.AllowPainting)
+      {
+        Rectangle innerRectangle;
+
+        innerRectangle = this.GetInsideViewPort();
+
+        // draw the background
+        using (SolidBrush brush = new SolidBrush(this.BackColor))
+          e.Graphics.FillRectangle(brush, innerRectangle);
+
+        if (_texture != null && this.GridDisplayMode != ImageBoxGridDisplayMode.None)
+        {
+          switch (this.GridDisplayMode)
+          {
+            case ImageBoxGridDisplayMode.Image:
+              Rectangle fillRectangle;
+
+              fillRectangle = this.GetImageViewPort();
+              e.Graphics.FillRectangle(_texture, fillRectangle);
+              break;
+
+            case ImageBoxGridDisplayMode.Client:
+              e.Graphics.FillRectangle(_texture, innerRectangle);
+              break;
+          }
+        }
+
+        // draw the image
+        if (!this.ViewSize.IsEmpty)
+          this.DrawImageBorder(e.Graphics);
+        if (this.VirtualMode)
+          this.OnVirtualDraw(e);
+        else if (this.Image != null)
+          this.DrawImage(e.Graphics);
+
+        // draw the grid
+        if (this.ShowPixelGrid && !this.VirtualMode)
+          this.DrawPixelGrid(e.Graphics);
+
+        // draw the selection
+        if (this.SelectionRegion != Rectangle.Empty)
+          this.DrawSelection(e);
+
+        base.OnPaint(e);
+      }
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.ParentChanged" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnParentChanged(EventArgs e)
+    {
+      base.OnParentChanged(e);
+      this.AdjustLayout();
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.Resize" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnResize(EventArgs e)
+    {
+      this.AdjustLayout();
+
+      base.OnResize(e);
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.ScrollableControl.Scroll" /> event.
+    /// </summary>
+    /// <param name="se">
+    ///   A <see cref="T:System.Windows.Forms.ScrollEventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnScroll(ScrollEventArgs se)
+    {
+      this.Invalidate();
+
+      base.OnScroll(se);
+    }
+
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    ///   Gets or sets a value indicating whether clicking the control with the mouse will automatically zoom in or out.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if clicking the control allows zooming; otherwise, <c>false</c>.
+    /// </value>
+    [DefaultValue(false)]
+    [Category("Behavior")]
+    public virtual bool AllowClickZoom
+    {
+      get { return _allowClickZoom; }
+      set
+      {
+        if (_allowClickZoom != value)
+        {
+          _allowClickZoom = value;
+          this.OnAllowClickZoomChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the DoubleClick event can be raised.
+    /// </summary>
+    /// <value><c>true</c> if the DoubleClick event can be raised; otherwise, <c>false</c>.</value>
+    [Category("Behavior")]
+    [DefaultValue(false)]
+    public virtual bool AllowDoubleClick
+    {
+      get { return _allowDoubleClick; }
+      set
+      {
+        if (this.AllowDoubleClick != value)
+        {
+          _allowDoubleClick = value;
+
+          this.OnAllowDoubleClickChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    ///   Gets or sets a value indicating whether the user can change the zoom level.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if the zoom level can be changed; otherwise, <c>false</c>.
+    /// </value>
+    [Category("Behavior")]
+    [DefaultValue(true)]
+    public virtual bool AllowZoom
+    {
+      get { return _allowZoom; }
+      set
+      {
+        if (this.AllowZoom != value)
+        {
+          _allowZoom = value;
+
+          this.OnAllowZoomChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    ///   Gets or sets a value indicating whether the image is centered where possible.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if the image should be centered where possible; otherwise, <c>false</c>.
+    /// </value>
+    [DefaultValue(true)]
+    [Category("Appearance")]
+    public virtual bool AutoCenter
+    {
+      get { return _autoCenter; }
+      set
+      {
+        if (_autoCenter != value)
+        {
+          _autoCenter = value;
+          this.OnAutoCenterChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    ///   Gets or sets if the mouse can be used to pan the control.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if the control can be auto panned; otherwise, <c>false</c>.
+    /// </value>
+    /// <remarks>If this property is set, the SizeToFit property cannot be used.</remarks>
+    [DefaultValue(true)]
+    [Category("Behavior")]
+    public virtual bool AutoPan
+    {
+      get { return _autoPan; }
+      set
+      {
+        if (_autoPan != value)
+        {
+          _autoPan = value;
+          this.OnAutoPanChanged(EventArgs.Empty);
+
+          if (value)
+            this.SizeToFit = false;
+        }
+      }
+    }
+
+    /// <summary>
+    ///   Gets or sets the minimum size of the auto-scroll.
+    /// </summary>
+    /// <value></value>
+    /// <returns>
+    ///   A <see cref="T:System.Drawing.Size" /> that determines the minimum size of the virtual area through which the user can scroll.
+    /// </returns>
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public new Size AutoScrollMinSize
+    {
+      get { return base.AutoScrollMinSize; }
+      set { base.AutoScrollMinSize = value; }
+    }
+
+    /// <summary>
     ///   Gets or sets the size of the drop shadow.
     /// </summary>
     /// <value>The size of the drop shadow.</value>
-    [Category("Appearance"), DefaultValue(3)]
+    [Category("Appearance")]
+    [DefaultValue(3)]
     public virtual int DropShadowSize
     {
       get { return _dropShadowSize; }
@@ -583,27 +1007,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   Gets or sets the font of the text displayed by the control.
-    /// </summary>
-    /// <value></value>
-    /// <returns>
-    ///   The <see cref="T:System.Drawing.Font" /> to apply to the text displayed by the control. The default is the value of the
-    ///   <see
-    ///     cref="P:System.Windows.Forms.Control.DefaultFont" />
-    ///   property.
-    /// </returns>
-    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public override Font Font
-    {
-      get { return base.Font; }
-      set { base.Font = value; }
-    }
-
-    /// <summary>
     ///   Gets or sets the size of the grid cells.
     /// </summary>
     /// <value>The size of the grid cells.</value>
-    [Category("Appearance"), DefaultValue(8)]
+    [Category("Appearance")]
+    [DefaultValue(8)]
     public virtual int GridCellSize
     {
       get { return _gridCellSize; }
@@ -621,7 +1029,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the color of primary cells in the grid.
     /// </summary>
     /// <value>The color of primary cells in the grid.</value>
-    [Category("Appearance"), DefaultValue(typeof(Color), "Gainsboro")]
+    [Category("Appearance")]
+    [DefaultValue(typeof(Color), "Gainsboro")]
     public virtual Color GridColor
     {
       get { return _gridColor; }
@@ -639,7 +1048,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the color of alternate cells in the grid.
     /// </summary>
     /// <value>The color of alternate cells in the grid.</value>
-    [Category("Appearance"), DefaultValue(typeof(Color), "White")]
+    [Category("Appearance")]
+    [DefaultValue(typeof(Color), "White")]
     public virtual Color GridColorAlternate
     {
       get { return _gridColorAlternate; }
@@ -657,7 +1067,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the grid display mode.
     /// </summary>
     /// <value>The grid display mode.</value>
-    [DefaultValue(ImageBoxGridDisplayMode.Client), Category("Appearance")]
+    [DefaultValue(ImageBoxGridDisplayMode.Client)]
+    [Category("Appearance")]
     public virtual ImageBoxGridDisplayMode GridDisplayMode
     {
       get { return _gridDisplayMode; }
@@ -675,7 +1086,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the grid scale.
     /// </summary>
     /// <value>The grid scale.</value>
-    [DefaultValue(typeof(ImageBoxGridScale), "Small"), Category("Appearance")]
+    [DefaultValue(typeof(ImageBoxGridScale), "Small")]
+    [Category("Appearance")]
     public virtual ImageBoxGridScale GridScale
     {
       get { return _gridScale; }
@@ -693,7 +1105,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the image.
     /// </summary>
     /// <value>The image.</value>
-    [Category("Appearance"), DefaultValue(null)]
+    [Category("Appearance")]
+    [DefaultValue(null)]
     public virtual Image Image
     {
       get { return _image; }
@@ -711,7 +1124,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the color of the image border.
     /// </summary>
     /// <value>The color of the image border.</value>
-    [Category("Appearance"), DefaultValue(typeof(Color), "ControlDark")]
+    [Category("Appearance")]
+    [DefaultValue(typeof(Color), "ControlDark")]
     public virtual Color ImageBorderColor
     {
       get { return _imageBorderColor; }
@@ -730,7 +1144,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the image border style.
     /// </summary>
     /// <value>The image border style.</value>
-    [Category("Appearance"), DefaultValue(typeof(ImageBoxBorderStyle), "None")]
+    [Category("Appearance")]
+    [DefaultValue(typeof(ImageBoxBorderStyle), "None")]
     public virtual ImageBoxBorderStyle ImageBorderStyle
     {
       get { return _imageBorderStyle; }
@@ -749,7 +1164,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the interpolation mode.
     /// </summary>
     /// <value>The interpolation mode.</value>
-    [Category("Appearance"), DefaultValue(InterpolationMode.NearestNeighbor)]
+    [Category("Appearance")]
+    [DefaultValue(InterpolationMode.NearestNeighbor)]
     public virtual InterpolationMode InterpolationMode
     {
       get { return _interpolationMode; }
@@ -772,7 +1188,8 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   <c>true</c> if the mouse should be inverted when panning the control; otherwise, <c>false</c>.
     /// </value>
-    [DefaultValue(false), Category("Behavior")]
+    [DefaultValue(false)]
+    [Category("Behavior")]
     public virtual bool InvertMouse
     {
       get { return _invertMouse; }
@@ -787,12 +1204,24 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Gets a value indicating whether the image is currently being displayed at 100% zoom
+    /// </summary>
+    /// <value><c>true</c> if the image is currently being displayed at 100% zoom; otherwise, <c>false</c>.</value>
+    [Browsable(false)]
+    public virtual bool IsActualSize
+    {
+      get { return this.Zoom == 100; }
+    }
+
+    /// <summary>
     ///   Gets a value indicating whether this control is panning.
     /// </summary>
     /// <value>
     ///   <c>true</c> if this control is panning; otherwise, <c>false</c>.
     /// </value>
-    [DefaultValue(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
+    [DefaultValue(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
     public virtual bool IsPanning
     {
       get { return _isPanning; }
@@ -831,28 +1260,9 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   <c>true</c> if a selection region is currently being drawn; otherwise, <c>false</c>.
     /// </value>
-    [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public virtual bool IsSelecting
-    {
-      get { return _isSelecting; }
-      protected set
-      {
-        if (_isSelecting != value)
-        {
-          CancelEventArgs args;
-
-          args = new CancelEventArgs();
-
-          if (value)
-            this.OnSelecting(args);
-          else
-            this.OnSelected(EventArgs.Empty);
-
-          if (!args.Cancel)
-            _isSelecting = value;
-        }
-      }
-    }
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public virtual bool IsSelecting { get; protected set; }
 
     /// <summary>
     ///   Gets or sets a value indicating whether selection regions should be limited to the image boundaries.
@@ -860,7 +1270,8 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   <c>true</c> if selection regions should be limited to image boundaries; otherwise, <c>false</c>.
     /// </value>
-    [Category("Behavior"), DefaultValue(true)]
+    [Category("Behavior")]
+    [DefaultValue(true)]
     public virtual bool LimitSelectionToImage
     {
       get { return _limitSelectionToImage; }
@@ -875,7 +1286,12 @@ namespace Cyotek.Windows.Forms
       }
     }
 
-    [Category("Appearance"), DefaultValue(typeof(Color), "DimGray")]
+    /// <summary>
+    /// Gets or sets the color of the pixel grid.
+    /// </summary>
+    /// <value>The color of the pixel grid.</value>
+    [Category("Appearance")]
+    [DefaultValue(typeof(Color), "DimGray")]
     public virtual Color PixelGridColor
     {
       get { return _pixelGridColor; }
@@ -891,12 +1307,33 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Gets or sets the minimum size of zoomed pixel's before the pixel grid will be drawn
+    /// </summary>
+    /// <value>The pixel grid threshold.</value>
+    [Category("Behavior")]
+    [DefaultValue(5)]
+    public virtual int PixelGridThreshold
+    {
+      get { return _pixelGridThreshold; }
+      set
+      {
+        if (this.PixelGridThreshold != value)
+        {
+          _pixelGridThreshold = value;
+
+          this.OnPixelGridThresholdChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
     ///   Gets or sets the color of selection regions.
     /// </summary>
     /// <value>
     ///   The color of selection regions.
     /// </value>
-    [Category("Appearance"), DefaultValue(typeof(Color), "Highlight")]
+    [Category("Appearance")]
+    [DefaultValue(typeof(Color), "Highlight")]
     public virtual Color SelectionColor
     {
       get { return _selectionColor; }
@@ -917,7 +1354,8 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   The selection mode.
     /// </value>
-    [Category("Behavior"), DefaultValue(typeof(ImageBoxSelectionMode), "None")]
+    [Category("Behavior")]
+    [DefaultValue(typeof(ImageBoxSelectionMode), "None")]
     public virtual ImageBoxSelectionMode SelectionMode
     {
       get { return _selectionMode; }
@@ -938,7 +1376,8 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   The selection region.
     /// </value>
-    [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual RectangleF SelectionRegion
     {
       get { return _selectionRegion; }
@@ -959,7 +1398,8 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   <c>true</c> to enable the shortcuts; otherwise, <c>false</c>.
     /// </value>
-    [Category("Behavior"), DefaultValue(true)]
+    [Category("Behavior")]
+    [DefaultValue(true)]
     public virtual bool ShortcutsEnabled
     {
       get { return _shortcutsEnabled; }
@@ -974,7 +1414,12 @@ namespace Cyotek.Windows.Forms
       }
     }
 
-    [Category("Appearance"), DefaultValue(false)]
+    /// <summary>
+    /// Gets or sets a value indicating whether a pixel grid is displayed when the control is zoomed.
+    /// </summary>
+    /// <value><c>true</c> if a pixel grid is displayed when the control is zoomed; otherwise, <c>false</c>.</value>
+    [Category("Appearance")]
+    [DefaultValue(false)]
     public virtual bool ShowPixelGrid
     {
       get { return _showPixelGrid; }
@@ -995,7 +1440,8 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   <c>true</c> if the control should size to fit the image contents; otherwise, <c>false</c>.
     /// </value>
-    [DefaultValue(false), Category("Appearance")]
+    [DefaultValue(false)]
+    [Category("Appearance")]
     public virtual bool SizeToFit
     {
       get { return _sizeToFit; }
@@ -1015,20 +1461,6 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   This property is not relevant for this class.
-    /// </summary>
-    /// <value></value>
-    /// <returns>
-    ///   The text associated with this control.
-    /// </returns>
-    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public override string Text
-    {
-      get { return base.Text; }
-      set { base.Text = value; }
-    }
-
-    /// <summary>
     ///   Gets or sets a value indicating whether the control acts as a virtual image box.
     /// </summary>
     /// <value>
@@ -1037,7 +1469,8 @@ namespace Cyotek.Windows.Forms
     /// <remarks>
     ///   When this property is set to <c>true</c>, the Image property is ignored in favor of the VirtualSize property. In addition, the VirtualDraw event is raised to allow custom painting of the image area.
     /// </remarks>
-    [Category("Behavior"), DefaultValue(false)]
+    [Category("Behavior")]
+    [DefaultValue(false)]
     public virtual bool VirtualMode
     {
       get { return _virtualMode; }
@@ -1056,7 +1489,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the size of the virtual image.
     /// </summary>
     /// <value>The size of the virtual image.</value>
-    [Category("Appearance"), DefaultValue(typeof(Size), "0, 0")]
+    [Category("Appearance")]
+    [DefaultValue(typeof(Size), "0, 0")]
     public virtual Size VirtualSize
     {
       get { return _virtualSize; }
@@ -1075,16 +1509,17 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the zoom.
     /// </summary>
     /// <value>The zoom.</value>
-    [DefaultValue(100), Category("Appearance")]
+    [DefaultValue(100)]
+    [Category("Appearance")]
     public virtual int Zoom
     {
       get { return _zoom; }
       set
       {
-        if (value < ImageBox.MinZoom)
-          value = ImageBox.MinZoom;
-        else if (value > ImageBox.MaxZoom)
-          value = ImageBox.MaxZoom;
+        if (value < MinZoom)
+          value = MinZoom;
+        else if (value > MaxZoom)
+          value = MaxZoom;
 
         if (_zoom != value)
         {
@@ -1098,7 +1533,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets the zoom factor.
     /// </summary>
     /// <value>The zoom factor.</value>
-    [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual double ZoomFactor
     {
       get { return (double)this.Zoom / 100; }
@@ -1108,7 +1544,8 @@ namespace Cyotek.Windows.Forms
     ///   Gets or sets the zoom levels.
     /// </summary>
     /// <value>The zoom levels.</value>
-    [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden) /*Category("Behavior"), DefaultValue(typeof(ZoomLevelCollection), "7, 10, 15, 20, 25, 30, 50, 70, 100, 150, 200, 300, 400, 500, 600, 700, 800, 1200, 1600")*/]
+    [Browsable(false) /*Category("Behavior"), DefaultValue(typeof(ZoomLevelCollection), "7, 10, 15, 20, 25, 30, 50, 70, 100, 150, 200, 300, 400, 500, 600, 700, 800, 1200, 1600")*/]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual ZoomLevelCollection ZoomLevels
     {
       get { return _zoomLevels; }
@@ -1152,10 +1589,20 @@ namespace Cyotek.Windows.Forms
       get { return Convert.ToInt32(this.ViewSize.Width * this.ZoomFactor); }
     }
 
+    /// <summary>
+    /// Gets the size of the view.
+    /// </summary>
+    /// <value>The size of the view.</value>
     protected virtual Size ViewSize
     {
       get { return this.VirtualMode ? this.VirtualSize : this.Image != null ? this.Image.Size : Size.Empty; }
     }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether a drag operation was cancelled.
+    /// </summary>
+    /// <value><c>true</c> if the drag operation was cancelled; otherwise, <c>false</c>.</value>
+    protected bool WasDragCancelled { get; set; }
 
     #endregion
 
@@ -1366,6 +1813,16 @@ namespace Cyotek.Windows.Forms
       return new Point((int)offset.X, (int)offset.Y);
     }
 
+    public Point GetOffsetPoint(int x, int y)
+    {
+      return this.GetOffsetPoint(new Point(x, y));
+    }
+
+    public PointF GetOffsetPoint(float x, float y)
+    {
+      return this.GetOffsetPoint(new PointF(x, y));
+    }
+
     /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.PointF" /> repositioned to include the current image offset and scaled by the current zoom level
     /// </summary>
@@ -1424,42 +1881,6 @@ namespace Cyotek.Windows.Forms
       offsetY = viewport.Top + this.Padding.Top + this.AutoScrollPosition.Y;
 
       return new Rectangle(new Point(scaled.Left + offsetX, scaled.Top + offsetY), scaled.Size);
-    }
-
-    /// <summary>
-    ///   Retrieves the size of a rectangular area into which a control can be fitted.
-    /// </summary>
-    /// <param name="proposedSize">The custom-sized area for a control.</param>
-    /// <returns>
-    ///   An ordered pair of type <see cref="T:System.Drawing.Size" /> representing the width and height of a rectangle.
-    /// </returns>
-    public override Size GetPreferredSize(Size proposedSize)
-    {
-      Size size;
-
-      if (!this.ViewSize.IsEmpty)
-      {
-        int width;
-        int height;
-
-        // get the size of the image
-        width = this.ScaledImageWidth;
-        height = this.ScaledImageHeight;
-
-        // add an offset based on padding
-        width += this.Padding.Horizontal;
-        height += this.Padding.Vertical;
-
-        // add an offset based on the border style
-        width += this.GetImageBorderOffset();
-        height += this.GetImageBorderOffset();
-
-        size = new Size(width, height);
-      }
-      else
-        size = base.GetPreferredSize(proposedSize);
-
-      return size;
     }
 
     /// <summary>
@@ -1847,6 +2268,10 @@ namespace Cyotek.Windows.Forms
         case ImageBoxGridScale.Large:
           scale = 2;
           break;
+        case ImageBoxGridScale.Tiny:
+          scale = 0.5F;
+          break;
+
         default:
           scale = 1;
           break;
@@ -1854,30 +2279,7 @@ namespace Cyotek.Windows.Forms
 
       cellSize = (int)(cellSize * scale);
 
-      return ImageBox.CreateCheckerBoxTile(cellSize, firstColor, secondColor);
-    }
-
-    /// <summary>
-    ///   Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        if (_texture != null)
-        {
-          _texture.Dispose();
-          _texture = null;
-        }
-
-        if (_gridTile != null)
-        {
-          _gridTile.Dispose();
-          _gridTile = null;
-        }
-      }
-      base.Dispose(disposing);
+      return CreateCheckerBoxTile(cellSize, firstColor, secondColor);
     }
 
     /// <summary>
@@ -1894,7 +2296,12 @@ namespace Cyotek.Windows.Forms
       bottomEdge = new Rectangle(viewPort.Left + this.DropShadowSize, viewPort.Bottom + 1, viewPort.Width + 1, this.DropShadowSize);
 
       using (Brush brush = new SolidBrush(this.ImageBorderColor))
-        g.FillRectangles(brush, new[] { rightEdge, bottomEdge });
+      {
+        g.FillRectangles(brush, new[]
+        {
+          rightEdge, bottomEdge
+        });
+      }
     }
 
     /// <summary>
@@ -1923,7 +2330,10 @@ namespace Cyotek.Windows.Forms
 
           alpha = feather - ((feather / glowSize) * i);
 
-          using (Pen pen = new Pen(Color.FromArgb(alpha, this.ImageBorderColor), i) { LineJoin = LineJoin.Round })
+          using (Pen pen = new Pen(Color.FromArgb(alpha, this.ImageBorderColor), i)
+          {
+            LineJoin = LineJoin.Round
+          })
             g.DrawPath(pen, path);
         }
       }
@@ -1995,7 +2405,7 @@ namespace Cyotek.Windows.Forms
 
       pixelSize = (float)this.ZoomFactor;
 
-      if (pixelSize > ImageBox.PixelGridThreshold)
+      if (pixelSize > this.PixelGridThreshold)
       {
         Rectangle viewport;
         float offsetX;
@@ -2005,7 +2415,10 @@ namespace Cyotek.Windows.Forms
         offsetX = Math.Abs(this.AutoScrollPosition.X) % pixelSize;
         offsetY = Math.Abs(this.AutoScrollPosition.Y) % pixelSize;
 
-        using (Pen pen = new Pen(this.PixelGridColor) { DashStyle = DashStyle.Dot })
+        using (Pen pen = new Pen(this.PixelGridColor)
+        {
+          DashStyle = DashStyle.Dot
+        })
         {
           for (float x = viewport.Left + pixelSize - offsetX; x < viewport.Right; x += pixelSize)
             g.DrawLine(pen, x, viewport.Top, x, viewport.Bottom);
@@ -2041,6 +2454,12 @@ namespace Cyotek.Windows.Forms
       e.Graphics.ResetClip();
     }
 
+    protected virtual void EndDrag()
+    {
+      this.IsSelecting = false;
+      this.OnSelected(EventArgs.Empty);
+    }
+
     /// <summary>
     ///   Gets an offset based on the current image border style.
     /// </summary>
@@ -2064,27 +2483,6 @@ namespace Cyotek.Windows.Forms
       }
 
       return offset;
-    }
-
-    /// <summary>
-    ///   Determines whether the specified key is a regular input key or a special key that requires preprocessing.
-    /// </summary>
-    /// <param name="keyData">
-    ///   One of the <see cref="T:System.Windows.Forms.Keys" /> values.
-    /// </param>
-    /// <returns>
-    ///   true if the specified key is a regular input key; otherwise, false.
-    /// </returns>
-    protected override bool IsInputKey(Keys keyData)
-    {
-      bool result;
-
-      if ((keyData & Keys.Right) == Keys.Right | (keyData & Keys.Left) == Keys.Left | (keyData & Keys.Up) == Keys.Up | (keyData & Keys.Down) == Keys.Down)
-        result = true;
-      else
-        result = base.IsInputKey(keyData);
-
-      return result;
     }
 
     /// <summary>
@@ -2170,46 +2568,6 @@ namespace Cyotek.Windows.Forms
 
       if (handler != null)
         handler(this, e);
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.BackColorChanged" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnBackColorChanged(EventArgs e)
-    {
-      base.OnBackColorChanged(e);
-
-      this.Invalidate();
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="ScrollControl.BorderStyleChanged" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   The <see cref="EventArgs" /> instance containing the event data.
-    /// </param>
-    protected override void OnBorderStyleChanged(EventArgs e)
-    {
-      base.OnBorderStyleChanged(e);
-
-      this.AdjustLayout();
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.DockChanged" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnDockChanged(EventArgs e)
-    {
-      base.OnDockChanged(e);
-
-      if (this.Dock != DockStyle.None)
-        this.AutoSize = false;
     }
 
     /// <summary>
@@ -2410,22 +2768,6 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.KeyDown" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   A <see cref="T:System.Windows.Forms.KeyEventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnKeyDown(KeyEventArgs e)
-    {
-      base.OnKeyDown(e);
-
-      this.ProcessScrollingShortcuts(e);
-
-      if (this.ShortcutsEnabled)
-        this.ProcessImageShortcuts(e);
-    }
-
-    /// <summary>
     ///   Raises the <see cref="LimitSelectionToImageChanged" /> event.
     /// </summary>
     /// <param name="e">
@@ -2439,150 +2781,6 @@ namespace Cyotek.Windows.Forms
 
       if (handler != null)
         handler(this, e);
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.MouseDown" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnMouseDown(MouseEventArgs e)
-    {
-      base.OnMouseDown(e);
-
-      if (!this.Focused)
-        this.Focus();
-
-      if (e.Button == MouseButtons.Left && this.SelectionMode != ImageBoxSelectionMode.None)
-        this.SelectionRegion = Rectangle.Empty;
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.MouseMove" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnMouseMove(MouseEventArgs e)
-    {
-      base.OnMouseMove(e);
-
-      if (e.Button == MouseButtons.Left)
-      {
-        this.ProcessPanning(e);
-        this.ProcessSelection(e);
-      }
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.MouseUp" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnMouseUp(MouseEventArgs e)
-    {
-      bool doNotProcessClick;
-
-      base.OnMouseUp(e);
-
-      doNotProcessClick = this.IsPanning || this.IsSelecting;
-
-      if (this.IsPanning)
-        this.IsPanning = false;
-
-      if (this.IsSelecting)
-        this.IsSelecting = false;
-
-      if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && !this.IsPanning && !this.SizeToFit)
-      {
-        if (e.Button == MouseButtons.Left && Control.ModifierKeys == Keys.None)
-          this.ProcessMouseZoom(true, e.Location);
-        else if (e.Button == MouseButtons.Right || (e.Button == MouseButtons.Left && Control.ModifierKeys != Keys.None))
-          this.ProcessMouseZoom(false, e.Location);
-      }
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.MouseWheel" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnMouseWheel(MouseEventArgs e)
-    {
-      base.OnMouseWheel(e);
-
-      if (this.AllowZoom && !this.SizeToFit)
-        this.ProcessMouseZoom(e.Delta > 0, e.Location);
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.PaddingChanged" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnPaddingChanged(System.EventArgs e)
-    {
-      base.OnPaddingChanged(e);
-      this.AdjustLayout();
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.Paint" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   A <see cref="T:System.Windows.Forms.PaintEventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnPaint(PaintEventArgs e)
-    {
-      if (this.AllowPainting)
-      {
-        Rectangle innerRectangle;
-
-        innerRectangle = this.GetInsideViewPort();
-
-        // draw the background
-        using (SolidBrush brush = new SolidBrush(this.BackColor))
-          e.Graphics.FillRectangle(brush, innerRectangle);
-
-        if (_texture != null && this.GridDisplayMode != ImageBoxGridDisplayMode.None)
-        {
-          switch (this.GridDisplayMode)
-          {
-            case ImageBoxGridDisplayMode.Image:
-              Rectangle fillRectangle;
-
-              fillRectangle = this.GetImageViewPort();
-              e.Graphics.FillRectangle(_texture, fillRectangle);
-              break;
-
-            case ImageBoxGridDisplayMode.Client:
-              e.Graphics.FillRectangle(_texture, innerRectangle);
-              break;
-          }
-        }
-
-        // draw the image
-        if (!this.ViewSize.IsEmpty)
-          this.DrawImageBorder(e.Graphics);
-        if (this.VirtualMode)
-          this.OnVirtualDraw(e);
-        else if (this.Image != null)
-          this.DrawImage(e.Graphics);
-
-        // draw the grid
-        if (this.ShowPixelGrid && !this.VirtualMode)
-          this.DrawPixelGrid(e.Graphics);
-
-        // draw the selection
-        if (this.SelectionRegion != Rectangle.Empty)
-          this.DrawSelection(e);
-
-        base.OnPaint(e);
-      }
     }
 
     /// <summary>
@@ -2618,18 +2816,6 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.ParentChanged" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnParentChanged(System.EventArgs e)
-    {
-      base.OnParentChanged(e);
-      this.AdjustLayout();
-    }
-
-    /// <summary>
     ///   Raises the <see cref="PixelGridColorChanged" /> event.
     /// </summary>
     /// <param name="e">
@@ -2648,29 +2834,17 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.Resize" /> event.
+    /// Raises the <see cref="PixelGridThresholdChanged" /> event.
     /// </summary>
-    /// <param name="e">
-    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnResize(EventArgs e)
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnPixelGridThresholdChanged(EventArgs e)
     {
-      this.AdjustLayout();
+      EventHandler handler;
 
-      base.OnResize(e);
-    }
+      handler = this.PixelGridThresholdChanged;
 
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.ScrollableControl.Scroll" /> event.
-    /// </summary>
-    /// <param name="se">
-    ///   A <see cref="T:System.Windows.Forms.ScrollEventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnScroll(ScrollEventArgs se)
-    {
-      this.Invalidate();
-
-      base.OnScroll(se);
+      if (handler != null)
+        handler(this, e);
     }
 
     /// <summary>
@@ -2686,7 +2860,7 @@ namespace Cyotek.Windows.Forms
       switch (this.SelectionMode)
       {
         case ImageBoxSelectionMode.Zoom:
-          if (this.SelectionRegion.Width > ImageBox.SelectionDeadZone && this.SelectionRegion.Height > ImageBox.SelectionDeadZone)
+          if (this.SelectionRegion.Width > SelectionDeadZone && this.SelectionRegion.Height > SelectionDeadZone)
           {
             this.ZoomToRegion(this.SelectionRegion);
             this.SelectionRegion = RectangleF.Empty;
@@ -2706,9 +2880,9 @@ namespace Cyotek.Windows.Forms
     /// <param name="e">
     ///   The <see cref="System.EventArgs" /> instance containing the event data.
     /// </param>
-    protected virtual void OnSelecting(CancelEventArgs e)
+    protected virtual void OnSelecting(ImageBoxCancelEventArgs e)
     {
-      EventHandler<CancelEventArgs> handler;
+      EventHandler<ImageBoxCancelEventArgs> handler;
 
       handler = this.Selecting;
 
@@ -3037,13 +3211,10 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected virtual void ProcessSelection(MouseEventArgs e)
     {
-      if (this.SelectionMode != ImageBoxSelectionMode.None)
+      if (this.SelectionMode != ImageBoxSelectionMode.None && e.Button == MouseButtons.Left && !this.WasDragCancelled)
       {
         if (!this.IsSelecting)
-        {
-          _startMousePosition = e.Location;
-          this.IsSelecting = true;
-        }
+          this.StartDrag(e);
 
         if (this.IsSelecting)
         {
@@ -3093,6 +3264,20 @@ namespace Cyotek.Windows.Forms
           this.SelectionRegion = selection;
         }
       }
+    }
+
+    protected virtual void StartDrag(MouseEventArgs e)
+    {
+      ImageBoxCancelEventArgs args;
+
+      args = new ImageBoxCancelEventArgs(e.Location);
+
+      this.OnSelecting(args);
+
+      this.WasDragCancelled = args.Cancel;
+      this.IsSelecting = !args.Cancel;
+      if (this.IsSelecting)
+        _startMousePosition = e.Location;
     }
 
     /// <summary>

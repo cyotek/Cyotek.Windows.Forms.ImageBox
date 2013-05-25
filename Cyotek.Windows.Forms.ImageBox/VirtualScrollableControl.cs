@@ -67,6 +67,79 @@ namespace Cyotek.Windows.Forms
 
     #endregion
 
+    #region Overridden Members
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.Resize" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnResize(EventArgs e)
+    {
+      base.OnResize(e);
+
+      this.AdjustScrollbars();
+
+      if (this.AutoScroll && !this.AutoScrollPosition.IsEmpty)
+      {
+        int xOffset;
+        int yOffset;
+        Rectangle scrollArea;
+
+        scrollArea = this.ScrollArea;
+        xOffset = scrollArea.Right - this.DisplayRectangle.Right;
+        yOffset = scrollArea.Bottom - this.DisplayRectangle.Bottom;
+
+        if (this.AutoScrollPosition.Y < 0 && yOffset < 0)
+          yOffset = Math.Max(yOffset, this.AutoScrollPosition.Y);
+        else
+          yOffset = 0;
+
+        if (this.AutoScrollPosition.X < 0 && xOffset < 0)
+          xOffset = Math.Max(xOffset, this.AutoScrollPosition.X);
+        else
+          xOffset = 0;
+
+        this.ScrollByOffset(new Size(xOffset, yOffset));
+      }
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="Scroll" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   The <see cref="ScrollEventArgs" /> instance containing the event data.
+    /// </param>
+    protected override void OnScroll(ScrollEventArgs e)
+    {
+      if (e.Type != ScrollEventType.EndScroll)
+      {
+        if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
+          this.ScrollByOffset(new Size(e.NewValue + this.AutoScrollPosition.X, 0));
+        else if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
+          this.ScrollByOffset(new Size(0, e.NewValue + this.AutoScrollPosition.Y));
+      }
+
+      base.OnScroll(e);
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="System.Windows.Forms.Control.VisibleChanged" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
+    protected override void OnVisibleChanged(EventArgs e)
+    {
+      if (base.Visible)
+        base.PerformLayout();
+
+      base.OnVisibleChanged(e);
+    }
+
+    #endregion
+
     #region Properties
 
     /// <summary>
@@ -75,7 +148,8 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   <c>true</c> if the container enables auto-scrolling; otherwise, <c>false</c>.
     /// </value>
-    [Category("Layout"), DefaultValue(true)]
+    [Category("Layout")]
+    [DefaultValue(true)]
     public virtual bool AutoScroll
     {
       get { return _autoScroll; }
@@ -97,7 +171,8 @@ namespace Cyotek.Windows.Forms
     ///   A <see cref="T:System.Drawing.Size" /> that represents the height and width of the auto-scroll margin in pixels.
     /// </value>
     /// <exception cref="System.ArgumentOutOfRangeException"></exception>
-    [Category("Layout"), DefaultValue(typeof(Size), "0, 0")]
+    [Category("Layout")]
+    [DefaultValue(typeof(Size), "0, 0")]
     public virtual Size AutoScrollMargin
     {
       get { return _autoScrollMargin; }
@@ -123,7 +198,8 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   A <see cref="T:System.Drawing.Size" /> that determines the minimum size of the virtual area through which the user can scroll.
     /// </value>
-    [Category("Layout"), DefaultValue(typeof(Size), "0, 0")]
+    [Category("Layout")]
+    [DefaultValue(typeof(Size), "0, 0")]
     public virtual Size AutoScrollMinSize
     {
       get { return _autoScrollMinSize; }
@@ -144,7 +220,8 @@ namespace Cyotek.Windows.Forms
     /// <value>
     ///   A <see cref="T:System.Drawing.Point" /> that represents the auto-scroll position in pixels.
     /// </value>
-    [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual Point AutoScrollPosition
     {
       get { return _autoScrollPosition; }
@@ -305,75 +382,6 @@ namespace Cyotek.Windows.Forms
 
       if (handler != null)
         handler(this, e);
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.Resize" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnResize(EventArgs e)
-    {
-      base.OnResize(e);
-
-      this.AdjustScrollbars();
-
-      if (this.AutoScroll && !this.AutoScrollPosition.IsEmpty)
-      {
-        int xOffset;
-        int yOffset;
-        Rectangle scrollArea;
-
-        scrollArea = this.ScrollArea;
-        xOffset = scrollArea.Right - this.DisplayRectangle.Right;
-        yOffset = scrollArea.Bottom - this.DisplayRectangle.Bottom;
-
-        if (this.AutoScrollPosition.Y < 0 && yOffset < 0)
-          yOffset = Math.Max(yOffset, this.AutoScrollPosition.Y);
-        else
-          yOffset = 0;
-
-        if (this.AutoScrollPosition.X < 0 && xOffset < 0)
-          xOffset = Math.Max(xOffset, this.AutoScrollPosition.X);
-        else
-          xOffset = 0;
-
-        this.ScrollByOffset(new Size(xOffset, yOffset));
-      }
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="Scroll" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   The <see cref="ScrollEventArgs" /> instance containing the event data.
-    /// </param>
-    protected override void OnScroll(ScrollEventArgs e)
-    {
-      if (e.Type != ScrollEventType.EndScroll)
-      {
-        if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
-          this.ScrollByOffset(new Size(e.NewValue + this.AutoScrollPosition.X, 0));
-        else if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-          this.ScrollByOffset(new Size(0, e.NewValue + this.AutoScrollPosition.Y));
-      }
-
-      base.OnScroll(e);
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.Control.VisibleChanged" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnVisibleChanged(EventArgs e)
-    {
-      if (base.Visible)
-        base.PerformLayout();
-
-      base.OnVisibleChanged(e);
     }
 
     /// <summary>
