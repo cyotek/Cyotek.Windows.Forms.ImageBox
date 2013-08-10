@@ -4,7 +4,16 @@ using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  public partial class DragTestForm : BaseForm
+  // Cyotek ImageBox
+  // Copyright (c) 2010-2013 Cyotek.
+  // http://cyotek.com
+  // http://cyotek.com/blog/tag/imagebox
+
+  // Licensed under the MIT License. See imagebox-license.txt for the full text.
+
+  // If you use this control in your applications, attribution, donations or contributions are welcome.
+
+  internal partial class DragTestForm : BaseForm
   {
     #region Instance Fields
 
@@ -28,6 +37,16 @@ namespace Cyotek.Windows.Forms.Demo
     #endregion
 
     #region Event Handlers
+
+    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      AboutDialog.ShowAboutDialog();
+    }
+
+    private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      this.Close();
+    }
 
     private void imageBox_MouseDown(object sender, MouseEventArgs e)
     {

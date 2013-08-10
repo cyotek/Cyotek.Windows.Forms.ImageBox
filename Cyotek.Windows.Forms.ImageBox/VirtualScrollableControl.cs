@@ -7,6 +7,9 @@ using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms
 {
+  /// <summary>
+  /// Defines a base class for controls that support auto-scrolling behavior.
+  /// </summary>
   [ToolboxItem(false)]
   public class VirtualScrollableControl : ScrollControl
   {
@@ -106,7 +109,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   Raises the <see cref="Scroll" /> event.
+    ///   Raises the <see cref="ScrollControl.Scroll" /> event.
     /// </summary>
     /// <param name="e">
     ///   The <see cref="ScrollEventArgs" /> instance containing the event data.
@@ -115,10 +118,15 @@ namespace Cyotek.Windows.Forms
     {
       if (e.Type != ScrollEventType.EndScroll)
       {
-        if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
-          this.ScrollByOffset(new Size(e.NewValue + this.AutoScrollPosition.X, 0));
-        else if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-          this.ScrollByOffset(new Size(0, e.NewValue + this.AutoScrollPosition.Y));
+        switch (e.ScrollOrientation)
+        {
+          case ScrollOrientation.HorizontalScroll:
+            this.ScrollByOffset(new Size(e.NewValue + this.AutoScrollPosition.X, 0));
+            break;
+          case ScrollOrientation.VerticalScroll:
+            this.ScrollByOffset(new Size(0, e.NewValue + this.AutoScrollPosition.Y));
+            break;
+        }
       }
 
       base.OnScroll(e);

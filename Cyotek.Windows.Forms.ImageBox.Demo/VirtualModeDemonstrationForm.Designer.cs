@@ -31,9 +31,16 @@
       this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.splitContainer = new System.Windows.Forms.SplitContainer();
       this.propertyGrid = new Cyotek.Windows.Forms.PropertyGrid();
+      this.statusStrip = new System.Windows.Forms.StatusStrip();
+      this.menuStrip = new System.Windows.Forms.MenuStrip();
+      this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.splitContainer.Panel1.SuspendLayout();
       this.splitContainer.Panel2.SuspendLayout();
       this.splitContainer.SuspendLayout();
+      this.menuStrip.SuspendLayout();
       this.SuspendLayout();
       // 
       // imageBox
@@ -42,7 +49,7 @@
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
       this.imageBox.SelectionMode = Cyotek.Windows.Forms.ImageBoxSelectionMode.Rectangle;
-      this.imageBox.Size = new System.Drawing.Size(543, 373);
+      this.imageBox.Size = new System.Drawing.Size(543, 327);
       this.imageBox.TabIndex = 0;
       this.imageBox.VirtualMode = true;
       this.imageBox.VirtualSize = new System.Drawing.Size(300, 200);
@@ -52,7 +59,7 @@
       // 
       this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
       this.splitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-      this.splitContainer.Location = new System.Drawing.Point(0, 0);
+      this.splitContainer.Location = new System.Drawing.Point(0, 24);
       this.splitContainer.Name = "splitContainer";
       // 
       // splitContainer.Panel1
@@ -62,7 +69,7 @@
       // splitContainer.Panel2
       // 
       this.splitContainer.Panel2.Controls.Add(this.imageBox);
-      this.splitContainer.Size = new System.Drawing.Size(847, 373);
+      this.splitContainer.Size = new System.Drawing.Size(847, 327);
       this.splitContainer.SplitterDistance = 300;
       this.splitContainer.TabIndex = 0;
       // 
@@ -72,8 +79,58 @@
       this.propertyGrid.Location = new System.Drawing.Point(0, 0);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(300, 373);
+      this.propertyGrid.Size = new System.Drawing.Size(300, 327);
       this.propertyGrid.TabIndex = 0;
+      // 
+      // statusStrip
+      // 
+      this.statusStrip.Location = new System.Drawing.Point(0, 351);
+      this.statusStrip.Name = "statusStrip";
+      this.statusStrip.Size = new System.Drawing.Size(847, 22);
+      this.statusStrip.TabIndex = 8;
+      
+      // 
+      // menuStrip
+      // 
+      this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.helpToolStripMenuItem});
+      this.menuStrip.Location = new System.Drawing.Point(0, 0);
+      this.menuStrip.Name = "menuStrip";
+      this.menuStrip.Size = new System.Drawing.Size(847, 24);
+      this.menuStrip.TabIndex = 7;
+      
+      // 
+      // fileToolStripMenuItem
+      // 
+      this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.closeToolStripMenuItem});
+      this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+      this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+      this.fileToolStripMenuItem.Text = "&File";
+      // 
+      // closeToolStripMenuItem
+      // 
+      this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+      this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
+      this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.closeToolStripMenuItem.Text = "&Close";
+      this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+      // 
+      // helpToolStripMenuItem
+      // 
+      this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+      this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+      this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+      this.helpToolStripMenuItem.Text = "&Help";
+      // 
+      // aboutToolStripMenuItem
+      // 
+      this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.aboutToolStripMenuItem.Text = "&About...";
+      this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
       // 
       // VirtualModeDemonstrationForm
       // 
@@ -81,13 +138,18 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(847, 373);
       this.Controls.Add(this.splitContainer);
+      this.Controls.Add(this.statusStrip);
+      this.Controls.Add(this.menuStrip);
       this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.Name = "VirtualModeDemonstrationForm";
       this.Text = "Virtual Mode Demonstration";
       this.splitContainer.Panel1.ResumeLayout(false);
       this.splitContainer.Panel2.ResumeLayout(false);
       this.splitContainer.ResumeLayout(false);
+      this.menuStrip.ResumeLayout(false);
+      this.menuStrip.PerformLayout();
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
@@ -96,5 +158,11 @@
     private ImageBox imageBox;
     private System.Windows.Forms.SplitContainer splitContainer;
     private PropertyGrid propertyGrid;
+    private System.Windows.Forms.StatusStrip statusStrip;
+    private System.Windows.Forms.MenuStrip menuStrip;
+    private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
   }
 }

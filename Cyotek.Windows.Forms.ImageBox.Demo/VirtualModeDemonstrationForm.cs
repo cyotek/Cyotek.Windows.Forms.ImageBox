@@ -4,7 +4,16 @@ using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  public partial class VirtualModeDemonstrationForm : BaseForm
+  // Cyotek ImageBox
+  // Copyright (c) 2010-2013 Cyotek.
+  // http://cyotek.com
+  // http://cyotek.com/blog/tag/imagebox
+
+  // Licensed under the MIT License. See imagebox-license.txt for the full text.
+
+  // If you use this control in your applications, attribution, donations or contributions are welcome.
+
+  internal partial class VirtualModeDemonstrationForm : BaseForm
   {
     #region Constructors
 
@@ -27,6 +36,16 @@ namespace Cyotek.Windows.Forms.Demo
     #endregion
 
     #region Event Handlers
+
+    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      AboutDialog.ShowAboutDialog();
+    }
+
+    private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      this.Close();
+    }
 
     private void imageBox_VirtualDraw(object sender, PaintEventArgs e)
     {

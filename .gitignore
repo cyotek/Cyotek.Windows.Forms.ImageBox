@@ -161,3 +161,13 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+# Extra maps
+maps/map60.jpg
+maps/map70.jpg
+maps/map80.jpg
+maps/map90.jpg
+maps/map100.jpg
+
+optimizeimages.bat
+nuget/

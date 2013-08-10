@@ -11,7 +11,8 @@
     <AssemblyName>imgbxdmo</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -56,6 +57,18 @@
     <Compile Include="BaseForm.Designer.cs">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AnimatedGifDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnimatedGifDemoForm.Designer.cs">
+      <DependentUpon>AnimatedGifDemoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TextDemoForm.Designer.cs">
+      <DependentUpon>TextDemoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DragTestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +112,24 @@
     <Compile Include="AboutDialog.designer.cs">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ScaledAdornmentsDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScaledAdornmentsDemoForm.Designer.cs">
+      <DependentUpon>ScaledAdornmentsDemoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SizeModeDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SizeModeDemoForm.Designer.cs">
+      <DependentUpon>SizeModeDemoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SwitchImageDuringZoomDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SwitchImageDuringZoomDemoForm.Designer.cs">
+      <DependentUpon>SwitchImageDuringZoomDemoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="VirtualModeDemonstrationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +141,8 @@
     <Content Include="..\icon.ico">
       <Link>icon.ico</Link>
     </Content>
+    <None Include="Resources\map.png" />
+    <Content Include="Resources\MapMarker.png" />
     <Content Include="Resources\cursor.png" />
     <None Include="Resources\icon-32.png" />
     <None Include="Resources\grid-dot.png" />
@@ -120,16 +153,25 @@
     <Content Include="Resources\magnifier-zoom-out.png" />
     <Content Include="Resources\magnifier-zoom.png" />
     <None Include="Resources\monitor-sidebar.png" />
+    <Content Include="Resources\Newtons_cradle_animation_book_2.gif" />
     <Content Include="Resources\Object Position.ico" />
     <Content Include="Resources\Object Size.ico" />
     <Content Include="Resources\sample.jpg" />
+    <None Include="Resources\samplecrop.png" />
     <Content Include="Resources\selection-select.png" />
     <Content Include="Resources\selection.png" />
+    <Content Include="Resources\The_Legendary_Treasure_Map_by_Bogbrush.png" />
     <Content Include="Resources\zone.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BaseForm.resx">
       <DependentUpon>BaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AnimatedGifDemoForm.resx">
+      <DependentUpon>AnimatedGifDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextDemoForm.resx">
+      <DependentUpon>TextDemoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DragTestForm.resx">
       <DependentUpon>DragTestForm.cs</DependentUpon>
@@ -145,11 +187,20 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="AboutDialog.resx">
       <DependentUpon>AboutDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScaledAdornmentsDemoForm.resx">
+      <DependentUpon>ScaledAdornmentsDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SizeModeDemoForm.resx">
+      <DependentUpon>SizeModeDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SwitchImageDuringZoomDemoForm.resx">
+      <DependentUpon>SwitchImageDuringZoomDemoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VirtualModeDemonstrationForm.resx">
       <DependentUpon>VirtualModeDemonstrationForm.cs</DependentUpon>
@@ -165,6 +216,9 @@
     <None Include="cyopublic.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rem copy /y $(SolutionDir)$(SolutionName).Design\$(OutDir)$(SolutionName).Design.* $(TargetDir)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

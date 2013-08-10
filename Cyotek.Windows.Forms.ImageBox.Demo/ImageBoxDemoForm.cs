@@ -7,19 +7,15 @@ using Cyotek.Windows.Forms.Demo.Properties;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2013 Cyotek. All Rights Reserved.
+  // Copyright (c) 2010-2013 Cyotek.
   // http://cyotek.com
-
-  // If you use this control in your applications, attribution or donations are welcome.
-
-  // ImageBox sample project
   // http://cyotek.com/blog/tag/imagebox
 
-  // Preview image based on Glyfz sampler - http://www.glyfz.com/sampler.htm
-  // Large preview image from http://www.crazythemes.com/colorful-abstract-widescreen-wallpapers-vol2/2153
-  // Toolbar icons from Fugue Icons - http://p.yusukekamiyamane.com/
+  // Licensed under the MIT License. See imagebox-license.txt for the full text.
 
-  public partial class ImageBoxDemoForm : BaseForm
+  // If you use this control in your applications, attribution, donations or contributions are welcome.
+
+  internal partial class ImageBoxDemoForm : BaseForm
   {
     #region Instance Fields
 
@@ -78,16 +74,6 @@ namespace Cyotek.Windows.Forms.Demo
         zoomLevelsToolStripComboBox.Items.Add(string.Format("{0}%", zoom));
     }
 
-    private string FormatPoint(Point point)
-    {
-      return string.Format("X:{0}, Y:{1}", point.X, point.Y);
-    }
-
-    private string FormatRectangle(RectangleF rect)
-    {
-      return string.Format("X:{0}, Y:{1}, W:{2}, H:{3}", (int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
-    }
-
     private void OpenImage(Image image)
     {
       imageBox.Image = image;
@@ -133,8 +119,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      using (Form dialog = new AboutDialog())
-        dialog.ShowDialog(this);
+      AboutDialog.ShowAboutDialog();
     }
 
     private void actualSizeToolStripButton_Click(object sender, EventArgs e)
@@ -232,12 +217,6 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void pixelGridToolStripButton_Click(object sender, EventArgs e)
-    {
-      using (PixelGridForm dialog = new PixelGridForm())
-        dialog.ShowDialog(this);
-    }
-
     private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
     {
       imageBox.SelectAll();
@@ -251,12 +230,6 @@ namespace Cyotek.Windows.Forms.Demo
     private void showImageRegionToolStripButton_Click(object sender, EventArgs e)
     {
       imageBox.Invalidate();
-    }
-
-    private void virtualModeToolStripButton_Click(object sender, EventArgs e)
-    {
-      using (VirtualModeDemonstrationForm form = new VirtualModeDemonstrationForm())
-        form.ShowDialog(this);
     }
 
     private void zoomInToolStripButton_Click(object sender, EventArgs e)

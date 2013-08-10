@@ -1,10 +1,13 @@
 ﻿namespace Cyotek.Windows.Forms
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2013 Cyotek. All Rights Reserved.
+  // Copyright (c) 2010-2013 Cyotek.
   // http://cyotek.com
+  // http://cyotek.com/blog/tag/imagebox
 
-  // If you use this control in your applications, attribution or donations are welcome.
+  // Licensed under the MIT License. See imagebox-license.txt for the full text.
+
+  // If you use this control in your applications, attribution, donations or contributions are welcome.
 
   /// <summary>
   ///   Specifies the selection mode.

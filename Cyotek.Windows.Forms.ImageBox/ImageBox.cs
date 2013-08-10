@@ -7,11 +7,13 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2013 Cyotek. All Rights Reserved.
+  // Copyright (c) 2010-2013 Cyotek.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
-  // If you use this control in your applications, attribution or donations are welcome.
+  // Licensed under the MIT License. See imagebox-license.txt for the full text.
+
+  // If you use this control in your applications, attribution, donations or contributions are welcome.
 
   /// <summary>
   ///   Component for displaying images with support for scrolling and zooming.
@@ -19,6 +21,7 @@ namespace Cyotek.Windows.Forms
   [DefaultProperty("Image")]
   [ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp")]
   [ToolboxItem(true)]
+  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */
   public class ImageBox : VirtualScrollableControl
   {
     #region Constants
@@ -75,6 +78,8 @@ namespace Cyotek.Windows.Forms
 
     private int _pixelGridThreshold;
 
+    private bool _scaleText;
+
     private Color _selectionColor;
 
     private ImageBoxSelectionMode _selectionMode;
@@ -85,13 +90,19 @@ namespace Cyotek.Windows.Forms
 
     private bool _showPixelGrid;
 
-    private bool _sizeToFit;
+    private ImageBoxSizeMode _sizeMode;
 
     private Point _startMousePosition;
 
     private Point _startScrollPosition;
 
-    private TextureBrush _texture;
+    private ContentAlignment _textAlign;
+
+    private Color _textBackColor;
+
+    private ImageBoxGridDisplayMode _textDisplayMode;
+
+    private Brush _texture;
 
     private int _updateCount;
 
@@ -102,8 +113,6 @@ namespace Cyotek.Windows.Forms
     private int _zoom;
 
     private ZoomLevelCollection _zoomLevels;
-
-    private bool _isAnimating;
 
     #endregion
 
@@ -118,8 +127,9 @@ namespace Cyotek.Windows.Forms
       this.SetStyle(ControlStyles.StandardDoubleClick, false);
       this.UpdateStyles();
 
-      this.WheelScrollsControl = false;
       // ReSharper disable DoNotCallOverridableMethodsInConstructor
+      this.BeginUpdate();
+      this.WheelScrollsControl = false;
       this.AllowZoom = true;
       this.LimitSelectionToImage = true;
       this.DropShadowSize = 3;
@@ -142,6 +152,10 @@ namespace Cyotek.Windows.Forms
       this.ImageBorderColor = SystemColors.ControlDark;
       this.PixelGridColor = Color.DimGray;
       this.PixelGridThreshold = 5;
+      this.TextAlign = ContentAlignment.MiddleCenter;
+      this.TextBackColor = Color.Transparent;
+      this.TextDisplayMode = ImageBoxGridDisplayMode.Client;
+      this.EndUpdate();
       // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
 
@@ -276,6 +290,12 @@ namespace Cyotek.Windows.Forms
     public event EventHandler PixelGridThresholdChanged;
 
     /// <summary>
+    /// Occurs when the ScaleText property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler ScaleTextChanged;
+
+    /// <summary>
     ///   Occurs when a selection region has been defined
     /// </summary>
     [Category("Action")]
@@ -318,10 +338,34 @@ namespace Cyotek.Windows.Forms
     public event EventHandler ShowPixelGridChanged;
 
     /// <summary>
+    /// Occurs when the SizeMode property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler SizeModeChanged;
+
+    /// <summary>
     ///   Occurs when the SizeToFit property is changed.
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler SizeToFitChanged;
+
+    /// <summary>
+    /// Occurs when the TextAlign property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler TextAlignChanged;
+
+    /// <summary>
+    /// Occurs when the TextBackColor property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler TextBackColorChanged;
+
+    /// <summary>
+    /// Occurs when the TextDisplayMode property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler TextDisplayModeChanged;
 
     /// <summary>
     ///   Occurs when virtual painting should occur
@@ -352,6 +396,12 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler ZoomLevelsChanged;
+
+    /// <summary>
+    /// Occurs when then a zoom action is performed.
+    /// </summary>
+    [Category("Action")]
+    public event EventHandler<ImageBoxZoomEventArgs> Zoomed;
 
     #endregion
 
@@ -501,41 +551,6 @@ namespace Cyotek.Windows.Forms
       set { base.BackgroundImageLayout = value; }
     }
 
-    /// <summary>
-    ///   Gets or sets the font of the text displayed by the control.
-    /// </summary>
-    /// <value></value>
-    /// <returns>
-    ///   The <see cref="T:System.Drawing.Font" /> to apply to the text displayed by the control. The default is the value of the
-    ///   <see
-    ///     cref="P:System.Windows.Forms.Control.DefaultFont" />
-    ///   property.
-    /// </returns>
-    [Browsable(false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public override Font Font
-    {
-      get { return base.Font; }
-      set { base.Font = value; }
-    }
-
-    /// <summary>
-    ///   This property is not relevant for this class.
-    /// </summary>
-    /// <value></value>
-    /// <returns>
-    ///   The text associated with this control.
-    /// </returns>
-    [Browsable(false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public override string Text
-    {
-      get { return base.Text; }
-      set { base.Text = value; }
-    }
-
     #endregion
 
     #region Overridden Members
@@ -584,6 +599,9 @@ namespace Cyotek.Windows.Forms
     {
       if (disposing)
       {
+        if (this.IsAnimating)
+          ImageAnimator.StopAnimate(this.Image, this.OnFrameChangedHandler);
+
         if (_texture != null)
         {
           _texture.Dispose();
@@ -596,6 +614,7 @@ namespace Cyotek.Windows.Forms
           _gridTile = null;
         }
       }
+
       base.Dispose(disposing);
     }
 
@@ -661,6 +680,28 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Raises the <see cref="E:System.Windows.Forms.Control.FontChanged" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    protected override void OnFontChanged(EventArgs e)
+    {
+      base.OnFontChanged(e);
+
+      this.Invalidate();
+    }
+
+    /// <summary>
+    /// Raises the <see cref="E:System.Windows.Forms.Control.ForeColorChanged" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    protected override void OnForeColorChanged(EventArgs e)
+    {
+      base.OnForeColorChanged(e);
+
+      this.Invalidate();
+    }
+
+    /// <summary>
     ///   Raises the <see cref="System.Windows.Forms.Control.KeyDown" /> event.
     /// </summary>
     /// <param name="e">
@@ -672,7 +713,7 @@ namespace Cyotek.Windows.Forms
 
       this.ProcessScrollingShortcuts(e);
 
-      if (this.ShortcutsEnabled)
+      if (this.ShortcutsEnabled && this.AllowZoom && this.SizeMode == ImageBoxSizeMode.Normal)
         this.ProcessImageShortcuts(e);
     }
 
@@ -731,7 +772,7 @@ namespace Cyotek.Windows.Forms
         this.EndDrag();
       this.WasDragCancelled = false;
 
-      if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && !this.IsPanning && !this.SizeToFit)
+      if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && !this.IsPanning && this.SizeMode == ImageBoxSizeMode.Normal)
       {
         if (e.Button == MouseButtons.Left && ModifierKeys == Keys.None)
           this.ProcessMouseZoom(true, e.Location);
@@ -750,8 +791,17 @@ namespace Cyotek.Windows.Forms
     {
       base.OnMouseWheel(e);
 
-      if (this.AllowZoom && !this.SizeToFit)
-        this.ProcessMouseZoom(e.Delta > 0, e.Location);
+      if (this.AllowZoom && this.SizeMode == ImageBoxSizeMode.Normal)
+      {
+        int spins;
+
+        // The MouseWheel event can contain multiple "spins" of the wheel so we need to adjust accordingly
+        spins = Math.Abs(e.Delta / SystemInformation.MouseWheelScrollDelta);
+
+        // TODO: Really should update the source method to handle multiple increments rather than calling it multiple times
+        for (int i = 0; i < spins; i++)
+          this.ProcessMouseZoom(e.Delta > 0, e.Location);
+      }
     }
 
     /// <summary>
@@ -817,6 +867,10 @@ namespace Cyotek.Windows.Forms
         if (this.SelectionRegion != Rectangle.Empty)
           this.DrawSelection(e);
 
+        // text
+        if (!string.IsNullOrEmpty(this.Text) && this.TextDisplayMode != ImageBoxGridDisplayMode.None)
+          this.DrawText(e);
+
         base.OnPaint(e);
       }
     }
@@ -857,6 +911,17 @@ namespace Cyotek.Windows.Forms
       this.Invalidate();
 
       base.OnScroll(se);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="E:System.Windows.Forms.Control.TextChanged" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    protected override void OnTextChanged(EventArgs e)
+    {
+      base.OnTextChanged(e);
+
+      this.Invalidate();
     }
 
     #endregion
@@ -965,9 +1030,6 @@ namespace Cyotek.Windows.Forms
         {
           _autoPan = value;
           this.OnAutoPanChanged(EventArgs.Empty);
-
-          if (value)
-            this.SizeToFit = false;
         }
       }
     }
@@ -986,6 +1048,23 @@ namespace Cyotek.Windows.Forms
     {
       get { return base.AutoScrollMinSize; }
       set { base.AutoScrollMinSize = value; }
+    }
+
+    /// <summary>
+    /// Gets the point at the center of the currently displayed image viewport.
+    /// </summary>
+    /// <value>The point at the center of the current image viewport.</value>
+    [Browsable(false)]
+    public Point CenterPoint
+    {
+      get
+      {
+        Rectangle viewport;
+
+        viewport = this.GetImageViewPort();
+
+        return new Point(viewport.Width / 2, viewport.Height / 2);
+      }
     }
 
     /// <summary>
@@ -1116,15 +1195,11 @@ namespace Cyotek.Windows.Forms
       {
         if (_image != value)
         {
+          // disable animations
+          if (this.IsAnimating)
+            ImageAnimator.StopAnimate(this.Image, this.OnFrameChangedHandler);
+
           _image = value;
-
-          if (ImageAnimator.CanAnimate(_image))
-          {
-            ImageAnimator.Animate(_image, new EventHandler(OnFrameChanged));
-            this._isAnimating = true;
-          }
-          else this._isAnimating = false;
-
           this.OnImageChanged(EventArgs.Empty);
         }
       }
@@ -1337,6 +1412,26 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the font size of text is scaled according to the current zoom level.
+    /// </summary>
+    /// <value><c>true</c> if the size of text is scaled according to the current zoom level; otherwise, <c>false</c>.</value>
+    [Category("Appearance")]
+    [DefaultValue(false)]
+    public virtual bool ScaleText
+    {
+      get { return _scaleText; }
+      set
+      {
+        if (this.ScaleText != value)
+        {
+          _scaleText = value;
+
+          this.OnScaleTextChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
     ///   Gets or sets the color of selection regions.
     /// </summary>
     /// <value>
@@ -1445,6 +1540,26 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Gets or sets the size mode of images hosted in the control.
+    /// </summary>
+    /// <value>The size mode.</value>
+    [Category("Behavior")]
+    [DefaultValue(typeof(ImageBoxSizeMode), "Normal")]
+    public virtual ImageBoxSizeMode SizeMode
+    {
+      get { return _sizeMode; }
+      set
+      {
+        if (this.SizeMode != value)
+        {
+          _sizeMode = value;
+
+          this.OnSizeModeChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
     ///   Gets or sets a value indicating whether the control should automatically size to fit the image contents.
     /// </summary>
     /// <value>
@@ -1452,20 +1567,84 @@ namespace Cyotek.Windows.Forms
     /// </value>
     [DefaultValue(false)]
     [Category("Appearance")]
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Obsolete("This property is deprecated and will be removed in a future version of the component. Implementors should use the SizeMode property instead.")]
     public virtual bool SizeToFit
     {
-      get { return _sizeToFit; }
+      get { return this.SizeMode == ImageBoxSizeMode.Fit; }
       set
       {
-        if (_sizeToFit != value)
+        if (this.SizeToFit != value)
         {
-          _sizeToFit = value;
+          this.SizeMode = value ? ImageBoxSizeMode.Fit : ImageBoxSizeMode.Normal;
           this.OnSizeToFitChanged(EventArgs.Empty);
 
           if (value)
             this.AutoPan = false;
           else
             this.ActualSize();
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets the alignment of the text on the control.
+    /// </summary>
+    /// <value>One of the <see cref="ContentAlignment"/> values. The default is <c>MiddleCenter</c>.</value>
+    [Category("Appearance")]
+    [DefaultValue(typeof(ContentAlignment), "MiddleCenter")]
+    public virtual ContentAlignment TextAlign
+    {
+      get { return _textAlign; }
+      set
+      {
+        if (this.TextAlign != value)
+        {
+          _textAlign = value;
+
+          this.OnTextAlignChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets the color of the text background.
+    /// </summary>
+    /// <value>The color of the text background.</value>
+    [Category("Appearance")]
+    [DefaultValue(typeof(Color), "Transparent")]
+    public virtual Color TextBackColor
+    {
+      get { return _textBackColor; }
+      set
+      {
+        if (this.TextBackColor != value)
+        {
+          _textBackColor = value;
+
+          this.OnTextBackColorChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets the text display mode.
+    /// </summary>
+    /// <value>The text display mode.</value>
+    [Category("Appearance")]
+    [DefaultValue(typeof(ImageBoxGridDisplayMode), "Client")]
+    public virtual ImageBoxGridDisplayMode TextDisplayMode
+    {
+      get { return _textDisplayMode; }
+      set
+      {
+        if (this.TextDisplayMode != value)
+        {
+          _textDisplayMode = value;
+
+          this.OnTextDisplayModeChanged(EventArgs.Empty);
         }
       }
     }
@@ -1524,19 +1703,7 @@ namespace Cyotek.Windows.Forms
     public virtual int Zoom
     {
       get { return _zoom; }
-      set
-      {
-        if (value < MinZoom)
-          value = MinZoom;
-        else if (value > MaxZoom)
-          value = MaxZoom;
-
-        if (_zoom != value)
-        {
-          _zoom = value;
-          this.OnZoomChanged(EventArgs.Empty);
-        }
-      }
+      set { this.SetZoom(value, value > this.Zoom ? ImageBoxZoomActions.ZoomIn : ImageBoxZoomActions.ZoomOut, ImageBoxActionSources.Unknown); }
     }
 
     /// <summary>
@@ -1582,6 +1749,12 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the current image is animated.
+    /// </summary>
+    /// <value><c>true</c> if the current image is animated; otherwise, <c>false</c>.</value>
+    protected bool IsAnimating { get; set; }
+
+    /// <summary>
     ///   Gets the height of the scaled image.
     /// </summary>
     /// <value>The height of the scaled image.</value>
@@ -1623,10 +1796,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     public virtual void ActualSize()
     {
-      if (this.SizeToFit)
-        this.SizeToFit = false;
-
-      this.Zoom = 100;
+      this.PerformActualSize(ImageBoxActionSources.Unknown);
     }
 
     /// <summary>
@@ -1644,6 +1814,34 @@ namespace Cyotek.Windows.Forms
     public virtual void CenterAt(Point imageLocation)
     {
       this.ScrollTo(imageLocation, new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2));
+    }
+
+    /// <summary>
+    ///   Centers the given point in the image in the center of the control
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to center.</param>
+    /// <param name="y">The Y co-ordinate of the point to center.</param>
+    public void CenterAt(int x, int y)
+    {
+      this.CenterAt(new Point(x, y));
+    }
+
+    /// <summary>
+    ///   Centers the given point in the image in the center of the control
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to center.</param>
+    /// <param name="y">The Y co-ordinate of the point to center.</param>
+    public void CenterAt(float x, float y)
+    {
+      this.CenterAt(new Point((int)x, (int)y));
+    }
+
+    /// <summary>
+    /// Resets the viewport to show the center of the image.
+    /// </summary>
+    public virtual void CenterToImage()
+    {
+      this.AutoScrollPosition = new Point((this.AutoScrollMinSize.Width - this.ClientSize.Width) / 2, (this.AutoScrollMinSize.Height - this.ClientSize.Height) / 2);
     }
 
     /// <summary>
@@ -1746,21 +1944,30 @@ namespace Cyotek.Windows.Forms
         if (!this.HScroll && !this.VScroll) // if no scrolling is present, tinker the view port so that the image and any applicable borders all fit inside
           innerRectangle.Inflate(-this.GetImageBorderOffset(), -this.GetImageBorderOffset());
 
-        if (this.AutoCenter)
+        if (this.SizeMode != ImageBoxSizeMode.Stretch)
         {
-          int x;
-          int y;
+          if (this.AutoCenter)
+          {
+            int x;
+            int y;
 
-          x = !this.HScroll ? (innerRectangle.Width - (this.ScaledImageWidth + this.Padding.Horizontal)) / 2 : 0;
-          y = !this.VScroll ? (innerRectangle.Height - (this.ScaledImageHeight + this.Padding.Vertical)) / 2 : 0;
+            x = !this.HScroll ? (innerRectangle.Width - (this.ScaledImageWidth + this.Padding.Horizontal)) / 2 : 0;
+            y = !this.VScroll ? (innerRectangle.Height - (this.ScaledImageHeight + this.Padding.Vertical)) / 2 : 0;
 
-          offset = new Point(x, y);
+            offset = new Point(x, y);
+          }
+          else
+            offset = Point.Empty;
+
+          width = Math.Min(this.ScaledImageWidth - Math.Abs(this.AutoScrollPosition.X), innerRectangle.Width);
+          height = Math.Min(this.ScaledImageHeight - Math.Abs(this.AutoScrollPosition.Y), innerRectangle.Height);
         }
         else
+        {
           offset = Point.Empty;
-
-        width = Math.Min(this.ScaledImageWidth - Math.Abs(this.AutoScrollPosition.X), innerRectangle.Width);
-        height = Math.Min(this.ScaledImageHeight - Math.Abs(this.AutoScrollPosition.Y), innerRectangle.Height);
+          width = innerRectangle.Width;
+          height = innerRectangle.Height;
+        }
 
         viewPort = new Rectangle(offset.X + innerRectangle.Left, offset.Y + innerRectangle.Top, width, height);
       }
@@ -1812,8 +2019,8 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.Point" /> repositioned to include the current image offset and scaled by the current zoom level
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Point which has been repositioned to match the current zoom level and image offset</returns>
+    /// <param name="source">The source <see cref="Point"/> to offset.</param>
+    /// <returns>A <see cref="Point"/> which has been repositioned to match the current zoom level and image offset</returns>
     public virtual Point GetOffsetPoint(Point source)
     {
       PointF offset;
@@ -1823,11 +2030,23 @@ namespace Cyotek.Windows.Forms
       return new Point((int)offset.X, (int)offset.Y);
     }
 
+    /// <summary>
+    ///   Returns the source co-ordinates repositioned to include the current image offset and scaled by the current zoom level
+    /// </summary>
+    /// <param name="x">The source X co-ordinate.</param>
+    /// <param name="y">The source Y co-ordinate.</param>
+    /// <returns>A <see cref="Point"/> which has been repositioned to match the current zoom level and image offset</returns>
     public Point GetOffsetPoint(int x, int y)
     {
       return this.GetOffsetPoint(new Point(x, y));
     }
 
+    /// <summary>
+    ///   Returns the source co-ordinates repositioned to include the current image offset and scaled by the current zoom level
+    /// </summary>
+    /// <param name="x">The source X co-ordinate.</param>
+    /// <param name="y">The source Y co-ordinate.</param>
+    /// <returns>A <see cref="Point"/> which has been repositioned to match the current zoom level and image offset</returns>
     public PointF GetOffsetPoint(float x, float y)
     {
       return this.GetOffsetPoint(new PointF(x, y));
@@ -1836,8 +2055,8 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.PointF" /> repositioned to include the current image offset and scaled by the current zoom level
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Point which has been repositioned to match the current zoom level and image offset</returns>
+    /// <param name="source">The source <see cref="PointF"/> to offset.</param>
+    /// <returns>A <see cref="PointF"/> which has been repositioned to match the current zoom level and image offset</returns>
     public virtual PointF GetOffsetPoint(PointF source)
     {
       Rectangle viewport;
@@ -1856,8 +2075,8 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.RectangleF" /> scaled according to the current zoom level and repositioned to include the current image offset
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Rectangle which has been resized and repositioned to match the current zoom level and image offset</returns>
+    /// <param name="source">The source <see cref="RectangleF"/> to offset.</param>
+    /// <returns>A <see cref="RectangleF"/> which has been resized and repositioned to match the current zoom level and image offset</returns>
     public virtual RectangleF GetOffsetRectangle(RectangleF source)
     {
       RectangleF viewport;
@@ -1874,10 +2093,36 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    ///   Returns the source rectangle scaled according to the current zoom level and repositioned to include the current image offset
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the source rectangle.</param>
+    /// <param name="y">The Y co-ordinate of the source rectangle.</param>
+    /// <param name="width">The width of the rectangle.</param>
+    /// <param name="height">The height of the rectangle.</param>
+    /// <returns>A <see cref="Rectangle"/> which has been resized and repositioned to match the current zoom level and image offset</returns>
+    public Rectangle GetOffsetRectangle(int x, int y, int width, int height)
+    {
+      return this.GetOffsetRectangle(new Rectangle(x, y, width, height));
+    }
+
+    /// <summary>
+    ///   Returns the source rectangle scaled according to the current zoom level and repositioned to include the current image offset
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the source rectangle.</param>
+    /// <param name="y">The Y co-ordinate of the source rectangle.</param>
+    /// <param name="width">The width of the rectangle.</param>
+    /// <param name="height">The height of the rectangle.</param>
+    /// <returns>A <see cref="RectangleF"/> which has been resized and repositioned to match the current zoom level and image offset</returns>
+    public RectangleF GetOffsetRectangle(float x, float y, float width, float height)
+    {
+      return this.GetOffsetRectangle(new RectangleF(x, y, width, height));
+    }
+
+    /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.Rectangle" /> scaled according to the current zoom level and repositioned to include the current image offset
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Rectangle which has been resized and repositioned to match the current zoom level and image offset</returns>
+    /// <param name="source">The source <see cref="Rectangle"/> to offset.</param>
+    /// <returns>A <see cref="Rectangle"/> which has been resized and repositioned to match the current zoom level and image offset</returns>
     public virtual Rectangle GetOffsetRectangle(Rectangle source)
     {
       Rectangle viewport;
@@ -1896,8 +2141,30 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.Point" /> scaled according to the current zoom level
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Point which has been scaled to match the current zoom level</returns>
+    /// <param name="x">The X co-ordinate of the point to scale.</param>
+    /// <param name="y">The Y co-ordinate of the point to scale.</param>
+    /// <returns>A <see cref="Point"/> which has been scaled to match the current zoom level</returns>
+    public Point GetScaledPoint(int x, int y)
+    {
+      return this.GetScaledPoint(new Point(x, y));
+    }
+
+    /// <summary>
+    ///   Returns the source <see cref="T:System.Drawing.Point" /> scaled according to the current zoom level
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to scale.</param>
+    /// <param name="y">The Y co-ordinate of the point to scale.</param>
+    /// <returns>A <see cref="Point"/> which has been scaled to match the current zoom level</returns>
+    public PointF GetScaledPoint(float x, float y)
+    {
+      return this.GetScaledPoint(new PointF(x, y));
+    }
+
+    /// <summary>
+    ///   Returns the source <see cref="T:System.Drawing.Point" /> scaled according to the current zoom level
+    /// </summary>
+    /// <param name="source">The source <see cref="Point"/> to scale.</param>
+    /// <returns>A <see cref="Point"/> which has been scaled to match the current zoom level</returns>
     public virtual Point GetScaledPoint(Point source)
     {
       return new Point((int)(source.X * this.ZoomFactor), (int)(source.Y * this.ZoomFactor));
@@ -1906,18 +2173,44 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.PointF" /> scaled according to the current zoom level
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Point which has been scaled to match the current zoom level</returns>
+    /// <param name="source">The source <see cref="PointF"/> to scale.</param>
+    /// <returns>A <see cref="PointF"/> which has been scaled to match the current zoom level</returns>
     public virtual PointF GetScaledPoint(PointF source)
     {
       return new PointF((float)(source.X * this.ZoomFactor), (float)(source.Y * this.ZoomFactor));
     }
 
     /// <summary>
+    ///   Returns the source rectangle scaled according to the current zoom level
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the source rectangle.</param>
+    /// <param name="y">The Y co-ordinate of the source rectangle.</param>
+    /// <param name="width">The width of the rectangle.</param>
+    /// <param name="height">The height of the rectangle.</param>
+    /// <returns>A <see cref="Rectangle"/> which has been scaled to match the current zoom level</returns>
+    public Rectangle GetScaledRectangle(int x, int y, int width, int height)
+    {
+      return this.GetScaledRectangle(new Rectangle(x, y, width, height));
+    }
+
+    /// <summary>
+    ///   Returns the source rectangle scaled according to the current zoom level
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the source rectangle.</param>
+    /// <param name="y">The Y co-ordinate of the source rectangle.</param>
+    /// <param name="width">The width of the rectangle.</param>
+    /// <param name="height">The height of the rectangle.</param>
+    /// <returns>A <see cref="RectangleF"/> which has been scaled to match the current zoom level</returns>
+    public RectangleF GetScaledRectangle(float x, float y, float width, float height)
+    {
+      return this.GetScaledRectangle(new RectangleF(x, y, width, height));
+    }
+
+    /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.Rectangle" /> scaled according to the current zoom level
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Rectangle which has been resized to match the current zoom level</returns>
+    /// <param name="source">The source <see cref="Rectangle"/> to scale.</param>
+    /// <returns>A <see cref="Rectangle"/> which has been scaled to match the current zoom level</returns>
     public virtual Rectangle GetScaledRectangle(Rectangle source)
     {
       return new Rectangle((int)(source.Left * this.ZoomFactor), (int)(source.Top * this.ZoomFactor), (int)(source.Width * this.ZoomFactor), (int)(source.Height * this.ZoomFactor));
@@ -1926,18 +2219,40 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.RectangleF" /> scaled according to the current zoom level
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Rectangle which has been resized to match the current zoom level</returns>
+    /// <param name="source">The source <see cref="RectangleF"/> to scale.</param>
+    /// <returns>A <see cref="RectangleF"/> which has been scaled to match the current zoom level</returns>
     public virtual RectangleF GetScaledRectangle(RectangleF source)
     {
       return new RectangleF((float)(source.Left * this.ZoomFactor), (float)(source.Top * this.ZoomFactor), (float)(source.Width * this.ZoomFactor), (float)(source.Height * this.ZoomFactor));
     }
 
     /// <summary>
+    ///   Returns the source size scaled according to the current zoom level
+    /// </summary>
+    /// <param name="width">The width of the size to scale.</param>
+    /// <param name="height">The height of the size to scale.</param>
+    /// <returns>A <see cref="SizeF"/> which has been resized to match the current zoom level</returns>
+    public SizeF GetScaledSize(float width, float height)
+    {
+      return this.GetScaledSize(new SizeF(width, height));
+    }
+
+    /// <summary>
+    ///   Returns the source size scaled according to the current zoom level
+    /// </summary>
+    /// <param name="width">The width of the size to scale.</param>
+    /// <param name="height">The height of the size to scale.</param>
+    /// <returns>A <see cref="Size"/> which has been resized to match the current zoom level</returns>
+    public Size GetScaledSize(int width, int height)
+    {
+      return this.GetScaledSize(new Size(width, height));
+    }
+
+    /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.SizeF" /> scaled according to the current zoom level
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Size which has been resized to match the current zoom level</returns>
+    /// <param name="source">The source <see cref="SizeF"/> to scale.</param>
+    /// <returns>A <see cref="SizeF"/> which has been resized to match the current zoom level</returns>
     public virtual SizeF GetScaledSize(SizeF source)
     {
       return new SizeF((float)(source.Width * this.ZoomFactor), (float)(source.Height * this.ZoomFactor));
@@ -1946,8 +2261,8 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Returns the source <see cref="T:System.Drawing.Size" /> scaled according to the current zoom level
     /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A Size which has been resized to match the current zoom level</returns>
+    /// <param name="source">The source <see cref="Size"/> to scale.</param>
+    /// <returns>A <see cref="Size"/> which has been resized to match the current zoom level</returns>
     public virtual Size GetScaledSize(Size source)
     {
       return new Size((int)(source.Width * this.ZoomFactor), (int)(source.Height * this.ZoomFactor));
@@ -1989,19 +2304,24 @@ namespace Cyotek.Windows.Forms
 
       if (!this.ViewSize.IsEmpty)
       {
-        float sourceLeft;
-        float sourceTop;
-        float sourceWidth;
-        float sourceHeight;
-        Rectangle viewPort;
+        if (this.SizeMode != ImageBoxSizeMode.Stretch)
+        {
+          float sourceLeft;
+          float sourceTop;
+          float sourceWidth;
+          float sourceHeight;
+          Rectangle viewPort;
 
-        viewPort = this.GetImageViewPort();
-        sourceLeft = (float)(-this.AutoScrollPosition.X / this.ZoomFactor);
-        sourceTop = (float)(-this.AutoScrollPosition.Y / this.ZoomFactor);
-        sourceWidth = (float)(viewPort.Width / this.ZoomFactor);
-        sourceHeight = (float)(viewPort.Height / this.ZoomFactor);
+          viewPort = this.GetImageViewPort();
+          sourceLeft = (float)(-this.AutoScrollPosition.X / this.ZoomFactor);
+          sourceTop = (float)(-this.AutoScrollPosition.Y / this.ZoomFactor);
+          sourceWidth = (float)(viewPort.Width / this.ZoomFactor);
+          sourceHeight = (float)(viewPort.Height / this.ZoomFactor);
 
-        region = new RectangleF(sourceLeft, sourceTop, sourceWidth, sourceHeight);
+          region = new RectangleF(sourceLeft, sourceTop, sourceWidth, sourceHeight);
+        }
+        else
+          region = new RectangleF(PointF.Empty, this.ViewSize);
       }
       else
         region = RectangleF.Empty;
@@ -2014,7 +2334,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     /// <param name="point">The point.</param>
     /// <returns>
-    ///   <c>true</c> if the specified point is located within the image view point; otherwise, <c>false</c>.
+    ///   <c>true</c> if the specified point is located within the image view port; otherwise, <c>false</c>.
     /// </returns>
     public virtual bool IsPointInImage(Point point)
     {
@@ -2022,14 +2342,89 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    ///   Determines whether the specified point is located within the image view port
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to check.</param>
+    /// <param name="y">The Y co-ordinate of the point to check.</param>
+    /// <returns>
+    ///   <c>true</c> if the specified point is located within the image view port; otherwise, <c>false</c>.
+    /// </returns>
+    public bool IsPointInImage(int x, int y)
+    {
+      return this.IsPointInImage(new Point(x, y));
+    }
+
+    /// <summary>
+    ///   Determines whether the specified point is located within the image view port
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to check.</param>
+    /// <param name="y">The Y co-ordinate of the point to check.</param>
+    /// <returns>
+    ///   <c>true</c> if the specified point is located within the image view port; otherwise, <c>false</c>.
+    /// </returns>
+    public bool IsPointInImage(float x, float y)
+    {
+      return this.IsPointInImage(new Point((int)x, (int)y));
+    }
+
+    /// <summary>
     ///   Converts the given client size point to represent a coordinate on the source image.
     /// </summary>
     /// <param name="point">The source point.</param>
-    /// <returns>Point.Empty is the point could not be matched to the source image, otherwise the new translated point</returns>
-    /// <remarks>If a match is made, the return will be offset by 1</remarks>
-    public virtual Point PointToImage(Point point)
+    /// <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+    public Point PointToImage(Point point)
     {
       return this.PointToImage(point, false);
+    }
+
+    /// <summary>
+    ///   Converts the given client size point to represent a coordinate on the source image.
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to convert.</param>
+    /// <param name="y">The Y co-ordinate of the point to convert.</param>
+    /// <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+    public Point PointToImage(float x, float y)
+    {
+      return this.PointToImage(x, y, false);
+    }
+
+    /// <summary>
+    ///   Converts the given client size point to represent a coordinate on the source image.
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to convert.</param>
+    /// <param name="y">The Y co-ordinate of the point to convert.</param>
+    /// <param name="fitToBounds">
+    ///   if set to <c>true</c> and the point is outside the bounds of the source image, it will be mapped to the nearest edge.
+    /// </param>
+    /// <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+    public Point PointToImage(float x, float y, bool fitToBounds)
+    {
+      return this.PointToImage(new Point((int)x, (int)y), fitToBounds);
+    }
+
+    /// <summary>
+    ///   Converts the given client size point to represent a coordinate on the source image.
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to convert.</param>
+    /// <param name="y">The Y co-ordinate of the point to convert.</param>
+    /// <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+    public Point PointToImage(int x, int y)
+    {
+      return this.PointToImage(x, y, false);
+    }
+
+    /// <summary>
+    ///   Converts the given client size point to represent a coordinate on the source image.
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to convert.</param>
+    /// <param name="y">The Y co-ordinate of the point to convert.</param>
+    /// <param name="fitToBounds">
+    ///   if set to <c>true</c> and the point is outside the bounds of the source image, it will be mapped to the nearest edge.
+    /// </param>
+    /// <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
+    public Point PointToImage(int x, int y, bool fitToBounds)
+    {
+      return this.PointToImage(new Point(x, y), fitToBounds);
     }
 
     /// <summary>
@@ -2039,8 +2434,7 @@ namespace Cyotek.Windows.Forms
     /// <param name="fitToBounds">
     ///   if set to <c>true</c> and the point is outside the bounds of the source image, it will be mapped to the nearest edge.
     /// </param>
-    /// <returns>Point.Empty is the point could not be matched to the source image, otherwise the new translated point</returns>
-    /// <remarks>If a match is made, the return will be offset by 1</remarks>
+    /// <returns><c>Point.Empty</c> if the point could not be matched to the source image, otherwise the new translated point</returns>
     public virtual Point PointToImage(Point point, bool fitToBounds)
     {
       Rectangle viewport;
@@ -2074,6 +2468,30 @@ namespace Cyotek.Windows.Forms
       }
 
       return new Point(x, y);
+    }
+
+    /// <summary>
+    ///   Scrolls the control to the given point in the image, offset at the specified display point
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to scroll to.</param>
+    /// <param name="y">The Y co-ordinate of the point to scroll to.</param>
+    /// <param name="relativeX">The X co-ordinate relative to the <c>x</c> parameter.</param>
+    /// <param name="relativeY">The Y co-ordinate relative to the <c>y</c> parameter.</param>
+    public void ScrollTo(int x, int y, int relativeX, int relativeY)
+    {
+      this.ScrollTo(new Point(x, y), new Point(relativeX, relativeY));
+    }
+
+    /// <summary>
+    ///   Scrolls the control to the given point in the image, offset at the specified display point
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the point to scroll to.</param>
+    /// <param name="y">The Y co-ordinate of the point to scroll to.</param>
+    /// <param name="relativeX">The X co-ordinate relative to the <c>x</c> parameter.</param>
+    /// <param name="relativeY">The Y co-ordinate relative to the <c>y</c> parameter.</param>
+    public void ScrollTo(float x, float y, float relativeX, float relativeY)
+    {
+      this.ScrollTo(new Point((int)x, (int)y), new Point((int)relativeX, (int)relativeY));
     }
 
     /// <summary>
@@ -2113,20 +2531,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   zooms into the image
+    ///   Zooms into the image
     /// </summary>
     public virtual void ZoomIn()
     {
-      if (this.SizeToFit)
-      {
-        int previousZoom;
-
-        previousZoom = this.Zoom;
-        this.SizeToFit = false;
-        this.Zoom = previousZoom; // Stop the zoom getting reset to 100% before calculating the new zoom
-      }
-
-      this.Zoom = this.ZoomLevels.NextZoom(this.Zoom);
+      this.PerformZoomIn(ImageBoxActionSources.Unknown);
     }
 
     /// <summary>
@@ -2134,16 +2543,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     public virtual void ZoomOut()
     {
-      if (this.SizeToFit)
-      {
-        int previousZoom;
-
-        previousZoom = this.Zoom;
-        this.SizeToFit = false;
-        this.Zoom = previousZoom; // Stop the zoom getting reset to 100% before calculating the new zoom
-      }
-
-      this.Zoom = this.ZoomLevels.PreviousZoom(this.Zoom);
+      this.PerformZoomOut(ImageBoxActionSources.Unknown);
     }
 
     /// <summary>
@@ -2189,7 +2589,31 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   Adjusts the view port to fit the  given region
+    ///   Adjusts the view port to fit the given region
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the selection region.</param>
+    /// <param name="y">The Y co-ordinate of the selection region.</param>
+    /// <param name="width">The width of the selection region.</param>
+    /// <param name="height">The height of the selection region.</param>
+    public void ZoomToRegion(float x, float y, float width, float height)
+    {
+      this.ZoomToRegion(new RectangleF(x, y, width, height));
+    }
+
+    /// <summary>
+    ///   Adjusts the view port to fit the given region
+    /// </summary>
+    /// <param name="x">The X co-ordinate of the selection region.</param>
+    /// <param name="y">The Y co-ordinate of the selection region.</param>
+    /// <param name="width">The width of the selection region.</param>
+    /// <param name="height">The height of the selection region.</param>
+    public void ZoomToRegion(int x, int y, int width, int height)
+    {
+      this.ZoomToRegion(new RectangleF(x, y, width, height));
+    }
+
+    /// <summary>
+    ///   Adjusts the view port to fit the given region
     /// </summary>
     /// <param name="rectangle">The rectangle to fit the view port to.</param>
     public virtual void ZoomToRegion(RectangleF rectangle)
@@ -2215,14 +2639,17 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     protected virtual void AdjustLayout()
     {
-      if (this.AutoSize)
-        this.AdjustSize();
-      else if (this.SizeToFit)
-        this.ZoomToFit();
-      else if (this.AutoScroll)
-        this.AdjustViewPort();
+      if (this.AllowPainting)
+      {
+        if (this.AutoSize)
+          this.AdjustSize();
+        else if (this.SizeMode != ImageBoxSizeMode.Normal)
+          this.ZoomToFit();
+        else if (this.AutoScroll)
+          this.AdjustViewPort();
 
-      this.Invalidate();
+        this.Invalidate();
+      }
     }
 
     /// <summary>
@@ -2278,6 +2705,7 @@ namespace Cyotek.Windows.Forms
         case ImageBoxGridScale.Large:
           scale = 2;
           break;
+
         case ImageBoxGridScale.Tiny:
           scale = 0.5F;
           break;
@@ -2367,7 +2795,10 @@ namespace Cyotek.Windows.Forms
       // http://stackoverflow.com/questions/14070311/why-is-graphics-drawimage-cropping-part-of-my-image/14070372#14070372
       g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-      ImageAnimator.UpdateFrames(this.Image);
+      // Animation. Thanks to teamalpha5441 for the contribution
+      if (this.IsAnimating && !this.DesignMode)
+        ImageAnimator.UpdateFrames(this.Image);
+
       g.DrawImage(this.Image, this.GetImageViewPort(), this.GetSourceImageRegion(), GraphicsUnit.Pixel);
 
       g.PixelOffsetMode = currentPixelOffsetMode;
@@ -2404,6 +2835,131 @@ namespace Cyotek.Windows.Forms
 
         graphics.ResetClip();
       }
+    }
+
+    /// <summary>
+    /// Draws the specified text within the specified bounds using the specified device context.
+    /// </summary>
+    /// <param name="graphics">The device context in which to draw the text.</param>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="bounds">The <see cref="Rectangle"/> that represents the bounds of the text.</param>
+    protected void DrawLabel(Graphics graphics, string text, Rectangle bounds)
+    {
+      this.DrawLabel(graphics, text, this.Font, this.ForeColor, this.TextBackColor, this.TextAlign, bounds);
+    }
+
+    /// <summary>
+    /// Draws the specified text within the specified bounds using the specified device context and font.
+    /// </summary>
+    /// <param name="graphics">The device context in which to draw the text.</param>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="font">The <see cref="Font"/> to apply to the drawn text.</param>
+    /// <param name="bounds">The <see cref="Rectangle"/> that represents the bounds of the text.</param>
+    protected void DrawLabel(Graphics graphics, string text, Font font, Rectangle bounds)
+    {
+      this.DrawLabel(graphics, text, font, this.ForeColor, this.TextBackColor, this.TextAlign, bounds);
+    }
+
+    /// <summary>
+    /// Draws the specified text within the specified bounds using the specified device context, font, and color.
+    /// </summary>
+    /// <param name="graphics">The device context in which to draw the text.</param>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="font">The <see cref="Font"/> to apply to the drawn text.</param>
+    /// <param name="foreColor">The <see cref="Color"/> to apply to the text.</param>
+    /// <param name="bounds">The <see cref="Rectangle"/> that represents the bounds of the text.</param>
+    protected void DrawLabel(Graphics graphics, string text, Font font, Color foreColor, Rectangle bounds)
+    {
+      this.DrawLabel(graphics, text, font, foreColor, this.TextBackColor, this.TextAlign, bounds);
+    }
+
+    /// <summary>
+    /// Draws the specified text within the specified bounds using the specified device context, font, color, and back color.
+    /// </summary>
+    /// <param name="graphics">The device context in which to draw the text.</param>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="font">The <see cref="Font"/> to apply to the drawn text.</param>
+    /// <param name="foreColor">The <see cref="Color"/> to apply to the text.</param>
+    /// <param name="backColor">The <see cref="Color"/> to apply to the area represented by <c>bounds</c>.</param>
+    /// <param name="bounds">The <see cref="Rectangle"/> that represents the bounds of the text.</param>
+    protected void DrawLabel(Graphics graphics, string text, Font font, Color foreColor, Color backColor, Rectangle bounds)
+    {
+      this.DrawLabel(graphics, text, font, foreColor, backColor, this.TextAlign, bounds);
+    }
+
+    /// <summary>
+    /// Draws the specified text within the specified bounds using the specified device context, font, color, back color, and formatting instructions.
+    /// </summary>
+    /// <param name="graphics">The device context in which to draw the text.</param>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="font">The <see cref="Font"/> to apply to the drawn text.</param>
+    /// <param name="foreColor">The <see cref="Color"/> to apply to the text.</param>
+    /// <param name="backColor">The <see cref="Color"/> to apply to the area represented by <c>bounds</c>.</param>
+    /// <param name="textAlign">The <see cref="ContentAlignment"/> to apply to the text.</param>
+    /// <param name="bounds">The <see cref="Rectangle"/> that represents the bounds of the text.</param>
+    protected void DrawLabel(Graphics graphics, string text, Font font, Color foreColor, Color backColor, ContentAlignment textAlign, Rectangle bounds)
+    {
+      this.DrawLabel(graphics, text, font, foreColor, backColor, textAlign, bounds, this.ScaleText);
+    }
+
+    /// <summary>
+    /// Draws the specified text within the specified bounds using the specified device context, font, color, back color, and formatting instructions.
+    /// </summary>
+    /// <param name="graphics">The device context in which to draw the text.</param>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="font">The <see cref="Font"/> to apply to the drawn text.</param>
+    /// <param name="foreColor">The <see cref="Color"/> to apply to the text.</param>
+    /// <param name="backColor">The <see cref="Color"/> to apply to the area represented by <c>bounds</c>.</param>
+    /// <param name="textAlign">The <see cref="ContentAlignment"/> to apply to the text.</param>
+    /// <param name="bounds">The <see cref="Rectangle"/> that represents the bounds of the text.</param>
+    /// <param name="scaleText">If set to <c>true</c> the font size is scaled according to the current zoom level.</param>
+    protected virtual void DrawLabel(Graphics graphics, string text, Font font, Color foreColor, Color backColor, ContentAlignment textAlign, Rectangle bounds, bool scaleText)
+    {
+      TextFormatFlags flags;
+
+      if (scaleText)
+        font = new Font(font.FontFamily, (float)(font.Size * this.ZoomFactor), font.Style);
+
+      flags = TextFormatFlags.NoPrefix | TextFormatFlags.WordEllipsis | TextFormatFlags.WordBreak;
+
+      switch (textAlign)
+      {
+        case ContentAlignment.TopLeft:
+        case ContentAlignment.MiddleLeft:
+        case ContentAlignment.BottomLeft:
+          flags |= TextFormatFlags.Left;
+          break;
+        case ContentAlignment.TopRight:
+        case ContentAlignment.MiddleRight:
+        case ContentAlignment.BottomRight:
+          flags |= TextFormatFlags.Right;
+          break;
+        default:
+          flags |= TextFormatFlags.HorizontalCenter;
+          break;
+      }
+
+      switch (textAlign)
+      {
+        case ContentAlignment.TopCenter:
+        case ContentAlignment.TopLeft:
+        case ContentAlignment.TopRight:
+          flags |= TextFormatFlags.Top;
+          break;
+        case ContentAlignment.BottomCenter:
+        case ContentAlignment.BottomLeft:
+        case ContentAlignment.BottomRight:
+          flags |= TextFormatFlags.Bottom;
+          break;
+        default:
+          flags |= TextFormatFlags.VerticalCenter;
+          break;
+      }
+
+      TextRenderer.DrawText(graphics, text, font, bounds, foreColor, backColor, flags);
+
+      if (scaleText)
+        font.Dispose();
     }
 
     /// <summary>
@@ -2465,6 +3021,22 @@ namespace Cyotek.Windows.Forms
       e.Graphics.ResetClip();
     }
 
+    /// <summary>
+    /// Draws the text.
+    /// </summary>
+    /// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
+    protected virtual void DrawText(PaintEventArgs e)
+    {
+      Rectangle bounds;
+
+      bounds = this.TextDisplayMode == ImageBoxGridDisplayMode.Client ? this.GetInsideViewPort() : this.GetImageViewPort();
+
+      this.DrawLabel(e.Graphics, this.Text, this.Font, this.ForeColor, this.TextBackColor, this.TextAlign, bounds, this.ScaleText);
+    }
+
+    /// <summary>
+    /// Completes an ongoing selection or drag operation.
+    /// </summary>
     protected virtual void EndDrag()
     {
       this.IsSelecting = false;
@@ -2597,11 +3169,6 @@ namespace Cyotek.Windows.Forms
 
       if (handler != null)
         handler(this, e);
-    }
-
-    private void OnFrameChanged(object sender, EventArgs e)
-    {
-        this.Invalidate();
     }
 
     /// <summary>
@@ -2741,6 +3308,10 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
+      this.IsAnimating = ImageAnimator.CanAnimate(this.Image);
+      if (this.IsAnimating)
+        ImageAnimator.Animate(this.Image, this.OnFrameChangedHandler);
+
       this.AdjustLayout();
 
       handler = this.ImageChanged;
@@ -2858,6 +3429,22 @@ namespace Cyotek.Windows.Forms
       EventHandler handler;
 
       handler = this.PixelGridThresholdChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="ScaleTextChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnScaleTextChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      this.Invalidate();
+
+      handler = this.ScaleTextChanged;
 
       if (handler != null)
         handler(this, e);
@@ -2991,6 +3578,22 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Raises the <see cref="SizeModeChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnSizeModeChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      this.AdjustLayout();
+
+      handler = this.SizeModeChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+    /// <summary>
     ///   Raises the <see cref="SizeToFitChanged" /> event.
     /// </summary>
     /// <param name="e">
@@ -3003,6 +3606,54 @@ namespace Cyotek.Windows.Forms
       this.AdjustLayout();
 
       handler = this.SizeToFitChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="TextAlignChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnTextAlignChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      this.Invalidate();
+
+      handler = this.TextAlignChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="TextBackColorChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnTextBackColorChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      this.Invalidate();
+
+      handler = this.TextBackColorChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="TextDisplayModeChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnTextDisplayModeChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      this.Invalidate();
+
+      handler = this.TextDisplayModeChanged;
 
       if (handler != null)
         handler(this, e);
@@ -3095,6 +3746,20 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Raises the <see cref="Zoomed" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnZoomed(ImageBoxZoomEventArgs e)
+    {
+      EventHandler<ImageBoxZoomEventArgs> handler;
+
+      handler = this.Zoomed;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+    /// <summary>
     ///   Processes shortcut keys for zooming and selection
     /// </summary>
     /// <param name="e">
@@ -3102,32 +3767,36 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected virtual void ProcessImageShortcuts(KeyEventArgs e)
     {
-      int previousZoom;
+      Point currentPixel;
+      int currentZoom;
+      Point relativePoint;
 
-      previousZoom = this.Zoom;
+      relativePoint = this.CenterPoint;
+      currentPixel = this.PointToImage(relativePoint);
+      currentZoom = this.Zoom;
 
       switch (e.KeyCode)
       {
         case Keys.Home:
           if (this.AllowZoom)
-            this.ActualSize();
+            this.PerformActualSize(ImageBoxActionSources.User);
           break;
 
         case Keys.PageDown:
         case Keys.Oemplus:
           if (this.AllowZoom)
-            this.ZoomIn();
+            this.PerformZoomIn(ImageBoxActionSources.User);
           break;
 
         case Keys.PageUp:
         case Keys.OemMinus:
           if (this.AllowZoom)
-            this.ZoomOut();
+            this.PerformZoomOut(ImageBoxActionSources.User);
           break;
       }
 
-      if (this.Zoom != previousZoom && this.AutoCenter && !this.AutoScrollMinSize.IsEmpty)
-        this.AutoScrollPosition = new Point((this.AutoScrollMinSize.Width - this.ClientSize.Width) / 2, (this.AutoScrollMinSize.Height - this.ClientSize.Height) / 2);
+      if (this.Zoom != currentZoom)
+        this.ScrollTo(currentPixel, relativePoint);
     }
 
     /// <summary>
@@ -3145,7 +3814,7 @@ namespace Cyotek.Windows.Forms
       currentPixel = this.PointToImage(cursorPosition);
       currentZoom = this.Zoom;
 
-      this.Zoom = isZoomIn ? this.ZoomLevels.NextZoom(this.Zoom) : this.ZoomLevels.PreviousZoom(this.Zoom);
+      this.SetZoom(isZoomIn ? this.ZoomLevels.NextZoom(this.Zoom) : this.ZoomLevels.PreviousZoom(this.Zoom), isZoomIn ? ImageBoxZoomActions.ZoomIn : ImageBoxZoomActions.ZoomOut, ImageBoxActionSources.User);
 
       if (this.Zoom != currentZoom)
         this.ScrollTo(currentPixel, cursorPosition);
@@ -3282,6 +3951,25 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Resets the <see cref="SizeMode"/> property whilsts retaining the original <see cref="Zoom"/>.
+    /// </summary>
+    protected void RestoreSizeMode()
+    {
+      if (this.SizeMode != ImageBoxSizeMode.Normal)
+      {
+        int previousZoom;
+
+        previousZoom = this.Zoom;
+        this.SizeMode = ImageBoxSizeMode.Normal;
+        this.Zoom = previousZoom; // Stop the zoom getting reset to 100% before calculating the new zoom
+      }
+    }
+
+    /// <summary>
+    /// Initializes a selection or drag operation.
+    /// </summary>
+    /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
     protected virtual void StartDrag(MouseEventArgs e)
     {
       ImageBoxCancelEventArgs args;
@@ -3320,11 +4008,83 @@ namespace Cyotek.Windows.Forms
 
       if (this.GridDisplayMode != ImageBoxGridDisplayMode.None && this.GridCellSize != 0)
       {
-        _gridTile = this.CreateGridTileImage(this.GridCellSize, this.GridColor, this.GridColorAlternate);
-        _texture = new TextureBrush(_gridTile);
+        if (this.GridScale != ImageBoxGridScale.None)
+        {
+          _gridTile = this.CreateGridTileImage(this.GridCellSize, this.GridColor, this.GridColorAlternate);
+          _texture = new TextureBrush(_gridTile);
+        }
+        else
+          _texture = new SolidBrush(this.GridColor);
       }
 
       this.Invalidate();
+    }
+
+    /// <summary>
+    /// Called when the animation frame changes.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="eventArgs">The <see cref="EventArgs"/> instance containing the event data.</param>
+    private void OnFrameChangedHandler(object sender, EventArgs eventArgs)
+    {
+      this.Invalidate();
+    }
+
+    /// <summary>
+    /// Resets the zoom to 100%.
+    /// </summary>
+    /// <param name="source">The source that initiated the action.</param>
+    private void PerformActualSize(ImageBoxActionSources source)
+    {
+      this.SizeMode = ImageBoxSizeMode.Normal;
+      this.SetZoom(100, ImageBoxZoomActions.ActualSize | (this.Zoom < 100 ? ImageBoxZoomActions.ZoomIn : ImageBoxZoomActions.ZoomOut), source);
+    }
+
+    /// <summary>
+    /// Zooms into the image
+    /// </summary>
+    /// <param name="source">The source that initiated the action.</param>
+    private void PerformZoomIn(ImageBoxActionSources source)
+    {
+      this.RestoreSizeMode();
+      this.SetZoom(this.ZoomLevels.NextZoom(this.Zoom), ImageBoxZoomActions.ZoomIn, source);
+    }
+
+    /// <summary>
+    /// Zooms out of the image
+    /// </summary>
+    /// <param name="source">The source that initiated the action.</param>
+    private void PerformZoomOut(ImageBoxActionSources source)
+    {
+      this.RestoreSizeMode();
+      this.SetZoom(this.ZoomLevels.PreviousZoom(this.Zoom), ImageBoxZoomActions.ZoomOut, source);
+    }
+
+    /// <summary>
+    /// Updates the current zoom.
+    /// </summary>
+    /// <param name="value">The new zoom value.</param>
+    /// <param name="actions">The zoom actions that caused the value to be updated.</param>
+    /// <param name="source">The source of the zoom operation.</param>
+    private void SetZoom(int value, ImageBoxZoomActions actions, ImageBoxActionSources source)
+    {
+      int previousZoom;
+
+      previousZoom = this.Zoom;
+
+      if (value < MinZoom)
+        value = MinZoom;
+      else if (value > MaxZoom)
+        value = MaxZoom;
+
+      if (_zoom != value)
+      {
+        _zoom = value;
+
+        this.OnZoomChanged(EventArgs.Empty);
+
+        this.OnZoomed(new ImageBoxZoomEventArgs(actions, source, previousZoom, this.Zoom));
+      }
     }
 
     #endregion

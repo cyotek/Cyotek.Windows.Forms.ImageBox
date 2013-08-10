@@ -3,16 +3,35 @@ using System.Drawing;
 
 namespace Cyotek.Windows.Forms
 {
+  // Cyotek ImageBox
+  // Copyright (c) 2010-2013 Cyotek.
+  // http://cyotek.com
+  // http://cyotek.com/blog/tag/imagebox
+
+  // Licensed under the MIT License. See imagebox-license.txt for the full text.
+
+  // If you use this control in your applications, attribution, donations or contributions are welcome.
+
+  /// <summary>
+  /// Provides data for a cancelable event.
+  /// </summary>
   public class ImageBoxCancelEventArgs : CancelEventArgs
   {
     #region Constructors
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ImageBoxCancelEventArgs"/> class.
+    /// </summary>
+    /// <param name="location">The location of the action being performed.</param>
     public ImageBoxCancelEventArgs(Point location)
       : this()
     {
       this.Location = location;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ImageBoxCancelEventArgs"/> class.
+    /// </summary>
     protected ImageBoxCancelEventArgs()
     { }
 
@@ -20,6 +39,10 @@ namespace Cyotek.Windows.Forms
 
     #region Properties
 
+    /// <summary>
+    /// Gets or sets the location of the action being performed.
+    /// </summary>
+    /// <value>The location of the action being performed.</value>
     public Point Location { get; protected set; }
 
     #endregion

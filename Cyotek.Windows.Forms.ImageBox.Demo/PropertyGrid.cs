@@ -48,7 +48,16 @@ namespace Cyotek.Windows.Forms
 
       selection = this.FindItem(itemLabel);
       if (selection != null)
-        this.SelectedGridItem = selection;
+      {
+        try
+        {
+          this.SelectedGridItem = selection;
+        }
+        catch
+        {
+          // ignore
+        }
+      }
     }
 
     #endregion

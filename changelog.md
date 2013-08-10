@@ -1,9 +1,38 @@
-# ImageBox Change Log
+# Cyotek ImageBox Change Log
+
+## 1.1.4.0
+### Changes and new features
+* Added NuGet package
+* Added a new `SizeMode` property. This allows you to switch between `Normal`, `Fit` and `Stretch` modes. Stretch is a new mode for the `ImageBox`, and acts similar to existing `Fit` functionality except the aspect ratio is not preserved.
+* The `SizeToFit` property has been marked as deprecated and should no longer be used. The `SizeMode` property has a `Fit` value that should be used instead. Setting the `SizeToFit` property will now manipulate `SizeMode` instead.
+* Added a license file to hopefully cut down on questions about usage. The `ImageBox` control is licensed under the MIT license, allowing you free reign to use it in your projects, commercial or otherwise. See `imagebox-license.txt` for the full text.
+* Added a new `CenterPoint` property. This property returns the pixel at the center of the current image viewport.
+* Added a bunch of missing XML comments documentation.
+* Added new overloads for most methods that accepted a source `Rectangle`, `Point` or `Size` to also accept `float` and `int` arguments.
+* Added a new `Zoomed` method that uses new `ImageBoxZoomEventArgs` arguments. This new event allows you to tell if the zoom was in or out, how it was raised, and current and previous zoom values. Not hugely thrilled with how aspects of this change has been internally implemented, so implementation methods are private rather than virtual so I can change them without affecting the signature.
+* Added new `CenterToImage` method which resets the viewport to be centered of the image, in the same way as zooming via the keyboard used to work.
+* Added support for animated GIF's, thanks to a contribution from [Eggy](https://github.com/teamalpha5441). Note animations only play at runtime, not design time.
+* The `Text` and `Font` properties are now available and, if set, will be displayed in the control. You can use the `ForeColor`, `TextBackColor`, `TextAlign`, `TextDisplayMode` and `ScaleText` properties to determine how the text will be rendered.
+* A new `DrawLabel` method that performs text drawing is available for use by custom implementations or virtual modes. 
+
+### Demonstration Changes
+* Added a new *Scaled Adornments* demonstration, showing how easy it is to add custom drawing that is scaled and positioned appropriately.
+* Added a new *Switch Image During Zoom* demonstration, a demo with an unwieldy name that shows how to switch out a low resolution image with a higher detailed one as you zoom into an `ImageBox`.
+* Added new *Text* and *Size Mode* demonstrations.
+
+### Bug Fixes
+* Zooming in and out with the keyboard now keeps the view centered to the same pixel that was centered prior to the zoom 
+* Zooming in and out with the keyboard is now correctly disabled if the `AllowZoom` property is `False`, or the `SizeMode` property is a value other than `Normal`. This means keyboard behaviour now matches mouse behaviour.
+* If the mouse wheel was rapidly spun (thus having a multiple of the base delta), the `Zoom` property was only adjusted once
+* Setting the `GridScale` property to `None` rendered the default `Small` grid. Using a scale of `None` now correctly just fills the grid area with a solid brush from the `GridColor` property.
+* The `MouseWheel` event is now available
+* Layout changes no longer occur if the `AllowPainting` property is `false` through use of the `BeginUpdate` method.
+* Fixed various documentation errors
 
 ## 1.1.3.0
 ### Changes and new features
 * The `Selecting` event now uses `ImageBoxCancelEventArgs` in order to provide further information.
-* Added new `DragTestForm` demo
+* Added new *DragTestForm* demo
 * Added new `Tiny` setting for `ImageBoxGridScale` which is half the size of `Small`.
 
 ### Bug Fixes

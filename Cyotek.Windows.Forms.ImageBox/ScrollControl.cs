@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+
 #if USEWIN32PINVOKELIB
 using Cyotek.Win32;
 #endif
@@ -11,6 +12,9 @@ using Cyotek.Win32;
 
 namespace Cyotek.Windows.Forms
 {
+  /// <summary>
+  /// Defines a base class for controls that support scrolling behavior.
+  /// </summary>
   [ToolboxItem(false)]
   public partial class ScrollControl : Control
   {
@@ -56,6 +60,14 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler BorderStyleChanged;
+
+    /// <summary>
+    /// Occurs when the mouse wheel moves while the control has focus.
+    /// </summary>
+    [Browsable(true)]
+    [EditorBrowsable(EditorBrowsableState.Always)]
+    [Category("Mouse")]
+    public new event MouseEventHandler MouseWheel;
 
     /// <summary>
     ///   Occurs when the PageSize property value changes
@@ -153,6 +165,8 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected override void OnMouseWheel(MouseEventArgs e)
     {
+      MouseEventHandler handler;
+
       if (this.WheelScrollsControl)
       {
         int x;
@@ -184,6 +198,10 @@ namespace Cyotek.Windows.Forms
 
         this.ScrollTo(x, y);
       }
+
+      handler = this.MouseWheel;
+      if (handler != null)
+        handler(this, e);
 
       base.OnMouseWheel(e);
     }
@@ -287,6 +305,10 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Gets or sets the border style.
+    /// </summary>
+    /// <value>The border style.</value>
     [Category("Appearance")]
     [DefaultValue(typeof(BorderStyle), "Fixed3D")]
     public virtual BorderStyle BorderStyle
@@ -650,6 +672,9 @@ namespace Cyotek.Windows.Forms
       this.HorizontalScroll.Visible = true;
     }
 
+    /// <summary>
+    /// Updates the horizontal scrollbar.
+    /// </summary>
     protected virtual void UpdateHorizontalScrollbar()
     {
       NativeMethods.SCROLLINFO scrollInfo;
@@ -703,6 +728,9 @@ namespace Cyotek.Windows.Forms
       this.VerticalScroll.Visible = true;
     }
 
+    /// <summary>
+    /// Updates the vertical scrollbar.
+    /// </summary>
     protected virtual void UpdateVerticalScrollbar()
     {
       NativeMethods.SCROLLINFO scrollInfo;

@@ -11,8 +11,7 @@
     <AssemblyName>Cyotek.Windows.Forms.ImageBox</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Cyotek.Windows.Forms.ImageBox.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Cyotek.Windows.Forms.ImageBox.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -48,12 +49,16 @@
     <Compile Include="ImageBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ImageBoxZoomActions.cs" />
+    <Compile Include="ImageBoxActionSources.cs" />
     <Compile Include="ImageBoxBorderStyle.cs" />
     <Compile Include="ImageBoxCancelEventArgs.cs" />
+    <Compile Include="ImageBoxZoomEventArgs.cs" />
     <Compile Include="ImageBoxGridDisplayMode.cs" />
     <Compile Include="ImageBoxGridScale.cs" />
     <Compile Include="ImageBoxSelectionMode.cs" />
     <Compile Include="ImageBoxNativeMethods.cs" />
+    <Compile Include="ImageBoxSizeMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrollControl.cs">
       <SubType>Component</SubType>
@@ -69,11 +74,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cyopublic.snk" />
+    <None Include="Cyotek.Windows.Forms.ImageBox.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ImageBox.bmp" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
