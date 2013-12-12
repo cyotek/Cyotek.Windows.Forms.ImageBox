@@ -63,6 +63,12 @@
     <Compile Include="AnimatedGifDemoForm.Designer.cs">
       <DependentUpon>AnimatedGifDemoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DisposedImageDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DisposedImageDemoForm.Designer.cs">
+      <DependentUpon>DisposedImageDemoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextDemoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,6 +176,9 @@
     <EmbeddedResource Include="AnimatedGifDemoForm.resx">
       <DependentUpon>AnimatedGifDemoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DisposedImageDemoForm.resx">
+      <DependentUpon>DisposedImageDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TextDemoForm.resx">
       <DependentUpon>TextDemoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -217,7 +226,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rem copy /y $(SolutionDir)$(SolutionName).Design\$(OutDir)$(SolutionName).Design.* $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

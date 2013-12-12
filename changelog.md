@@ -1,5 +1,12 @@
 # Cyotek ImageBox Change Log
 
+## 1.1.4.1
+### Bug Fixes
+* Removed unnecessary `UpdateStyles` calls.
+* Changed the `ViewSize` property and `DrawImage` methods to handle disposed images rather than bringing down an entire application.
+* Added `TextFormatFlags.NoPadding` to the flags used by `DrawLabel` to avoid a slight gap on left aligned text.
+* Fixed a potential crash calling `GetSelectedImage`. Thanks to MutStarburst for finding this bug.
+
 ## 1.1.4.0
 ### Changes and new features
 * Added NuGet package

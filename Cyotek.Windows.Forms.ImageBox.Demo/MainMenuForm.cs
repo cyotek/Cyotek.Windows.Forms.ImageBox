@@ -49,60 +49,63 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
+    #region Members
+
+    private void ShowDemo<T>() where T : Form, new()
+    {
+      Cursor.Current = Cursors.WaitCursor;
+
+      using (Form form = new T())
+        form.ShowDialog(this);
+    }
+
+    #endregion
+
     #region Event Handlers
 
     private void animatedGifDemoButton_Click(object sender, EventArgs e)
     {
-      using (Form form = new AnimatedGifDemoForm())
-        form.ShowDialog(this);
+      this.ShowDemo<AnimatedGifDemoForm>();
     }
 
     private void dragTestDemoButton_Click(object sender, EventArgs e)
     {
-      using (Form form = new DragTestForm())
-        form.ShowDialog(this);
+      this.ShowDemo<DragTestForm>();
     }
 
     private void imageBoxDemoButton_Click(object sender, EventArgs e)
     {
-      using (Form form = new ImageBoxDemoForm())
-        form.ShowDialog(this);
+      this.ShowDemo<ImageBoxDemoForm>();
     }
 
     private void pixelGridDemoButton_Click(object sender, EventArgs e)
     {
-      using (Form form = new PixelGridForm())
-        form.ShowDialog(this);
+      this.ShowDemo<PixelGridForm>();
     }
 
     private void scaledAdornmentsDemoButton_Click(object sender, EventArgs e)
     {
-      using (Form form = new ScaledAdornmentsDemoForm())
-        form.ShowDialog(this);
+      this.ShowDemo<ScaledAdornmentsDemoForm>();
     }
 
     private void sizeModeDemoButton_Click(object sender, EventArgs e)
     {
-      using (Form form = new SizeModeDemoForm())
-        form.ShowDialog(this);
+      this.ShowDemo<SizeModeDemoForm>();
     }
 
     private void switchImageDuringZoomDemoButton_Click(object sender, EventArgs e)
     {
-      using (Form form = new SwitchImageDuringZoomDemoForm())
-        form.ShowDialog(this);
+      this.ShowDemo<SwitchImageDuringZoomDemoForm>();
     }
 
     private void textDemoButton_Click(object sender, EventArgs e)
     {
-      using (Form form = new TextDemoForm())
-        form.ShowDialog(this);
+      this.ShowDemo<TextDemoForm>();
     }
 
     private void virtualModeDemoButton_Click(object sender, EventArgs e)
     {
-      using (Form form = new VirtualModeDemonstrationForm())
-        form.ShowDialog(this);
+      this.ShowDemo<VirtualModeDemonstrationForm>();
     }
 
     #endregion

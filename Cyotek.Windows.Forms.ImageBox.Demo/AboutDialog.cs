@@ -65,6 +65,14 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
+    protected override void OnResize(EventArgs e)
+    {
+      base.OnResize(e);
+
+      if (docsTabControl != null)
+        docsTabControl.SetBounds(docsTabControl.Left, docsTabControl.Top, this.ClientSize.Width - (docsTabControl.Left * 2), this.ClientSize.Height - (docsTabControl.Top + footerGroupBox.Height + docsTabControl.Left));
+    }
+
     #endregion
 
     #region Properties

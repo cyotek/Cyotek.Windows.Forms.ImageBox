@@ -21,8 +21,7 @@ namespace Cyotek.Windows.Forms
   [DefaultProperty("Image")]
   [ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp")]
   [ToolboxItem(true)]
-  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */
-  public class ImageBox : VirtualScrollableControl
+  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */ public class ImageBox : VirtualScrollableControl
   {
     #region Constants
 
@@ -125,7 +124,6 @@ namespace Cyotek.Windows.Forms
     {
       this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
       this.SetStyle(ControlStyles.StandardDoubleClick, false);
-      this.UpdateStyles();
 
       // ReSharper disable DoNotCallOverridableMethodsInConstructor
       this.BeginUpdate();
@@ -1576,7 +1574,7 @@ namespace Cyotek.Windows.Forms
       get { return this.SizeMode == ImageBoxSizeMode.Fit; }
       set
       {
-        if (this.SizeToFit != value)
+        if ((this.SizeMode == ImageBoxSizeMode.Fit) != value)
         {
           this.SizeMode = value ? ImageBoxSizeMode.Fit : ImageBoxSizeMode.Normal;
           this.OnSizeToFitChanged(EventArgs.Empty);
@@ -1778,7 +1776,7 @@ namespace Cyotek.Windows.Forms
     /// <value>The size of the view.</value>
     protected virtual Size ViewSize
     {
-      get { return this.VirtualMode ? this.VirtualSize : this.Image != null ? this.Image.Size : Size.Empty; }
+      get { return this.VirtualMode ? this.VirtualSize : this.GetImageSize(); }
     }
 
     /// <summary>
@@ -2277,19 +2275,22 @@ namespace Cyotek.Windows.Forms
     {
       Image result;
 
+      result = null;
+
       if (!this.SelectionRegion.IsEmpty)
       {
         Rectangle rect;
 
         rect = this.FitRectangle(new Rectangle((int)this.SelectionRegion.X, (int)this.SelectionRegion.Y, (int)this.SelectionRegion.Width, (int)this.SelectionRegion.Height));
 
-        result = new Bitmap(rect.Width, rect.Height);
+        if (rect.Width > 0 && rect.Height > 0)
+        {
+          result = new Bitmap(rect.Width, rect.Height);
 
-        using (Graphics g = Graphics.FromImage(result))
-          g.DrawImage(this.Image, new Rectangle(Point.Empty, rect.Size), rect, GraphicsUnit.Pixel);
+          using (Graphics g = Graphics.FromImage(result))
+            g.DrawImage(this.Image, new Rectangle(Point.Empty, rect.Size), rect, GraphicsUnit.Pixel);
+        }
       }
-      else
-        result = null;
 
       return result;
     }
@@ -2795,11 +2796,18 @@ namespace Cyotek.Windows.Forms
       // http://stackoverflow.com/questions/14070311/why-is-graphics-drawimage-cropping-part-of-my-image/14070372#14070372
       g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-      // Animation. Thanks to teamalpha5441 for the contribution
-      if (this.IsAnimating && !this.DesignMode)
-        ImageAnimator.UpdateFrames(this.Image);
+      try
+      {
+        // Animation. Thanks to teamalpha5441 for the contribution
+        if (this.IsAnimating && !this.DesignMode)
+          ImageAnimator.UpdateFrames(this.Image);
 
-      g.DrawImage(this.Image, this.GetImageViewPort(), this.GetSourceImageRegion(), GraphicsUnit.Pixel);
+        g.DrawImage(this.Image, this.GetImageViewPort(), this.GetSourceImageRegion(), GraphicsUnit.Pixel);
+      }
+      catch (ArgumentException)
+      {
+        // ignore errors that occur due to the image being disposed
+      }
 
       g.PixelOffsetMode = currentPixelOffsetMode;
       g.InterpolationMode = currentInterpolationMode;
@@ -2920,7 +2928,7 @@ namespace Cyotek.Windows.Forms
       if (scaleText)
         font = new Font(font.FontFamily, (float)(font.Size * this.ZoomFactor), font.Style);
 
-      flags = TextFormatFlags.NoPrefix | TextFormatFlags.WordEllipsis | TextFormatFlags.WordBreak;
+      flags = TextFormatFlags.NoPrefix | TextFormatFlags.WordEllipsis | TextFormatFlags.WordBreak | TextFormatFlags.NoPadding;
 
       switch (textAlign)
       {
@@ -3095,7 +3103,6 @@ namespace Cyotek.Windows.Forms
       EventHandler handler;
 
       this.SetStyle(ControlStyles.StandardDoubleClick, this.AllowDoubleClick);
-      this.UpdateStyles();
 
       handler = this.AllowDoubleClickChanged;
 
@@ -3308,9 +3315,16 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      this.IsAnimating = ImageAnimator.CanAnimate(this.Image);
-      if (this.IsAnimating)
-        ImageAnimator.Animate(this.Image, this.OnFrameChangedHandler);
+      try
+      {
+        this.IsAnimating = ImageAnimator.CanAnimate(this.Image);
+        if (this.IsAnimating)
+          ImageAnimator.Animate(this.Image, this.OnFrameChangedHandler);
+      }
+      catch (ArgumentException)
+      {
+        // probably a disposed image, ignore
+      }
 
       this.AdjustLayout();
 
@@ -3993,6 +4007,34 @@ namespace Cyotek.Windows.Forms
       this.AutoScrollPosition = position;
       this.Invalidate();
       this.OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+    }
+
+    /// <summary>
+    /// Gets the size of the image.
+    /// </summary>
+    /// <remarks>If an error occurs, for example due to the image being disposed, an empty size is returned</remarks>
+    /// <returns>Size.</returns>
+    private Size GetImageSize()
+    {
+      Size result;
+
+      // HACK: This whole thing stinks. Hey MS, how about an IsDisposed property for images?
+
+      if (this.Image != null)
+      {
+        try
+        {
+          result = this.Image.Size;
+        }
+        catch
+        {
+          result = Size.Empty;
+        }
+      }
+      else
+        result = Size.Empty;
+
+      return result;
     }
 
     /// <summary>

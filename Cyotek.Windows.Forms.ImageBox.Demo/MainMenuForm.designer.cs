@@ -33,12 +33,12 @@
       this.pixelGridDemoButton = new System.Windows.Forms.Button();
       this.virtualModeDemoButton = new System.Windows.Forms.Button();
       this.groupBox1 = new Cyotek.Windows.Forms.GroupBox();
+      this.textDemoButton = new System.Windows.Forms.Button();
       this.animatedGifDemoButton = new System.Windows.Forms.Button();
       this.switchImageDuringZoomDemoButton = new System.Windows.Forms.Button();
       this.sizeModeDemoButton = new System.Windows.Forms.Button();
       this.scaledAdornmentsDemoButton = new System.Windows.Forms.Button();
       this.dragTestDemoButton = new System.Windows.Forms.Button();
-      this.textDemoButton = new System.Windows.Forms.Button();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -94,10 +94,22 @@
       this.groupBox1.Controls.Add(this.pixelGridDemoButton);
       this.groupBox1.Location = new System.Drawing.Point(31, 65);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(444, 332);
+      this.groupBox1.Size = new System.Drawing.Size(444, 321);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Available Demonstrations";
+      // 
+      // textDemoButton
+      // 
+      this.textDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.textDemoButton.Location = new System.Drawing.Point(6, 287);
+      this.textDemoButton.Name = "textDemoButton";
+      this.textDemoButton.Size = new System.Drawing.Size(432, 27);
+      this.textDemoButton.TabIndex = 9;
+      this.textDemoButton.Text = "&Text Demonstration";
+      this.textDemoButton.UseVisualStyleBackColor = true;
+      this.textDemoButton.Click += new System.EventHandler(this.textDemoButton_Click);
       // 
       // animatedGifDemoButton
       // 
@@ -159,23 +171,11 @@
       this.dragTestDemoButton.UseVisualStyleBackColor = true;
       this.dragTestDemoButton.Click += new System.EventHandler(this.dragTestDemoButton_Click);
       // 
-      // textDemoButton
-      // 
-      this.textDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.textDemoButton.Location = new System.Drawing.Point(6, 287);
-      this.textDemoButton.Name = "textDemoButton";
-      this.textDemoButton.Size = new System.Drawing.Size(432, 27);
-      this.textDemoButton.TabIndex = 9;
-      this.textDemoButton.Text = "&Text Demonstration";
-      this.textDemoButton.UseVisualStyleBackColor = true;
-      this.textDemoButton.Click += new System.EventHandler(this.textDemoButton_Click);
-      // 
       // MainMenuForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(615, 495);
+      this.ClientSize = new System.Drawing.Size(615, 552);
       this.Controls.Add(this.groupBox1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "MainMenuForm";

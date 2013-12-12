@@ -33,6 +33,13 @@ namespace Cyotek.Windows.Forms.Demo
       base.OnLoad(e);
     }
 
+    protected override void OnShown(EventArgs e)
+    {
+      base.OnShown(e);
+
+      Cursor.Current = Cursors.Default;
+    }
+
     #endregion
 
     #region Members

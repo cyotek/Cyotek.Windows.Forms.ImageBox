@@ -171,3 +171,6 @@ maps/map100.jpg
 
 optimizeimages.bat
 nuget/
+*.ncrunchsolution
+*.ncrunchproject
+*.GhostDoc.xml
