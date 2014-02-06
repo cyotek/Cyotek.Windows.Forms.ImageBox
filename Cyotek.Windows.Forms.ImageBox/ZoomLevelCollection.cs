@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Cyotek.Windows.Forms
 {
@@ -149,8 +148,10 @@ namespace Cyotek.Windows.Forms
     /// <param name="arrayIndex">A 64-bit integer that represents the index in the <see cref="Array"/> at which storing begins.</param>
     public void CopyTo(int[] array, int arrayIndex)
     {
-      if (this.Count != 0)
-        Array.Copy(this.List.Values.ToArray(), 0, array, arrayIndex, this.Count);
+      for (int i = 0; i < this.Count; i++)
+      {
+        array[arrayIndex + i] = this.List.Values[i]; 
+      }
     }
 
     /// <summary>
@@ -159,7 +160,19 @@ namespace Cyotek.Windows.Forms
     /// <param name="zoomLevel">The zoom level.</param>
     public int FindNearest(int zoomLevel)
     {
-      return this.OrderBy(v => Math.Abs(v - zoomLevel)).First();
+      int nearestValue = this.List.Values[0];
+      int nearestDifference = Math.Abs(nearestValue - zoomLevel);
+      for (int i = 1; i < this.Count; i++)
+      {
+         int value = this.List.Values[i];
+         int difference = Math.Abs(value - zoomLevel);
+         if (difference < nearestDifference)
+         {
+            nearestValue = value;
+            nearestDifference = difference;
+         }
+      }
+      return nearestValue;
     }
 
     /// <summary>

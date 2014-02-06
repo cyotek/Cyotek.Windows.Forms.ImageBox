@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms
@@ -36,7 +35,10 @@ namespace Cyotek.Windows.Forms
         if (checkItem.Label == itemLabel)
           matchingItem = checkItem;
 
-        searchItems.AddRange(checkItem.GridItems.Cast<GridItem>());
+        foreach (GridItem item in checkItem.GridItems)
+        {
+          searchItems.Add(item);
+        }
       }
 
       return matchingItem;
