@@ -42,7 +42,7 @@ namespace Cyotek.Windows.Forms
 
     #endregion
 
-    #region Constructors
+    #region Public Constructors
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GroupBox"/> class.
@@ -83,9 +83,13 @@ namespace Cyotek.Windows.Forms
         fontHeight = this.Font.Height;
 
         if (_image != null)
+        {
           imageSize = _iconMargin.Width + _image.Width + 3;
+        }
         else
+        {
           imageSize = 0;
+        }
 
         return new Rectangle(3 + imageSize, fontHeight + 3, Math.Max(clientSize.Width - (imageSize + 6), 0), Math.Max((clientSize.Height - fontHeight) - 6, 0));
       }
@@ -112,7 +116,7 @@ namespace Cyotek.Windows.Forms
 
     #endregion
 
-    #region Overridden Members
+    #region Overridden Methods
 
     /// <summary> 
     /// Clean up any resources being used.
@@ -121,7 +125,9 @@ namespace Cyotek.Windows.Forms
     protected override void Dispose(bool disposing)
     {
       if (disposing)
+      {
         this.CleanUpResources();
+      }
 
       base.Dispose(disposing);
     }
@@ -183,7 +189,9 @@ namespace Cyotek.Windows.Forms
 
       // draw the image
       if ((_image != null))
+      {
         e.Graphics.DrawImage(_image, this.Padding.Left + _iconMargin.Width, this.Padding.Top + (int)size.Height + _iconMargin.Height, _image.Width, _image.Height);
+      }
 
       //draw a designtime outline
       if (this.DesignMode && (_borders & Border3DSide.All) != Border3DSide.All)
@@ -210,7 +218,7 @@ namespace Cyotek.Windows.Forms
 
     #endregion
 
-    #region Properties
+    #region Public Properties
 
     [Category("Appearance")]
     [DefaultValue(typeof(Border3DSide), "Top")]
@@ -320,7 +328,7 @@ namespace Cyotek.Windows.Forms
 
     #endregion
 
-    #region Members
+    #region Private Members
 
     /// <summary>
     /// Cleans up GDI resources.
@@ -328,10 +336,14 @@ namespace Cyotek.Windows.Forms
     private void CleanUpResources()
     {
       if (_topPen != null)
+      {
         _topPen.Dispose();
+      }
 
       if (_bottomPen != null)
+      {
         _bottomPen.Dispose();
+      }
     }
 
     /// <summary>

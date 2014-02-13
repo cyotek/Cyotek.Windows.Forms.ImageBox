@@ -13,7 +13,7 @@
         <description>The ImageBox is a custom control for displaying images. It supports zooming, scrolling, panning, region selection, virtual modes, and much more.</description>
         <summary>The ImageBox is a custom control for displaying images with built in support for zooming, scrolling, panning, region selection, virtual modes, and much more.</summary>
         <releaseNotes />
-        <copyright>Copyright 2010-2013 Cyotek.</copyright>
+        <copyright>Copyright 2010-2014 Cyotek.</copyright>
         <language>en-GB</language>
         <tags>image picturebox form control imagebox cyotek</tags>
         <frameworkAssemblies>

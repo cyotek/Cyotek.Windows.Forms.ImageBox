@@ -3,7 +3,7 @@
 namespace Cyotek.Windows.Forms
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2013 Cyotek.
+  // Copyright (c) 2010-2014 Cyotek.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -16,7 +16,7 @@ namespace Cyotek.Windows.Forms
   /// </summary>
   public class ImageBoxZoomEventArgs : EventArgs
   {
-    #region Constructors
+    #region Public Constructors
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ImageBoxZoomEventArgs"/> class.
@@ -34,6 +34,10 @@ namespace Cyotek.Windows.Forms
       this.NewZoom = newZoom;
     }
 
+    #endregion
+
+    #region Protected Constructors
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ImageBoxZoomEventArgs"/> class.
     /// </summary>
@@ -42,7 +46,7 @@ namespace Cyotek.Windows.Forms
 
     #endregion
 
-    #region Properties
+    #region Public Properties
 
     /// <summary>
     /// Gets or sets the actions that occured.

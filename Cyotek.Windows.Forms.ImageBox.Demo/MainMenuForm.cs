@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2013 Cyotek.
+  // Copyright (c) 2010-2014 Cyotek.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -14,7 +14,7 @@ namespace Cyotek.Windows.Forms.Demo
 
   internal partial class MainMenuForm : AboutDialog
   {
-    #region Constructors
+    #region Public Constructors
 
     public MainMenuForm()
     {
@@ -23,7 +23,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Overridden Members
+    #region Overridden Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -32,11 +32,11 @@ namespace Cyotek.Windows.Forms.Demo
       base.OnLoad(e);
 
       demoPage = new TabPage
-      {
-        UseVisualStyleBackColor = true,
-        Padding = new Padding(9),
-        Text = "Demonstrations"
-      };
+                 {
+                   UseVisualStyleBackColor = true,
+                   Padding = new Padding(9),
+                   Text = "Demonstrations"
+                 };
 
       groupBox1.Dock = DockStyle.Fill;
       demoPage.Controls.Add(groupBox1);
@@ -49,14 +49,16 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Members
+    #region Private Members
 
     private void ShowDemo<T>() where T : Form, new()
     {
       Cursor.Current = Cursors.WaitCursor;
 
       using (Form form = new T())
+      {
         form.ShowDialog(this);
+      }
     }
 
     #endregion
@@ -81,6 +83,11 @@ namespace Cyotek.Windows.Forms.Demo
     private void pixelGridDemoButton_Click(object sender, EventArgs e)
     {
       this.ShowDemo<PixelGridForm>();
+    }
+
+    private void resizableSelectionDemoButton_Click(object sender, EventArgs e)
+    {
+      this.ShowDemo<ResizableSelectionDemoForm>();
     }
 
     private void scaledAdornmentsDemoButton_Click(object sender, EventArgs e)

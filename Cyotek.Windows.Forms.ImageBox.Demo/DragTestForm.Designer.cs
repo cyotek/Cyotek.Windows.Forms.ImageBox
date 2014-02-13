@@ -35,9 +35,9 @@
       this.menuStrip = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.splitContainer.Panel1.SuspendLayout();
       this.splitContainer.Panel2.SuspendLayout();
       this.splitContainer.SuspendLayout();
@@ -103,7 +103,6 @@
       this.menuStrip.Name = "menuStrip";
       this.menuStrip.Size = new System.Drawing.Size(847, 24);
       this.menuStrip.TabIndex = 3;
-      
       // 
       // fileToolStripMenuItem
       // 
@@ -117,17 +116,9 @@
       // 
       this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
       this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-      this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.closeToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
       this.closeToolStripMenuItem.Text = "&Close";
       this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
-      // 
-      // statusStrip
-      // 
-      this.statusStrip.Location = new System.Drawing.Point(0, 351);
-      this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Size = new System.Drawing.Size(847, 22);
-      this.statusStrip.TabIndex = 4;
-      
       // 
       // helpToolStripMenuItem
       // 
@@ -140,9 +131,16 @@
       // aboutToolStripMenuItem
       // 
       this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
       this.aboutToolStripMenuItem.Text = "&About...";
       this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+      // 
+      // statusStrip
+      // 
+      this.statusStrip.Location = new System.Drawing.Point(0, 351);
+      this.statusStrip.Name = "statusStrip";
+      this.statusStrip.Size = new System.Drawing.Size(847, 22);
+      this.statusStrip.TabIndex = 4;
       // 
       // DragTestForm
       // 

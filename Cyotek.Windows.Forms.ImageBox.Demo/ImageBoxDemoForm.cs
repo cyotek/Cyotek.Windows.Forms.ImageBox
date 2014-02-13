@@ -7,7 +7,7 @@ using Cyotek.Windows.Forms.Demo.Properties;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2013 Cyotek.
+  // Copyright (c) 2010-2014 Cyotek.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -23,7 +23,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Constructors
+    #region Public Constructors
 
     public ImageBoxDemoForm()
     {
@@ -32,7 +32,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Overridden Members
+    #region Overridden Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -47,7 +47,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Members
+    #region Private Members
 
     private void DrawBox(Graphics graphics, Color color, RectangleF rectangle, double scale)
     {
@@ -56,14 +56,18 @@ namespace Cyotek.Windows.Forms.Demo
       penWidth = 2 * (float)scale;
 
       using (SolidBrush brush = new SolidBrush(Color.FromArgb(64, color)))
+      {
         graphics.FillRectangle(brush, rectangle);
+      }
 
       using (Pen pen = new Pen(color, penWidth)
+                       {
+                         DashStyle = DashStyle.Dot,
+                         DashCap = DashCap.Round
+                       })
       {
-        DashStyle = DashStyle.Dot,
-        DashCap = DashCap.Round
-      })
         graphics.DrawRectangle(pen, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+      }
     }
 
     private void FillZoomLevels()
@@ -71,7 +75,9 @@ namespace Cyotek.Windows.Forms.Demo
       zoomLevelsToolStripComboBox.Items.Clear();
 
       foreach (int zoom in imageBox.ZoomLevels)
+      {
         zoomLevelsToolStripComboBox.Items.Add(string.Format("{0}%", zoom));
+      }
     }
 
     private void OpenImage(Image image)
@@ -92,13 +98,17 @@ namespace Cyotek.Windows.Forms.Demo
         cursorToolStripStatusLabel.Text = this.FormatPoint(point);
       }
       else
+      {
         cursorToolStripStatusLabel.Text = string.Empty;
+      }
     }
 
     private void UpdatePreviewImage()
     {
       if (_previewImage != null)
+      {
         _previewImage.Dispose();
+      }
 
       _previewImage = imageBox.GetSelectedImage();
 
@@ -159,11 +169,15 @@ namespace Cyotek.Windows.Forms.Demo
     {
       // highlight the image
       if (showImageRegionToolStripButton.Checked)
+      {
         this.DrawBox(e.Graphics, Color.CornflowerBlue, imageBox.GetImageViewPort(), 1);
+      }
 
       // show the region that will be drawn from the source image
       if (showSourceImageRegionToolStripButton.Checked)
+      {
         this.DrawBox(e.Graphics, Color.Firebrick, new RectangleF(imageBox.GetImageViewPort().Location, imageBox.GetSourceImageRegion().Size), 1);
+      }
     }
 
     private void imageBox_Resize(object sender, EventArgs e)

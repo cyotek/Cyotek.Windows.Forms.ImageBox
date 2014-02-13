@@ -33,3 +33,6 @@ Original information on pixel clipping [Rotem](http://stackoverflow.com/question
 
 ### Animated GIF Support
 Contribution by [Eggy](https://github.com/teamalpha5441)
+
+### Removal of .NET 3.5 requirement
+Contribution by [dahmage](https://github.com/dahmage)

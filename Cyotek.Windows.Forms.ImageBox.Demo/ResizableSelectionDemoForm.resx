@@ -118,19 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="demoLabel.Text" xml:space="preserve">
-    <value>In this demo, a virtual mode ImageBox is being used to define a drag region, and then move it around.
+    <value>This demonstration shows how to expand the SelectionRegion to include the ability to drag the region around, and to resize it via the use of drag handles.
 
-When the Selecting event is raised, a check is made to see if the current cursor (adjusted for zoom of course!) is within the drag area. If it is, the event is cancelled. If it is not, a new selection region is allowed to be created.
-
-The MouseDown, MouseMove and MouseUp events are used to allow the drag region to be moved around, within the confines of the virtual area.
-
-See the "Resizable Selection" demo for an improved version of this code, which also supports cancelation and resizing support.
+VirtualMode is used to create a canvas area without requiring a backing image.
 </value>
   </data>
   <metadata name="menuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
+    <value>246, 17</value>
   </metadata>
   <metadata name="statusStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>132, 17</value>
+    <value>359, 17</value>
   </metadata>
 </root>

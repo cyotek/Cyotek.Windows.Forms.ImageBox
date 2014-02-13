@@ -5,7 +5,7 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2013 Cyotek.
+  // Copyright (c) 2010-2014 Cyotek.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -25,7 +25,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Constructors
+    #region Public Constructors
 
     public DragTestForm()
     {
@@ -79,9 +79,13 @@ namespace Cyotek.Windows.Forms.Demo
         y = Math.Max(0, imagePoint.Y - _dragOffset.Y);
 
         if (x + _dragItem.Width >= imageBox.VirtualSize.Width)
+        {
           x = imageBox.VirtualSize.Width - (int)_dragItem.Width;
+        }
         if (y + _dragItem.Height >= imageBox.VirtualSize.Height)
+        {
           y = imageBox.VirtualSize.Height - (int)_dragItem.Height;
+        }
 
         _dragItem.Location = new PointF(x, y);
         imageBox.Invalidate();
@@ -96,7 +100,9 @@ namespace Cyotek.Windows.Forms.Demo
     private void imageBox_Selecting(object sender, ImageBoxCancelEventArgs e)
     {
       if (_dragItem.Contains(imageBox.PointToImage(e.Location)))
+      {
         e.Cancel = true;
+      }
     }
 
     private void imageBox_SelectionRegionChanged(object sender, EventArgs e)
@@ -116,19 +122,21 @@ namespace Cyotek.Windows.Forms.Demo
       bounds = imageBox.GetOffsetRectangle(new RectangleF(PointF.Empty, imageBox.VirtualSize));
 
       using (Brush brush = new SolidBrush(Color.FromArgb(128, Color.Goldenrod)))
+      {
         e.Graphics.FillRectangle(brush, bounds);
+      }
 
-      using (Pen pen = new Pen(Color.DarkGoldenrod))
-        e.Graphics.DrawRectangle(pen, bounds.X, bounds.Y, bounds.Width, bounds.Height);
+      e.Graphics.DrawRectangle(Pens.DarkGoldenrod, bounds.X, bounds.Y, bounds.Width, bounds.Height);
 
       // draw the "drag" item
       bounds = imageBox.GetOffsetRectangle(_dragItem);
 
       using (Brush brush = new SolidBrush(Color.FromArgb(128, Color.CornflowerBlue)))
+      {
         e.Graphics.FillRectangle(brush, bounds);
+      }
 
-      using (Pen pen = new Pen(Color.Blue))
-        e.Graphics.DrawRectangle(pen, bounds.X, bounds.Y, bounds.Width, bounds.Height);
+      e.Graphics.DrawRectangle(Pens.Blue, bounds.X, bounds.Y, bounds.Width, bounds.Height);
     }
 
     #endregion

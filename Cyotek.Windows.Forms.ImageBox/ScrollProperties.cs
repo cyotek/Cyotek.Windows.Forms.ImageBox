@@ -13,7 +13,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     public class HScrollProperties : ScrollProperties
     {
-      #region Constructors
+      #region Public Constructors
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ScrollProperties" /> class.
@@ -37,7 +37,7 @@ namespace Cyotek.Windows.Forms
 
       #endregion
 
-      #region Constructors
+      #region Protected Constructors
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ScrollProperties"/> class.
@@ -51,7 +51,7 @@ namespace Cyotek.Windows.Forms
 
       #endregion
 
-      #region Properties
+      #region Public Properties
 
       /// <summary>
       /// Gets or sets whether the scroll bar can be used on the container.
@@ -120,7 +120,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     public class VScrollProperties : ScrollProperties
     {
-      #region Constructors
+      #region Public Constructors
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ScrollProperties" /> class.

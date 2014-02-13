@@ -1,5 +1,17 @@
 # Cyotek ImageBox Change Log
 
+## 1.1.4.2
+### Changes and new features
+* `DrawImage` now also ignores `OutOfMemoryException` exceptions
+* Removed requirement for .NET 3.5 thanks to a commit from [dahmage](https://github.com/dahmage)
+* Added `GetScaledRectangle` overloads using `Point` and `Size` (and the float variant) parameters
+
+### Bug Fixes
+* Calling `SelectAll` caused a crash if a backing image wasn't present (even if `VirtualMode` was set)
+
+### Demonstration changes
+* Added a new **Resizable Selection** demo. This demo makes use of a subclass of the `ImageBox` to add native dragging and resizing of the region defined by the `SelectionRegion` property.
+
 ## 1.1.4.1
 ### Bug Fixes
 * Removed unnecessary `UpdateStyles` calls.

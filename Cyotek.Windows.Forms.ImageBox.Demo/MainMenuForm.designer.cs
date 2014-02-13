@@ -33,6 +33,7 @@
       this.pixelGridDemoButton = new System.Windows.Forms.Button();
       this.virtualModeDemoButton = new System.Windows.Forms.Button();
       this.groupBox1 = new Cyotek.Windows.Forms.GroupBox();
+      this.resizableSelectionDemoButton = new System.Windows.Forms.Button();
       this.textDemoButton = new System.Windows.Forms.Button();
       this.animatedGifDemoButton = new System.Windows.Forms.Button();
       this.switchImageDuringZoomDemoButton = new System.Windows.Forms.Button();
@@ -83,6 +84,7 @@
       this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.groupBox1.Controls.Add(this.resizableSelectionDemoButton);
       this.groupBox1.Controls.Add(this.textDemoButton);
       this.groupBox1.Controls.Add(this.animatedGifDemoButton);
       this.groupBox1.Controls.Add(this.switchImageDuringZoomDemoButton);
@@ -94,10 +96,22 @@
       this.groupBox1.Controls.Add(this.pixelGridDemoButton);
       this.groupBox1.Location = new System.Drawing.Point(31, 65);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(444, 321);
+      this.groupBox1.Size = new System.Drawing.Size(444, 360);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Available Demonstrations";
+      // 
+      // resizableSelectionDemoButton
+      // 
+      this.resizableSelectionDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.resizableSelectionDemoButton.Location = new System.Drawing.Point(6, 320);
+      this.resizableSelectionDemoButton.Name = "resizableSelectionDemoButton";
+      this.resizableSelectionDemoButton.Size = new System.Drawing.Size(432, 27);
+      this.resizableSelectionDemoButton.TabIndex = 10;
+      this.resizableSelectionDemoButton.Text = "&Resizable Selection Demonstration";
+      this.resizableSelectionDemoButton.UseVisualStyleBackColor = true;
+      this.resizableSelectionDemoButton.Click += new System.EventHandler(this.resizableSelectionDemoButton_Click);
       // 
       // textDemoButton
       // 
@@ -201,6 +215,7 @@
     private System.Windows.Forms.Button switchImageDuringZoomDemoButton;
     private System.Windows.Forms.Button animatedGifDemoButton;
     private System.Windows.Forms.Button textDemoButton;
+    private System.Windows.Forms.Button resizableSelectionDemoButton;
 
 
 

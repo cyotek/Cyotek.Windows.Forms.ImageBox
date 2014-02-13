@@ -5,7 +5,7 @@ namespace Cyotek.Windows.Forms
 {
   internal class PropertyGrid : System.Windows.Forms.PropertyGrid
   {
-    #region Members
+    #region Public Members
 
     public GridItem FindItem(string itemLabel)
     {
@@ -20,7 +20,9 @@ namespace Cyotek.Windows.Forms
       // Find the GridItem root.
       rootItem = this.SelectedGridItem;
       while (rootItem.Parent != null)
+      {
         rootItem = rootItem.Parent;
+      }
 
       // Search the tree.
       searchItems = new List<GridItem>();
@@ -33,7 +35,9 @@ namespace Cyotek.Windows.Forms
         checkItem = searchItems[0];
         searchItems.RemoveAt(0);
         if (checkItem.Label == itemLabel)
+        {
           matchingItem = checkItem;
+        }
 
         foreach (GridItem item in checkItem.GridItems)
         {

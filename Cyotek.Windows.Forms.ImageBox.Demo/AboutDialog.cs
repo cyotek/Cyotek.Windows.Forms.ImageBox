@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2013 Cyotek.
+  // Copyright (c) 2010-2014 Cyotek.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -18,7 +18,7 @@ namespace Cyotek.Windows.Forms.Demo
 
   internal partial class AboutDialog : BaseForm
   {
-    #region Constructors
+    #region Public Constructors
 
     public AboutDialog()
     {
@@ -32,12 +32,14 @@ namespace Cyotek.Windows.Forms.Demo
     internal static void ShowAboutDialog()
     {
       using (Form dialog = new AboutDialog())
+      {
         dialog.ShowDialog();
+      }
     }
 
     #endregion
 
-    #region Overridden Members
+    #region Overridden Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -70,12 +72,14 @@ namespace Cyotek.Windows.Forms.Demo
       base.OnResize(e);
 
       if (docsTabControl != null)
+      {
         docsTabControl.SetBounds(docsTabControl.Left, docsTabControl.Top, this.ClientSize.Width - (docsTabControl.Left * 2), this.ClientSize.Height - (docsTabControl.Top + footerGroupBox.Height + docsTabControl.Left));
+      }
     }
 
     #endregion
 
-    #region Properties
+    #region Protected Properties
 
     protected TabControl TabControl
     {
@@ -84,7 +88,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Members
+    #region Private Members
 
     private void AddReadme(string fileName)
     {
@@ -95,22 +99,22 @@ namespace Cyotek.Windows.Forms.Demo
       fullPath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"), fileName);
 
       page = new TabPage
-      {
-        UseVisualStyleBackColor = true,
-        Padding = new Padding(9),
-        ToolTipText = fullPath,
-        Text = fileName
-      };
+             {
+               UseVisualStyleBackColor = true,
+               Padding = new Padding(9),
+               ToolTipText = fullPath,
+               Text = fileName
+             };
 
       textBox = new TextBox
-      {
-        ReadOnly = true,
-        Multiline = true,
-        WordWrap = true,
-        ScrollBars = ScrollBars.Vertical,
-        Dock = DockStyle.Fill,
-        Text = File.ReadAllText(fullPath)
-      };
+                {
+                  ReadOnly = true,
+                  Multiline = true,
+                  WordWrap = true,
+                  ScrollBars = ScrollBars.Vertical,
+                  Dock = DockStyle.Fill,
+                  Text = File.ReadAllText(fullPath)
+                };
 
       page.Controls.Add(textBox);
 

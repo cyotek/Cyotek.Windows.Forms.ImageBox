@@ -68,6 +68,21 @@
     <Compile Include="DisposedImageDemoForm.Designer.cs">
       <DependentUpon>DisposedImageDemoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DragHandle.cs" />
+    <Compile Include="DragHandleAnchor.cs" />
+    <Compile Include="DragHandleCollection.cs" />
+    <Compile Include="EventsListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ImageBoxEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ResizableSelectionDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResizableSelectionDemoForm.Designer.cs">
+      <DependentUpon>ResizableSelectionDemoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextDemoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -177,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DisposedImageDemoForm.resx">
       <DependentUpon>DisposedImageDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResizableSelectionDemoForm.resx">
+      <DependentUpon>ResizableSelectionDemoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TextDemoForm.resx">
       <DependentUpon>TextDemoForm.cs</DependentUpon>
