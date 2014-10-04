@@ -7,7 +7,7 @@ namespace Cyotek.Windows.Forms.Demo
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
-  // Licensed under the MIT License. See imagebox-license.txt for the full text.
+  // Licensed under the MIT License. See license.txt for the full text.
 
   // If you use this control in your applications, attribution, donations or contributions are welcome.
 
@@ -28,6 +28,7 @@ namespace Cyotek.Windows.Forms.Demo
     {
       base.OnLoad(e);
 
+      propertyGrid.SelectItem("TextPadding"); // HACK: This forces the property grid to scroll the property into view
       propertyGrid.SelectItem("Text");
     }
 

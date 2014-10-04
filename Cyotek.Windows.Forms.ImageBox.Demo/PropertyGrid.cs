@@ -1,8 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Cyotek.Windows.Forms
+namespace Cyotek.Windows.Forms.Demo
 {
+  // Cyotek ImageBox
+  // Copyright (c) 2010-2014 Cyotek.
+  // http://cyotek.com
+  // http://cyotek.com/blog/tag/imagebox
+
+  // Licensed under the MIT License. See license.txt for the full text.
+
+  // If you use this control in your applications, attribution, donations or contributions are welcome.
+
   internal class PropertyGrid : System.Windows.Forms.PropertyGrid
   {
     #region Public Members
@@ -28,7 +37,7 @@ namespace Cyotek.Windows.Forms
       searchItems = new List<GridItem>();
       searchItems.Add(rootItem);
 
-      while (searchItems.Count != 0 || matchingItem == null)
+      while (searchItems.Count != 0 && matchingItem == null)
       {
         GridItem checkItem;
 

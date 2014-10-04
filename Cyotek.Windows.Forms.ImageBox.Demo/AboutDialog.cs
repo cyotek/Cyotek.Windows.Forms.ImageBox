@@ -4,6 +4,8 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using CommonMark;
+using HtmlRenderer;
 
 namespace Cyotek.Windows.Forms.Demo
 {
@@ -12,7 +14,7 @@ namespace Cyotek.Windows.Forms.Demo
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
-  // Licensed under the MIT License. See imagebox-license.txt for the full text.
+  // Licensed under the MIT License. See license.txt for the full text.
 
   // If you use this control in your applications, attribution, donations or contributions are welcome.
 
@@ -63,7 +65,7 @@ namespace Cyotek.Windows.Forms.Demo
         this.AddReadme("changelog.md");
         this.AddReadme("readme.md");
         this.AddReadme("acknowledgements.md");
-        this.AddReadme("imagebox-license.txt");
+        this.AddReadme("license.txt");
       }
     }
 
@@ -92,33 +94,19 @@ namespace Cyotek.Windows.Forms.Demo
 
     private void AddReadme(string fileName)
     {
-      TabPage page;
-      TextBox textBox;
-      string fullPath;
+      this.docsTabControl.TabPages.Add(new TabPage
+                                       {
+                                         UseVisualStyleBackColor = true,
+                                         Padding = new Padding(9),
+                                         ToolTipText = this.GetFullReadmePath(fileName),
+                                         Text = fileName,
+                                         Tag = fileName
+                                       });
+    }
 
-      fullPath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"), fileName);
-
-      page = new TabPage
-             {
-               UseVisualStyleBackColor = true,
-               Padding = new Padding(9),
-               ToolTipText = fullPath,
-               Text = fileName
-             };
-
-      textBox = new TextBox
-                {
-                  ReadOnly = true,
-                  Multiline = true,
-                  WordWrap = true,
-                  ScrollBars = ScrollBars.Vertical,
-                  Dock = DockStyle.Fill,
-                  Text = File.ReadAllText(fullPath)
-                };
-
-      page.Controls.Add(textBox);
-
-      docsTabControl.TabPages.Add(page);
+    private string GetFullReadmePath(string fileName)
+    {
+      return Path.GetFullPath(Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"), fileName));
     }
 
     #endregion
@@ -128,6 +116,59 @@ namespace Cyotek.Windows.Forms.Demo
     private void closeButton_Click(object sender, EventArgs e)
     {
       this.Close();
+    }
+
+    private void docsTabControl_Selecting(object sender, TabControlCancelEventArgs e)
+    {
+      TabPage page;
+
+      page = e.TabPage;
+
+      if (page.Controls.Count == 0 && page.Tag != null)
+      {
+        Control documentView;
+        string fullPath;
+        string text;
+
+        Cursor.Current = Cursors.WaitCursor;
+
+        Debug.Print("Loading readme: {0}", page.Tag);
+
+        fullPath = this.GetFullReadmePath(page.Tag.ToString());
+        text = File.Exists(fullPath) ? File.ReadAllText(fullPath) : string.Format("Cannot find file '{0}'", fullPath);
+
+        if (text.IndexOf('\n') != -1 && text.IndexOf('\r') == -1)
+        {
+          text = text.Replace("\n", "\r\n");
+        }
+
+        switch (Path.GetExtension(fullPath))
+        {
+          case ".md":
+            documentView = new HtmlPanel
+                           {
+                             Dock = DockStyle.Fill,
+                             BaseStylesheet = Properties.Resources.CSS,
+                             Text = string.Concat("<html><body>", CommonMarkConverter.Convert(text), "</body></html>") // HACK: HTML panel screws up rendering if a <body> tag isn't present
+                           };
+            break;
+          default:
+            documentView = new TextBox
+                           {
+                             ReadOnly = true,
+                             Multiline = true,
+                             WordWrap = true,
+                             ScrollBars = ScrollBars.Vertical,
+                             Dock = DockStyle.Fill,
+                             Text = text
+                           };
+            break;
+        }
+
+        page.Controls.Add(documentView);
+
+        Cursor.Current = Cursors.Default;
+      }
     }
 
     private void footerGroupBox_Paint(object sender, PaintEventArgs e)

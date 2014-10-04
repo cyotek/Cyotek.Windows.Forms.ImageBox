@@ -11,7 +11,7 @@ namespace Cyotek.Windows.Forms
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
-  // Licensed under the MIT License. See imagebox-license.txt for the full text.
+  // Licensed under the MIT License. See license.txt for the full text.
 
   // If you use this control in your applications, attribution, donations or contributions are welcome.
 
@@ -100,6 +100,8 @@ namespace Cyotek.Windows.Forms
     private Color _textBackColor;
 
     private ImageBoxGridDisplayMode _textDisplayMode;
+
+    private Padding _textPadding;
 
     private Brush _texture;
 
@@ -366,6 +368,12 @@ namespace Cyotek.Windows.Forms
     public event EventHandler TextDisplayModeChanged;
 
     /// <summary>
+    /// Occurs when the TextPadding property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler TextPaddingChanged;
+
+    /// <summary>
     ///   Occurs when virtual painting should occur
     /// </summary>
     [Category("Appearance")]
@@ -403,7 +411,7 @@ namespace Cyotek.Windows.Forms
 
     #endregion
 
-    #region Class Members
+    #region Public Class Members
 
     /// <summary>
     ///   Creates a bitmap image containing a 2x2 grid using the specified cell size and colors.
@@ -845,32 +853,8 @@ namespace Cyotek.Windows.Forms
     {
       if (this.AllowPainting)
       {
-        Rectangle innerRectangle;
-
-        innerRectangle = this.GetInsideViewPort();
-
         // draw the background
-        using (SolidBrush brush = new SolidBrush(this.BackColor))
-        {
-          e.Graphics.FillRectangle(brush, innerRectangle);
-        }
-
-        if (_texture != null && this.GridDisplayMode != ImageBoxGridDisplayMode.None)
-        {
-          switch (this.GridDisplayMode)
-          {
-            case ImageBoxGridDisplayMode.Image:
-              Rectangle fillRectangle;
-
-              fillRectangle = this.GetImageViewPort();
-              e.Graphics.FillRectangle(_texture, fillRectangle);
-              break;
-
-            case ImageBoxGridDisplayMode.Client:
-              e.Graphics.FillRectangle(_texture, innerRectangle);
-              break;
-          }
-        }
+        this.DrawBackground(e);
 
         // draw the image
         if (!this.ViewSize.IsEmpty)
@@ -1692,6 +1676,22 @@ namespace Cyotek.Windows.Forms
           _textDisplayMode = value;
 
           this.OnTextDisplayModeChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    [Category("Appearance")]
+    [DefaultValue(typeof(Padding), "0, 0, 0, 0")]
+    public virtual Padding TextPadding
+    {
+      get { return _textPadding; }
+      set
+      {
+        if (this.TextPadding != value)
+        {
+          _textPadding = value;
+
+          this.OnTextPaddingChanged(EventArgs.Empty);
         }
       }
     }
@@ -2850,6 +2850,39 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Draws the background of the control.
+    /// </summary>
+    /// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
+    protected virtual void DrawBackground(PaintEventArgs e)
+    {
+      Rectangle innerRectangle;
+
+      innerRectangle = this.GetInsideViewPort();
+
+      using (SolidBrush brush = new SolidBrush(this.BackColor))
+      {
+        e.Graphics.FillRectangle(brush, innerRectangle);
+      }
+
+      if (_texture != null && this.GridDisplayMode != ImageBoxGridDisplayMode.None)
+      {
+        switch (this.GridDisplayMode)
+        {
+          case ImageBoxGridDisplayMode.Image:
+            Rectangle fillRectangle;
+
+            fillRectangle = this.GetImageViewPort();
+            e.Graphics.FillRectangle(_texture, fillRectangle);
+            break;
+
+          case ImageBoxGridDisplayMode.Client:
+            e.Graphics.FillRectangle(_texture, innerRectangle);
+            break;
+        }
+      }
+    }
+
+    /// <summary>
     ///   Draws a drop shadow.
     /// </summary>
     /// <param name="g">The graphics. </param>
@@ -2920,7 +2953,7 @@ namespace Cyotek.Windows.Forms
       currentInterpolationMode = g.InterpolationMode;
       currentPixelOffsetMode = g.PixelOffsetMode;
 
-      g.InterpolationMode = this.InterpolationMode;
+      g.InterpolationMode = this.GetInterpolationMode();
 
       // disable pixel offsets. Thanks to Rotem for the info.
       // http://stackoverflow.com/questions/14070311/why-is-graphics-drawimage-cropping-part-of-my-image/14070372#14070372
@@ -3061,6 +3094,23 @@ namespace Cyotek.Windows.Forms
     /// <param name="scaleText">If set to <c>true</c> the font size is scaled according to the current zoom level.</param>
     protected virtual void DrawLabel(Graphics graphics, string text, Font font, Color foreColor, Color backColor, ContentAlignment textAlign, Rectangle bounds, bool scaleText)
     {
+      this.DrawLabel(graphics, text, font, foreColor, backColor, textAlign, bounds, scaleText, Padding.Empty);
+    }
+
+    /// <summary>
+    /// Draws the specified text within the specified bounds using the specified device context, font, color, back color, and formatting instructions.
+    /// </summary>
+    /// <param name="graphics">The device context in which to draw the text.</param>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="font">The <see cref="Font"/> to apply to the drawn text.</param>
+    /// <param name="foreColor">The <see cref="Color"/> to apply to the text.</param>
+    /// <param name="backColor">The <see cref="Color"/> to apply to the area represented by <c>bounds</c>.</param>
+    /// <param name="textAlign">The <see cref="ContentAlignment"/> to apply to the text.</param>
+    /// <param name="bounds">The <see cref="Rectangle"/> that represents the bounds of the text.</param>
+    /// <param name="scaleText">If set to <c>true</c> the font size is scaled according to the current zoom level.</param>
+    /// <param name="padding">Padding to apply around the text</param>
+    protected virtual void DrawLabel(Graphics graphics, string text, Font font, Color foreColor, Color backColor, ContentAlignment textAlign, Rectangle bounds, bool scaleText, Padding padding)
+    {
       TextFormatFlags flags;
 
       if (scaleText)
@@ -3102,6 +3152,73 @@ namespace Cyotek.Windows.Forms
         default:
           flags |= TextFormatFlags.VerticalCenter;
           break;
+      }
+
+      if (padding.Horizontal != 0 || padding.Vertical != 0)
+      {
+        Size size;
+        int x;
+        int y;
+        int width;
+        int height;
+
+        size = TextRenderer.MeasureText(graphics, text, font, bounds.Size, flags);
+        width = size.Width;
+        height = size.Height;
+
+        switch (textAlign)
+        {
+          case ContentAlignment.TopLeft:
+            x = bounds.Left + padding.Left;
+            y = bounds.Top + padding.Top;
+            break;
+          case ContentAlignment.TopCenter:
+            x = bounds.Left + padding.Left + (((bounds.Width - width) / 2) - padding.Right);
+            y = bounds.Top + padding.Top;
+            break;
+          case ContentAlignment.TopRight:
+            x = bounds.Right - (padding.Right + width);
+            y = bounds.Top + padding.Top;
+            break;
+          case ContentAlignment.MiddleLeft:
+            x = bounds.Left + padding.Left;
+            y = bounds.Top + padding.Top + ((bounds.Height - height) / 2);
+            break;
+          case ContentAlignment.MiddleCenter:
+            x = bounds.Left + padding.Left + (((bounds.Width - width) / 2) - padding.Right);
+            y = bounds.Top + padding.Top + ((bounds.Height - height) / 2);
+            break;
+          case ContentAlignment.MiddleRight:
+            x = bounds.Right - (padding.Right + width);
+            y = bounds.Top + padding.Top + ((bounds.Height - height) / 2);
+            break;
+          case ContentAlignment.BottomLeft:
+            x = bounds.Left + padding.Left;
+            y = bounds.Bottom - (padding.Bottom + height);
+            break;
+          case ContentAlignment.BottomCenter:
+            x = bounds.Left + padding.Left + (((bounds.Width - width) / 2) - padding.Right);
+            y = bounds.Bottom - (padding.Bottom + height);
+            break;
+          case ContentAlignment.BottomRight:
+            x = bounds.Right - (padding.Right + width);
+            y = bounds.Bottom - (padding.Bottom + height);
+            break;
+          default:
+            throw new ArgumentOutOfRangeException("textAlign");
+        }
+
+        if (backColor != Color.Empty && backColor.A > 0)
+        {
+          using (Brush brush = new SolidBrush(backColor))
+          {
+            graphics.FillRectangle(brush, x - padding.Left, y - padding.Top, width + padding.Horizontal, height + padding.Vertical);
+          }
+        }
+
+        bounds = new Rectangle(x, y, width, height);
+
+        //bounds = new Rectangle(bounds.Left + padding.Left, bounds.Top + padding.Top, bounds.Width - padding.Horizontal, bounds.Height - padding.Vertical);
       }
 
       TextRenderer.DrawText(graphics, text, font, bounds, foreColor, backColor, flags);
@@ -3189,7 +3306,7 @@ namespace Cyotek.Windows.Forms
 
       bounds = this.TextDisplayMode == ImageBoxGridDisplayMode.Client ? this.GetInsideViewPort() : this.GetImageViewPort();
 
-      this.DrawLabel(e.Graphics, this.Text, this.Font, this.ForeColor, this.TextBackColor, this.TextAlign, bounds, this.ScaleText);
+      this.DrawLabel(e.Graphics, this.Text, this.Font, this.ForeColor, this.TextBackColor, this.TextAlign, bounds, this.ScaleText, this.TextPadding);
     }
 
     /// <summary>
@@ -3224,6 +3341,29 @@ namespace Cyotek.Windows.Forms
       }
 
       return offset;
+    }
+
+    protected virtual InterpolationMode GetInterpolationMode()
+    {
+      InterpolationMode mode;
+
+      mode = this.InterpolationMode;
+      
+      if (mode == InterpolationMode.Default)
+      {
+        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+        if (this.Zoom < 100)
+        {
+          // TODO: Check to see if we should cherry pick other modes depending on how much the image is actually zoomed
+          mode = InterpolationMode.HighQualityBicubic;
+        }
+        else
+        {
+          mode = InterpolationMode.NearestNeighbor;
+        }
+      }
+
+      return mode;
     }
 
     /// <summary>
@@ -3886,6 +4026,24 @@ namespace Cyotek.Windows.Forms
       this.Invalidate();
 
       handler = this.TextDisplayModeChanged;
+
+      if (handler != null)
+      {
+        handler(this, e);
+      }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="TextPaddingChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnTextPaddingChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      handler = this.TextPaddingChanged;
+
+      this.Invalidate();
 
       if (handler != null)
       {

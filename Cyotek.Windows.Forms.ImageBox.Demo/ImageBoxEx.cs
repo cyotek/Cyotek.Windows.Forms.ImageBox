@@ -10,7 +10,7 @@ namespace Cyotek.Windows.Forms.Demo
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
-  // Licensed under the MIT License. See imagebox-license.txt for the full text.
+  // Licensed under the MIT License. See license.txt for the full text.
 
   // If you use this control in your applications, attribution, donations or contributions are welcome.
 
@@ -171,6 +171,22 @@ namespace Cyotek.Windows.Forms.Demo
           }
         }
       }
+    }
+
+    /// <summary>
+    ///   Raises the <see cref="ImageBox.PanStart" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   The <see cref="System.ComponentModel.CancelEventArgs" /> instance containing the event data.
+    /// </param>
+    protected override void OnPanStart(CancelEventArgs e)
+    {
+      if (this.IsMoving || this.IsResizing || !this.DragOrigin.IsEmpty)
+      {
+        e.Cancel = true;
+      }
+
+      base.OnPanStart(e);
     }
 
     /// <summary>

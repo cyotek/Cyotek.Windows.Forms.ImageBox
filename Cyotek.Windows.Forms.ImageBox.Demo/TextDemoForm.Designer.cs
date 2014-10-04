@@ -35,7 +35,7 @@
       this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.splitContainer = new System.Windows.Forms.SplitContainer();
-      this.propertyGrid = new Cyotek.Windows.Forms.PropertyGrid();
+      this.propertyGrid = new Cyotek.Windows.Forms.Demo.PropertyGrid();
       this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.menuStrip.SuspendLayout();
       this.splitContainer.Panel1.SuspendLayout();
@@ -134,6 +134,7 @@
       this.imageBox.Text = "This is a demonstration of the ImageBox text functionality";
       this.imageBox.TextBackColor = System.Drawing.Color.Teal;
       this.imageBox.TextDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.Image;
+      this.imageBox.TextPadding = new System.Windows.Forms.Padding(3);
       // 
       // TextDemoForm
       // 

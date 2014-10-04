@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Cyotek.Windows.Forms.Demo</RootNamespace>
     <AssemblyName>imgbxdmo</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>cyopublic.snk</AssemblyOriginatorKeyFile>
@@ -43,6 +43,12 @@
     <ApplicationIcon>..\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommonMark">
+      <HintPath>..\packages\CommonMark.NET.0.2.1\lib\net35-client\CommonMark.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlRenderer">
+      <HintPath>..\packages\HtmlRenderer.WinForms.1.4.14.0\lib\net35-client\HtmlRenderer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -161,6 +167,7 @@
     <Content Include="..\icon.ico">
       <Link>icon.ico</Link>
     </Content>
+    <None Include="packages.config" />
     <None Include="Resources\map.png" />
     <Content Include="Resources\MapMarker.png" />
     <Content Include="Resources\cursor.png" />
@@ -173,6 +180,7 @@
     <Content Include="Resources\magnifier-zoom-out.png" />
     <Content Include="Resources\magnifier-zoom.png" />
     <None Include="Resources\monitor-sidebar.png" />
+    <Content Include="Resources\markdownpad-github.css" />
     <Content Include="Resources\Newtons_cradle_animation_book_2.gif" />
     <Content Include="Resources\Object Position.ico" />
     <Content Include="Resources\Object Size.ico" />

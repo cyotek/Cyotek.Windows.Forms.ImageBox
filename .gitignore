@@ -174,3 +174,5 @@ nuget/
 *.ncrunchsolution
 *.ncrunchproject
 *.GhostDoc.xml
+
+packages

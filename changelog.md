@@ -1,5 +1,17 @@
 # Cyotek ImageBox Change Log
 
+## 1.1.4.5
+* `ImageBoxEx` example control now correctly allows you to move and resize selection regions even when the control is zoomed
+* If the `InterpolationMode` property is set to `Default`, the `ImageBox` control will now choose an appropriate mode based on the current zoom levels
+
+## 1.1.4.4
+### Changes and new features
+* Added new `DrawBackground` virtual method. This allows you to override how the `ImageBox` draws the image background without having to override the entire `OnPaint` method.
+
+## 1.1.4.3
+### Changes and new features
+* Added a new `TextPadding` property and corresponding `DrawLabel` overload. When this property is set, rendered text from the `Text` and `TextAlign` properties is drawn with the appropriate padding. If the `TextBackColor` property is set to something not fully transparent, then the background will be filled in the original render spot, excluding the padding, allowing for labels with wider background borders.
+
 ## 1.1.4.2
 ### Changes and new features
 * `DrawImage` now also ignores `OutOfMemoryException` exceptions
@@ -24,7 +36,7 @@
 * Added NuGet package
 * Added a new `SizeMode` property. This allows you to switch between `Normal`, `Fit` and `Stretch` modes. Stretch is a new mode for the `ImageBox`, and acts similar to existing `Fit` functionality except the aspect ratio is not preserved.
 * The `SizeToFit` property has been marked as deprecated and should no longer be used. The `SizeMode` property has a `Fit` value that should be used instead. Setting the `SizeToFit` property will now manipulate `SizeMode` instead.
-* Added a license file to hopefully cut down on questions about usage. The `ImageBox` control is licensed under the MIT license, allowing you free reign to use it in your projects, commercial or otherwise. See `imagebox-license.txt` for the full text.
+* Added a license file to hopefully cut down on questions about usage. The `ImageBox` control is licensed under the MIT license, allowing you free reign to use it in your projects, commercial or otherwise. See `license.txt` for the full text.
 * Added a new `CenterPoint` property. This property returns the pixel at the center of the current image viewport.
 * Added a bunch of missing XML comments documentation.
 * Added new overloads for most methods that accepted a source `Rectangle`, `Point` or `Size` to also accept `float` and `int` arguments.

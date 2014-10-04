@@ -37,7 +37,7 @@ namespace Cyotek.Windows.Forms
 
     #endregion
 
-    #region Class Properties
+    #region Public Class Properties
 
     /// <summary>
     /// Returns the default zoom levels

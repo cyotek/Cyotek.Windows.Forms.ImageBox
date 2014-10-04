@@ -30,7 +30,7 @@
     {
       this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.splitContainer = new System.Windows.Forms.SplitContainer();
-      this.propertyGrid = new Cyotek.Windows.Forms.PropertyGrid();
+      this.propertyGrid = new PropertyGrid();
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.menuStrip = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();

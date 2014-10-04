@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.splitContainer = new System.Windows.Forms.SplitContainer();
-      this.propertyGrid = new Cyotek.Windows.Forms.PropertyGrid();
+      this.propertyGrid = new PropertyGrid();
       this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.menuStrip = new System.Windows.Forms.MenuStrip();

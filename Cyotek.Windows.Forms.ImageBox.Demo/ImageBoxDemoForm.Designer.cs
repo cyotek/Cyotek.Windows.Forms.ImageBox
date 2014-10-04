@@ -37,7 +37,7 @@
       this.selectionSplitContainer = new System.Windows.Forms.SplitContainer();
       this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.previewImageBox = new Cyotek.Windows.Forms.ImageBox();
-      this.propertyGrid = new Cyotek.Windows.Forms.PropertyGrid();
+      this.propertyGrid = new PropertyGrid();
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.cursorToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -487,7 +487,7 @@
 
     private System.Windows.Forms.SplitContainer viewSplitContainer;
     private Cyotek.Windows.Forms.ImageBox imageBox;
-    private Cyotek.Windows.Forms.PropertyGrid propertyGrid;
+    private PropertyGrid propertyGrid;
     private System.Windows.Forms.StatusStrip statusStrip;
     private System.Windows.Forms.ToolStripStatusLabel autoScrollPositionToolStripStatusLabel;
     private System.Windows.Forms.ToolStrip toolStrip;

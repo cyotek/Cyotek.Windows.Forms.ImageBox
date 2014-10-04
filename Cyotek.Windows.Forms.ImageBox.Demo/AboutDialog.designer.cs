@@ -128,6 +128,7 @@ namespace Cyotek.Windows.Forms.Demo
       this.docsTabControl.SelectedIndex = 0;
       this.docsTabControl.Size = new System.Drawing.Size(591, 365);
       this.docsTabControl.TabIndex = 3;
+      this.docsTabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.docsTabControl_Selecting);
       // 
       // AboutDialog
       // 

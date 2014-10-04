@@ -17,7 +17,7 @@ As well as the different behaviours offered, the `ImageBox` also supports a larg
 
 ## License
 
-The `ImageBox` control is licensed under the MIT License. See `imagebox-license.txt` for the full text. 
+The `ImageBox` control is licensed under the MIT License. See `license.txt` for the full text. 
 
 ## Further Reading
 

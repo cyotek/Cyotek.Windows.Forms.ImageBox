@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-
 #if USEWIN32PINVOKELIB
 using Cyotek.Win32;
 
