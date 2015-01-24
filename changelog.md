@@ -1,5 +1,13 @@
 # Cyotek ImageBox Change Log
 
+## 1.1.4.6
+* Zooming in or out using the default keybinds now preserves the center point relative to the new zoom
+* Added new overloads to `ZoomIn` and `ZoomOut` to determine if the center point should be preserved
+* Added new `MaximumSelectionSize` property to the demonstration `ImageBoxEx` control that allows for more control over default selection
+* Fixed the **About** dialog in the demonstration program not loading the default tab correctly
+* Refactored zoom handling for mouse and keyboard to avoid duplicate calculations
+* Updated copyright year
+
 ## 1.1.4.5
 * `ImageBoxEx` example control now correctly allows you to move and resize selection regions even when the control is zoomed
 * If the `InterpolationMode` property is set to `Default`, the `ImageBox` control will now choose an appropriate mode based on the current zoom levels

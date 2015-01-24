@@ -444,61 +444,37 @@ namespace Cyotek.Windows.Forms
     private void AdjustScrollbars()
     {
       Rectangle clientRectangle;
-      Size scrollSize;
-      Size pageSize;
-      int horzAddition;
-      int vertAddition;
-      bool horizontalScrollVisible;
-      bool verticalScrollVisible;
 
       clientRectangle = this.ClientRectangle;
-      scrollSize = new Size();
-      pageSize = new Size();
-      horzAddition = 0;
-      vertAddition = 0;
-      horizontalScrollVisible = false;
-      verticalScrollVisible = false;
 
-      if (this.AutoScroll && (this.AutoScrollMinSize.Height > clientRectangle.Height || this.AutoScrollMinSize.Width > clientRectangle.Width))
+      if (clientRectangle.Width > 1 && clientRectangle.Height > 1)
       {
-        int i;
+        Size scrollSize;
+        Size pageSize;
+        bool horizontalScrollVisible;
+        bool verticalScrollVisible;
 
-        for (i = 0; i < 2; i++)
+        scrollSize = Size.Empty;
+        pageSize = Size.Empty;
+
+        horizontalScrollVisible = this.AutoScroll && this.AutoScrollMinSize.Width > clientRectangle.Width;
+        verticalScrollVisible = this.AutoScroll && this.AutoScrollMinSize.Height > clientRectangle.Height;
+
+        if (verticalScrollVisible)
         {
-          if (this.AutoScrollMinSize.Width > (clientRectangle.Width - vertAddition))
-          {
-            horizontalScrollVisible = true;
-            horzAddition = SystemInformation.VerticalScrollBarWidth;
-          }
-
-          if (this.AutoScrollMinSize.Height > (clientRectangle.Height - horzAddition))
-          {
-            verticalScrollVisible = true;
-            vertAddition = SystemInformation.HorizontalScrollBarHeight;
-          }
+          scrollSize.Height = this.AutoScrollMinSize.Height;
+          pageSize.Height = clientRectangle.Height - 1;
         }
-      }
 
-      if (verticalScrollVisible)
-      {
-        scrollSize.Height = this.AutoScrollMinSize.Height;
-        if (clientRectangle.Height > horzAddition)
+        if (horizontalScrollVisible)
         {
-          pageSize.Height = clientRectangle.Height - horzAddition;
+          scrollSize.Width = this.AutoScrollMinSize.Width;
+          pageSize.Width = clientRectangle.Width - 1;
         }
-      }
 
-      if (horizontalScrollVisible)
-      {
-        scrollSize.Width = this.AutoScrollMinSize.Width;
-        if (clientRectangle.Width > vertAddition)
-        {
-          pageSize.Width = clientRectangle.Width - vertAddition;
-        }
+        this.ScrollSize = scrollSize;
+        this.PageSize = pageSize;
       }
-
-      this.ScrollSize = scrollSize;
-      this.PageSize = pageSize;
     }
 
     /// <summary>

@@ -86,7 +86,7 @@
       this.demoLabel.Location = new System.Drawing.Point(0, 0);
       this.demoLabel.Name = "demoLabel";
       this.demoLabel.Padding = new System.Windows.Forms.Padding(9);
-      this.demoLabel.Size = new System.Drawing.Size(419, 120);
+      this.demoLabel.Size = new System.Drawing.Size(419, 180);
       this.demoLabel.TabIndex = 1;
       this.demoLabel.Text = resources.GetString("demoLabel.Text");
       // 
@@ -105,7 +105,7 @@
       // splitContainer.Panel2
       // 
       this.splitContainer.Panel2.Controls.Add(this.eventsSplitContainer);
-      this.splitContainer.Size = new System.Drawing.Size(823, 321);
+      this.splitContainer.Size = new System.Drawing.Size(823, 418);
       this.splitContainer.SplitterDistance = 400;
       this.splitContainer.TabIndex = 5;
       // 
@@ -115,7 +115,7 @@
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
       this.imageBox.SelectionMode = Cyotek.Windows.Forms.ImageBoxSelectionMode.Rectangle;
-      this.imageBox.Size = new System.Drawing.Size(400, 321);
+      this.imageBox.Size = new System.Drawing.Size(400, 418);
       this.imageBox.TabIndex = 0;
       this.imageBox.VirtualMode = true;
       this.imageBox.VirtualSize = new System.Drawing.Size(256, 256);
@@ -149,8 +149,8 @@
       // eventsSplitContainer.Panel2
       // 
       this.eventsSplitContainer.Panel2.Controls.Add(this.tabControl1);
-      this.eventsSplitContainer.Size = new System.Drawing.Size(419, 321);
-      this.eventsSplitContainer.SplitterDistance = 120;
+      this.eventsSplitContainer.Size = new System.Drawing.Size(419, 418);
+      this.eventsSplitContainer.SplitterDistance = 180;
       this.eventsSplitContainer.TabIndex = 2;
       // 
       // tabControl1
@@ -162,7 +162,7 @@
       this.tabControl1.Location = new System.Drawing.Point(0, 0);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(419, 197);
+      this.tabControl1.Size = new System.Drawing.Size(419, 234);
       this.tabControl1.TabIndex = 0;
       // 
       // eventsTabPage
@@ -171,7 +171,7 @@
       this.eventsTabPage.Location = new System.Drawing.Point(4, 24);
       this.eventsTabPage.Name = "eventsTabPage";
       this.eventsTabPage.Padding = new System.Windows.Forms.Padding(6);
-      this.eventsTabPage.Size = new System.Drawing.Size(411, 169);
+      this.eventsTabPage.Size = new System.Drawing.Size(411, 206);
       this.eventsTabPage.TabIndex = 0;
       this.eventsTabPage.Text = "Events";
       this.eventsTabPage.UseVisualStyleBackColor = true;
@@ -183,7 +183,7 @@
       this.eventsListBox.ItemHeight = 15;
       this.eventsListBox.Location = new System.Drawing.Point(6, 6);
       this.eventsListBox.Name = "eventsListBox";
-      this.eventsListBox.Size = new System.Drawing.Size(399, 157);
+      this.eventsListBox.Size = new System.Drawing.Size(399, 194);
       this.eventsListBox.TabIndex = 0;
       // 
       // dragHandlesTabPage
@@ -357,7 +357,7 @@
             this.imageSizeToolStripStatusLabel,
             this.zoomToolStripStatusLabel,
             this.selectionToolStripStatusLabel});
-      this.statusStrip.Location = new System.Drawing.Point(0, 351);
+      this.statusStrip.Location = new System.Drawing.Point(0, 448);
       this.statusStrip.Name = "statusStrip";
       this.statusStrip.Size = new System.Drawing.Size(847, 22);
       this.statusStrip.TabIndex = 7;
@@ -409,7 +409,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(847, 373);
+      this.ClientSize = new System.Drawing.Size(847, 470);
       this.Controls.Add(this.splitContainer);
       this.Controls.Add(this.menuStrip);
       this.Controls.Add(this.statusStrip);

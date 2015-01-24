@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2014 Cyotek.
+  // Copyright (c) 2010-2015 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -38,13 +38,24 @@ namespace Cyotek.Windows.Forms.Demo
                    Text = "Demonstrations"
                  };
 
-      groupBox1.Dock = DockStyle.Fill;
-      demoPage.Controls.Add(groupBox1);
+      demoGroupBox.Dock = DockStyle.Fill;
+      demoPage.Controls.Add(demoGroupBox);
 
       this.TabControl.TabPages.Insert(0, demoPage);
       this.TabControl.SelectedTab = demoPage;
 
       this.Text = "Cyotek ImageBox Control for Windows Forms";
+    }
+
+    /// <summary>
+    /// Raises the <see cref="E:System.Windows.Forms.Form.Shown"/> event.
+    /// </summary>
+    /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event data. </param>
+    protected override void OnShown(EventArgs e)
+    {
+      base.OnShown(e);
+
+      imageBoxDemoButton.Focus();
     }
 
     #endregion

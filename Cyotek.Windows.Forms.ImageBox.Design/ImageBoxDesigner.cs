@@ -9,7 +9,7 @@ using System.Windows.Forms.Design;
 namespace Cyotek.Windows.Forms.Design // ReSharper restore CheckNamespace
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2014 Cyotek.
+  // Copyright (c) 2010-2015 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -19,7 +19,7 @@ namespace Cyotek.Windows.Forms.Design // ReSharper restore CheckNamespace
 
   // TODO: This library currently isn't used until I can work out how to properly get client applications to use it without an explicit reference.
   // Using a Designer attribute with a string type and DLL name is supposed to work, but the IDE isn't displaying tasks for the demo project this way
-  // I don't want it to be a part of the core ImageBox library due to the reference to System.Design, which means you can no longer flag
+  // I don't want it to be a part of the core ImageBox library due to the reference to System.Design as this means you can no longer flag
   // the assembly as only requiring the Client version of the .NET Framework but only the Full, which may not be suitable for everyone
 
   /// <summary>

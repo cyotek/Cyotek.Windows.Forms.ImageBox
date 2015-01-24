@@ -6,7 +6,7 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2014 Cyotek.
+  // Copyright (c) 2010-2015 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -21,6 +21,8 @@ namespace Cyotek.Windows.Forms.Demo
     private readonly DragHandleCollection _dragHandles;
 
     private int _dragHandleSize;
+
+    private Size _maximumSelectionSize;
 
     private Size _minimumSelectionSize;
 
@@ -45,6 +47,12 @@ namespace Cyotek.Windows.Forms.Demo
     /// </summary>
     [Category("Property Changed")]
     public event EventHandler DragHandleSizeChanged;
+
+    /// <summary>
+    /// Occurs when the MaximumSelectionSize property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler MaximumSelectionSizeChanged;
 
     /// <summary>
     /// Occurs when the MinimumSelectionSize property value changes
@@ -322,6 +330,22 @@ namespace Cyotek.Windows.Forms.Demo
 
     [Category("Behavior")]
     [DefaultValue(typeof(Size), "0, 0")]
+    public virtual Size MaximumSelectionSize
+    {
+      get { return _maximumSelectionSize; }
+      set
+      {
+        if (this.MaximumSelectionSize != value)
+        {
+          _maximumSelectionSize = value;
+
+          this.OnMaximumSelectionSizeChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    [Category("Behavior")]
+    [DefaultValue(typeof(Size), "0, 0")]
     public virtual Size MinimumSelectionSize
     {
       get { return _minimumSelectionSize; }
@@ -427,6 +451,22 @@ namespace Cyotek.Windows.Forms.Demo
       this.Invalidate();
 
       handler = this.DragHandleSizeChanged;
+
+      if (handler != null)
+      {
+        handler(this, e);
+      }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="MaximumSelectionSizeChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnMaximumSelectionSizeChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      handler = this.MaximumSelectionSizeChanged;
 
       if (handler != null)
       {
@@ -663,6 +703,10 @@ namespace Cyotek.Windows.Forms.Demo
           {
             top = bottom - this.MinimumSelectionSize.Height;
           }
+          else if (this.MaximumSelectionSize.Height > 0 && bottom - top > this.MaximumSelectionSize.Height)
+          {
+            top = bottom - this.MaximumSelectionSize.Height;
+          }
         }
         else if (resizingBottomEdge)
         {
@@ -670,6 +714,10 @@ namespace Cyotek.Windows.Forms.Demo
           if (bottom - top < this.MinimumSelectionSize.Height)
           {
             bottom = top + this.MinimumSelectionSize.Height;
+          }
+          else if (this.MaximumSelectionSize.Height > 0 && bottom - top > this.MaximumSelectionSize.Height)
+          {
+            bottom = top + this.MaximumSelectionSize.Height;
           }
         }
 
@@ -680,6 +728,10 @@ namespace Cyotek.Windows.Forms.Demo
           {
             left = right - this.MinimumSelectionSize.Width;
           }
+          else if (this.MaximumSelectionSize.Width > 0 && right - left > this.MaximumSelectionSize.Width)
+          {
+            left = right - this.MaximumSelectionSize.Width;
+          }
         }
         else if (resizingRightEdge)
         {
@@ -687,6 +739,10 @@ namespace Cyotek.Windows.Forms.Demo
           if (right - left < this.MinimumSelectionSize.Width)
           {
             right = left + this.MinimumSelectionSize.Width;
+          }
+          else if (this.MaximumSelectionSize.Width > 0 && right - left > this.MaximumSelectionSize.Width)
+          {
+            right = left + this.MaximumSelectionSize.Width;
           }
         }
 

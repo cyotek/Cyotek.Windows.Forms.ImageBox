@@ -32,7 +32,7 @@
       this.imageBoxDemoButton = new System.Windows.Forms.Button();
       this.pixelGridDemoButton = new System.Windows.Forms.Button();
       this.virtualModeDemoButton = new System.Windows.Forms.Button();
-      this.groupBox1 = new Cyotek.Windows.Forms.GroupBox();
+      this.demoGroupBox = new Cyotek.Windows.Forms.GroupBox();
       this.resizableSelectionDemoButton = new System.Windows.Forms.Button();
       this.textDemoButton = new System.Windows.Forms.Button();
       this.animatedGifDemoButton = new System.Windows.Forms.Button();
@@ -40,7 +40,7 @@
       this.sizeModeDemoButton = new System.Windows.Forms.Button();
       this.scaledAdornmentsDemoButton = new System.Windows.Forms.Button();
       this.dragTestDemoButton = new System.Windows.Forms.Button();
-      this.groupBox1.SuspendLayout();
+      this.demoGroupBox.SuspendLayout();
       this.SuspendLayout();
       // 
       // imageBoxDemoButton
@@ -79,27 +79,27 @@
       this.virtualModeDemoButton.UseVisualStyleBackColor = true;
       this.virtualModeDemoButton.Click += new System.EventHandler(this.virtualModeDemoButton_Click);
       // 
-      // groupBox1
+      // demoGroupBox
       // 
-      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+      this.demoGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox1.Controls.Add(this.resizableSelectionDemoButton);
-      this.groupBox1.Controls.Add(this.textDemoButton);
-      this.groupBox1.Controls.Add(this.animatedGifDemoButton);
-      this.groupBox1.Controls.Add(this.switchImageDuringZoomDemoButton);
-      this.groupBox1.Controls.Add(this.sizeModeDemoButton);
-      this.groupBox1.Controls.Add(this.scaledAdornmentsDemoButton);
-      this.groupBox1.Controls.Add(this.dragTestDemoButton);
-      this.groupBox1.Controls.Add(this.imageBoxDemoButton);
-      this.groupBox1.Controls.Add(this.virtualModeDemoButton);
-      this.groupBox1.Controls.Add(this.pixelGridDemoButton);
-      this.groupBox1.Location = new System.Drawing.Point(31, 65);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(444, 360);
-      this.groupBox1.TabIndex = 0;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Available Demonstrations";
+      this.demoGroupBox.Controls.Add(this.resizableSelectionDemoButton);
+      this.demoGroupBox.Controls.Add(this.textDemoButton);
+      this.demoGroupBox.Controls.Add(this.animatedGifDemoButton);
+      this.demoGroupBox.Controls.Add(this.switchImageDuringZoomDemoButton);
+      this.demoGroupBox.Controls.Add(this.sizeModeDemoButton);
+      this.demoGroupBox.Controls.Add(this.scaledAdornmentsDemoButton);
+      this.demoGroupBox.Controls.Add(this.dragTestDemoButton);
+      this.demoGroupBox.Controls.Add(this.imageBoxDemoButton);
+      this.demoGroupBox.Controls.Add(this.virtualModeDemoButton);
+      this.demoGroupBox.Controls.Add(this.pixelGridDemoButton);
+      this.demoGroupBox.Location = new System.Drawing.Point(31, 65);
+      this.demoGroupBox.Name = "demoGroupBox";
+      this.demoGroupBox.Size = new System.Drawing.Size(444, 360);
+      this.demoGroupBox.TabIndex = 0;
+      this.demoGroupBox.TabStop = false;
+      this.demoGroupBox.Text = "Available Demonstrations";
       // 
       // resizableSelectionDemoButton
       // 
@@ -190,14 +190,14 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(615, 552);
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.demoGroupBox);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "MainMenuForm";
       this.ShowIcon = true;
       this.ShowInTaskbar = true;
       this.Text = "Cyotek ImageBox Control for Windows Forms";
-      this.Controls.SetChildIndex(this.groupBox1, 0);
-      this.groupBox1.ResumeLayout(false);
+      this.Controls.SetChildIndex(this.demoGroupBox, 0);
+      this.demoGroupBox.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -208,7 +208,7 @@
     private System.Windows.Forms.Button imageBoxDemoButton;
     private System.Windows.Forms.Button pixelGridDemoButton;
     private System.Windows.Forms.Button virtualModeDemoButton;
-    private GroupBox groupBox1;
+    private GroupBox demoGroupBox;
     private System.Windows.Forms.Button dragTestDemoButton;
     private System.Windows.Forms.Button scaledAdornmentsDemoButton;
     private System.Windows.Forms.Button sizeModeDemoButton;

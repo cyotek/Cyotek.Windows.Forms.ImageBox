@@ -28,6 +28,7 @@ namespace Cyotek.Windows.Forms.Demo
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       this.closeButton = new System.Windows.Forms.Button();
       this.nameLabel = new System.Windows.Forms.Label();
       this.versionLabel = new System.Windows.Forms.Label();
@@ -36,6 +37,7 @@ namespace Cyotek.Windows.Forms.Demo
       this.footerGroupBox = new System.Windows.Forms.Panel();
       this.webLinkLabel = new System.Windows.Forms.LinkLabel();
       this.docsTabControl = new System.Windows.Forms.TabControl();
+      this.toolTip = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
       this.footerGroupBox.SuspendLayout();
       this.SuspendLayout();
@@ -119,6 +121,7 @@ namespace Cyotek.Windows.Forms.Demo
       this.webLinkLabel.TabStop = true;
       this.webLinkLabel.Tag = "www.cyotek.com";
       this.webLinkLabel.Text = "www.cyotek.com";
+      this.toolTip.SetToolTip(this.webLinkLabel, "Visit the Cyotek website for development topics and code");
       this.webLinkLabel.Click += new System.EventHandler(this.webLinkLabel_Click);
       // 
       // docsTabControl
@@ -167,5 +170,6 @@ namespace Cyotek.Windows.Forms.Demo
     private System.Windows.Forms.Panel footerGroupBox;
     private System.Windows.Forms.LinkLabel webLinkLabel;
     private System.Windows.Forms.TabControl docsTabControl;
+    private System.Windows.Forms.ToolTip toolTip;
   }
 }

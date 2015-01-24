@@ -120,6 +120,8 @@
   <data name="demoLabel.Text" xml:space="preserve">
     <value>This demonstration shows how to expand the SelectionRegion to include the ability to drag the region around, and to resize it via the use of drag handles.
 
+You can use the MinimumSelectionSize and MaximumSelectionSize to allow greater control over the selection process - for example when cropping an image.
+
 VirtualMode is used to create a canvas area without requiring a backing image.
 </value>
   </data>

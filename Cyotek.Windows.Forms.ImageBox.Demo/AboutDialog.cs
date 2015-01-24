@@ -10,7 +10,7 @@ using HtmlRenderer;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2014 Cyotek.
+  // Copyright (c) 2010-2015 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -66,6 +66,8 @@ namespace Cyotek.Windows.Forms.Demo
         this.AddReadme("readme.md");
         this.AddReadme("acknowledgements.md");
         this.AddReadme("license.txt");
+
+        this.LoadDocumentForTab(docsTabControl.SelectedTab);
       }
     }
 
@@ -120,11 +122,12 @@ namespace Cyotek.Windows.Forms.Demo
 
     private void docsTabControl_Selecting(object sender, TabControlCancelEventArgs e)
     {
-      TabPage page;
+      this.LoadDocumentForTab(e.TabPage);
+    }
 
-      page = e.TabPage;
-
-      if (page.Controls.Count == 0 && page.Tag != null)
+    private void LoadDocumentForTab(TabPage page)
+    {
+      if (page != null && page.Controls.Count == 0 && page.Tag != null)
       {
         Control documentView;
         string fullPath;
@@ -146,22 +149,22 @@ namespace Cyotek.Windows.Forms.Demo
         {
           case ".md":
             documentView = new HtmlPanel
-                           {
-                             Dock = DockStyle.Fill,
-                             BaseStylesheet = Properties.Resources.CSS,
-                             Text = string.Concat("<html><body>", CommonMarkConverter.Convert(text), "</body></html>") // HACK: HTML panel screws up rendering if a <body> tag isn't present
-                           };
+            {
+              Dock = DockStyle.Fill,
+              BaseStylesheet = Properties.Resources.CSS,
+              Text = string.Concat("<html><body>", CommonMarkConverter.Convert(text), "</body></html>") // HACK: HTML panel screws up rendering if a <body> tag isn't present
+            };
             break;
           default:
             documentView = new TextBox
-                           {
-                             ReadOnly = true,
-                             Multiline = true,
-                             WordWrap = true,
-                             ScrollBars = ScrollBars.Vertical,
-                             Dock = DockStyle.Fill,
-                             Text = text
-                           };
+            {
+              ReadOnly = true,
+              Multiline = true,
+              WordWrap = true,
+              ScrollBars = ScrollBars.Vertical,
+              Dock = DockStyle.Fill,
+              Text = text
+            };
             break;
         }
 

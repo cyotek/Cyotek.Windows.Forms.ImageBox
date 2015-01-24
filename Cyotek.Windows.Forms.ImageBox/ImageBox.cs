@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2014 Cyotek.
+  // Copyright (c) 2010-2015 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -21,7 +21,8 @@ namespace Cyotek.Windows.Forms
   [DefaultProperty("Image")]
   [ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp")]
   [ToolboxItem(true)]
-  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */ public class ImageBox : VirtualScrollableControl
+  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */
+  public class ImageBox : VirtualScrollableControl
   {
     #region Constants
 
@@ -2650,7 +2651,16 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     public virtual void ZoomIn()
     {
-      this.PerformZoomIn(ImageBoxActionSources.Unknown);
+      this.ZoomIn(true);
+    }
+
+    /// <summary>
+    ///   Zooms into the image
+    /// </summary>
+    /// <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+    public virtual void ZoomIn(bool preservePosition)
+    {
+      this.PerformZoomIn(ImageBoxActionSources.Unknown, preservePosition);
     }
 
     /// <summary>
@@ -2658,9 +2668,17 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     public virtual void ZoomOut()
     {
-      this.PerformZoomOut(ImageBoxActionSources.Unknown);
+      this.ZoomOut(true);
     }
 
+    /// <summary>
+    ///   Zooms out of the image
+    /// </summary>
+    /// <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+    public virtual void ZoomOut(bool preservePosition)
+    {
+      this.PerformZoomOut(ImageBoxActionSources.Unknown, preservePosition);
+    }
     /// <summary>
     ///   Zooms to the maximum size for displaying the entire image within the bounds of the control.
     /// </summary>
@@ -3348,7 +3366,7 @@ namespace Cyotek.Windows.Forms
       InterpolationMode mode;
 
       mode = this.InterpolationMode;
-      
+
       if (mode == InterpolationMode.Default)
       {
         // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
@@ -3631,17 +3649,22 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      try
+      this.IsAnimating = false;
+
+      if (this.Image != null)
       {
-        this.IsAnimating = ImageAnimator.CanAnimate(this.Image);
-        if (this.IsAnimating)
+        try
         {
-          ImageAnimator.Animate(this.Image, this.OnFrameChangedHandler);
+          this.IsAnimating = ImageAnimator.CanAnimate(this.Image);
+          if (this.IsAnimating)
+          {
+            ImageAnimator.Animate(this.Image, this.OnFrameChangedHandler);
+          }
         }
-      }
-      catch (ArgumentException)
-      {
-        // probably a disposed image, ignore
+        catch (ArgumentException)
+        {
+          // probably a disposed image, ignore
+        }
       }
 
       this.AdjustLayout();
@@ -4192,7 +4215,7 @@ namespace Cyotek.Windows.Forms
         case Keys.Oemplus:
           if (this.AllowZoom)
           {
-            this.PerformZoomIn(ImageBoxActionSources.User);
+            this.PerformZoomIn(ImageBoxActionSources.User, true);
           }
           break;
 
@@ -4200,7 +4223,7 @@ namespace Cyotek.Windows.Forms
         case Keys.OemMinus:
           if (this.AllowZoom)
           {
-            this.PerformZoomOut(ImageBoxActionSources.User);
+            this.PerformZoomOut(ImageBoxActionSources.User, true);
           }
           break;
       }
@@ -4220,18 +4243,7 @@ namespace Cyotek.Windows.Forms
     /// <param name="cursorPosition">The cursor position.</param>
     protected virtual void ProcessMouseZoom(bool isZoomIn, Point cursorPosition)
     {
-      Point currentPixel;
-      int currentZoom;
-
-      currentPixel = this.PointToImage(cursorPosition);
-      currentZoom = this.Zoom;
-
-      this.SetZoom(isZoomIn ? this.ZoomLevels.NextZoom(this.Zoom) : this.ZoomLevels.PreviousZoom(this.Zoom), isZoomIn ? ImageBoxZoomActions.ZoomIn : ImageBoxZoomActions.ZoomOut, ImageBoxActionSources.User);
-
-      if (this.Zoom != currentZoom)
-      {
-        this.ScrollTo(currentPixel, cursorPosition);
-      }
+      this.PerformZoom(isZoomIn ? ImageBoxZoomActions.ZoomIn : ImageBoxZoomActions.ZoomOut, ImageBoxActionSources.User, true, cursorPosition);
     }
 
     /// <summary>
@@ -4506,20 +4518,87 @@ namespace Cyotek.Windows.Forms
     /// Zooms into the image
     /// </summary>
     /// <param name="source">The source that initiated the action.</param>
-    private void PerformZoomIn(ImageBoxActionSources source)
+    /// <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+    private void PerformZoomIn(ImageBoxActionSources source, bool preservePosition)
     {
+      this.PerformZoom(ImageBoxZoomActions.ZoomIn, source, preservePosition);
+    }
+
+    /// <summary>
+    /// Performs a zoom action.
+    /// </summary>
+    /// <param name="action">The action to perform.</param>
+    /// <param name="source">The source that initiated the action.</param>
+    /// <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+    private void PerformZoom(ImageBoxZoomActions action, ImageBoxActionSources source, bool preservePosition)
+    {
+      this.PerformZoom(action, source, preservePosition, this.CenterPoint);
+    }
+
+    /// <summary>
+    /// Performs a zoom action.
+    /// </summary>
+    /// <param name="action">The action to perform.</param>
+    /// <param name="source">The source that initiated the action.</param>
+    /// <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+    /// <param name="relativePoint">A <see cref="Point"/> describing the current center of the control.</param>
+    private void PerformZoom(ImageBoxZoomActions action, ImageBoxActionSources source, bool preservePosition, Point relativePoint)
+    {
+      Point currentPixel;
+      int currentZoom;
+      int newZoom;
+
+      currentPixel = this.PointToImage(relativePoint);
+      currentZoom = this.Zoom;
+      newZoom = this.GetZoomLevel(action);
+
       this.RestoreSizeMode();
-      this.SetZoom(this.ZoomLevels.NextZoom(this.Zoom), ImageBoxZoomActions.ZoomIn, source);
+      this.SetZoom(newZoom, action, source);
+
+      if (preservePosition && this.Zoom != currentZoom)
+      {
+        this.ScrollTo(currentPixel, relativePoint);
+      }
+    }
+
+    /// <summary>
+    /// Returns an appropriate zoom level based on the specified action, relative to the current zoom level.
+    /// </summary>
+    /// <param name="action">The action to determine the zoom level.</param>
+    /// <exception cref="System.ArgumentOutOfRangeException">Thrown if an unsupported action is specified.</exception>
+    private int GetZoomLevel(ImageBoxZoomActions action)
+    {
+      int result;
+
+      switch (action)
+      {
+        case ImageBoxZoomActions.None:
+          result = this.Zoom;
+          break;
+        case ImageBoxZoomActions.ZoomIn:
+          result = this.ZoomLevels.NextZoom(this.Zoom);
+          break;
+        case ImageBoxZoomActions.ZoomOut:
+          result = this.ZoomLevels.PreviousZoom(this.Zoom);
+          break;
+        case ImageBoxZoomActions.ActualSize:
+          result = 100;
+          break;
+        default:
+          throw new ArgumentOutOfRangeException("action");
+      }
+
+      return result;
     }
 
     /// <summary>
     /// Zooms out of the image
     /// </summary>
     /// <param name="source">The source that initiated the action.</param>
-    private void PerformZoomOut(ImageBoxActionSources source)
+    /// <param name="preservePosition"><c>true</c> if the current scrolling position should be preserved relative to the new zoom level, <c>false</c> to reset.</param>
+    private void PerformZoomOut(ImageBoxActionSources source, bool preservePosition)
     {
-      this.RestoreSizeMode();
-      this.SetZoom(this.ZoomLevels.PreviousZoom(this.Zoom), ImageBoxZoomActions.ZoomOut, source);
+      this.PerformZoom(ImageBoxZoomActions.ZoomOut, source, preservePosition);
     }
 
     /// <summary>
