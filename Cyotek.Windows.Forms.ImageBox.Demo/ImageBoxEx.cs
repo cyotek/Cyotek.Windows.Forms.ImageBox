@@ -758,54 +758,59 @@ namespace Cyotek.Windows.Forms.Demo
       this.DragOriginOffset = Point.Empty;
     }
 
-    private void SetCursor(Point point)
+    protected virtual void SetCursor(Point point)
     {
-      Cursor cursor;
+      // http://forums.cyotek.com/imagebox/cursor-issue-in-imageboxex/msg92/#msg92
 
-      if (this.IsSelecting)
+      if (!this.IsPanning)
       {
-        cursor = Cursors.Default;
-      }
-      else
-      {
-        DragHandleAnchor handleAnchor;
+        Cursor cursor;
 
-        handleAnchor = this.IsResizing ? this.ResizeAnchor : this.HitTest(point);
-        if (handleAnchor != DragHandleAnchor.None && this.DragHandles[handleAnchor].Enabled)
-        {
-          switch (handleAnchor)
-          {
-            case DragHandleAnchor.TopLeft:
-            case DragHandleAnchor.BottomRight:
-              cursor = Cursors.SizeNWSE;
-              break;
-            case DragHandleAnchor.TopCenter:
-            case DragHandleAnchor.BottomCenter:
-              cursor = Cursors.SizeNS;
-              break;
-            case DragHandleAnchor.TopRight:
-            case DragHandleAnchor.BottomLeft:
-              cursor = Cursors.SizeNESW;
-              break;
-            case DragHandleAnchor.MiddleLeft:
-            case DragHandleAnchor.MiddleRight:
-              cursor = Cursors.SizeWE;
-              break;
-            default:
-              throw new ArgumentOutOfRangeException();
-          }
-        }
-        else if (this.IsMoving || this.SelectionRegion.Contains(this.PointToImage(point)))
-        {
-          cursor = Cursors.SizeAll;
-        }
-        else
+        if (this.IsSelecting)
         {
           cursor = Cursors.Default;
         }
-      }
+        else
+        {
+          DragHandleAnchor handleAnchor;
 
-      this.Cursor = cursor;
+          handleAnchor = this.IsResizing ? this.ResizeAnchor : this.HitTest(point);
+          if (handleAnchor != DragHandleAnchor.None && this.DragHandles[handleAnchor].Enabled)
+          {
+            switch (handleAnchor)
+            {
+              case DragHandleAnchor.TopLeft:
+              case DragHandleAnchor.BottomRight:
+                cursor = Cursors.SizeNWSE;
+                break;
+              case DragHandleAnchor.TopCenter:
+              case DragHandleAnchor.BottomCenter:
+                cursor = Cursors.SizeNS;
+                break;
+              case DragHandleAnchor.TopRight:
+              case DragHandleAnchor.BottomLeft:
+                cursor = Cursors.SizeNESW;
+                break;
+              case DragHandleAnchor.MiddleLeft:
+              case DragHandleAnchor.MiddleRight:
+                cursor = Cursors.SizeWE;
+                break;
+              default:
+                throw new ArgumentOutOfRangeException();
+            }
+          }
+          else if (this.IsMoving || this.SelectionRegion.Contains(this.PointToImage(point)))
+          {
+            cursor = Cursors.SizeAll;
+          }
+          else
+          {
+            cursor = Cursors.Default;
+          }
+        }
+
+        this.Cursor = cursor;
+      }
     }
 
     private void StartResize(DragHandleAnchor anchor)
