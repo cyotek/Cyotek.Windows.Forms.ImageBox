@@ -47,6 +47,7 @@
     <Compile Include="ImageBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ImageBoxMouseWheelMessageFilter.cs" />
     <Compile Include="ImageBoxZoomActions.cs" />
     <Compile Include="ImageBoxActionSources.cs" />
     <Compile Include="ImageBoxBorderStyle.cs" />

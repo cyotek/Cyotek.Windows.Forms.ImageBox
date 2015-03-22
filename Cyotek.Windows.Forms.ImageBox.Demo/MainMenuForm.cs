@@ -88,7 +88,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     private void imageBoxDemoButton_Click(object sender, EventArgs e)
     {
-      this.ShowDemo<ImageBoxDemoForm>();
+      this.ShowDemo<GeneralDemoForm>();
     }
 
     private void pixelGridDemoButton_Click(object sender, EventArgs e)

@@ -36,3 +36,6 @@ Contribution by [Eggy](https://github.com/teamalpha5441)
 
 ### Removal of .NET 3.5 requirement
 Contribution by [dahmage](https://github.com/dahmage)
+
+### Focusless Mouse Wheel Scroll
+Derived from this [answer](http://stackoverflow.com/a/11034674/148962) and [this answer](http://stackoverflow.com/a/13292894/148962) on StackOverflow as suggested by [mtagliaf](http://forums.cyotek.com/imagebox/mouse-scroll-without-focusing-on-imagebox/msg194/#msg194)

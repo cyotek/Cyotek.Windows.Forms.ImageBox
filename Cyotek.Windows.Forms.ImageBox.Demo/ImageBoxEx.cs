@@ -649,7 +649,7 @@ namespace Cyotek.Windows.Forms.Demo
         int y;
         Point imagePoint;
 
-        imagePoint = this.PointToImage(cursorPosition, true);
+        imagePoint = this.PointToImage(cursorPosition, false);
 
         x = Math.Max(0, imagePoint.X - this.DragOriginOffset.X);
         if (x + this.SelectionRegion.Width >= this.ViewSize.Width)

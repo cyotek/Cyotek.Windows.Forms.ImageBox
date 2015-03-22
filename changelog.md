@@ -1,5 +1,9 @@
 # Cyotek ImageBox Change Log
 
+## 1.1.5.0
+* **NEW:** Added `AllowUnfocusedMouseWheel` property. If set to `true` the control will support mouse wheel zooming even when it does not have focus
+* **FIX:** The `fitToBounds` parameter of the `PointToImage` wasn't being used correctly
+
 ## 1.1.4.6
 * Zooming in or out using the default keybinds now preserves the center point relative to the new zoom
 * Added new overloads to `ZoomIn` and `ZoomOut` to determine if the center point should be preserved
@@ -52,7 +56,7 @@
 * Added new `CenterToImage` method which resets the viewport to be centered of the image, in the same way as zooming via the keyboard used to work.
 * Added support for animated GIF's, thanks to a contribution from [Eggy](https://github.com/teamalpha5441). Note animations only play at runtime, not design time.
 * The `Text` and `Font` properties are now available and, if set, will be displayed in the control. You can use the `ForeColor`, `TextBackColor`, `TextAlign`, `TextDisplayMode` and `ScaleText` properties to determine how the text will be rendered.
-* A new `DrawLabel` method that performs text drawing is available for use by custom implementations or virtual modes. 
+* A new `DrawLabel` method that performs text drawing is available for use by custom implementations or virtual modes.
 
 ### Demonstration Changes
 * Added a new *Scaled Adornments* demonstration, showing how easy it is to add custom drawing that is scaled and positioned appropriately.
@@ -60,7 +64,7 @@
 * Added new *Text* and *Size Mode* demonstrations.
 
 ### Bug Fixes
-* Zooming in and out with the keyboard now keeps the view centered to the same pixel that was centered prior to the zoom 
+* Zooming in and out with the keyboard now keeps the view centered to the same pixel that was centered prior to the zoom
 * Zooming in and out with the keyboard is now correctly disabled if the `AllowZoom` property is `False`, or the `SizeMode` property is a value other than `Normal`. This means keyboard behaviour now matches mouse behaviour.
 * If the mouse wheel was rapidly spun (thus having a multiple of the base delta), the `Zoom` property was only adjusted once
 * Setting the `GridScale` property to `None` rendered the default `Small` grid. Using a scale of `None` now correctly just fills the grid area with a solid brush from the `GridColor` property.

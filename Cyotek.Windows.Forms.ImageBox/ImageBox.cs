@@ -2552,7 +2552,7 @@ namespace Cyotek.Windows.Forms
 
       viewport = this.GetImageViewPort();
 
-      if (viewport.Contains(point) || fitToBounds)
+      if (!fitToBounds || viewport.Contains(point))
       {
         if (this.AutoScrollPosition != Point.Empty)
         {
@@ -2562,22 +2562,25 @@ namespace Cyotek.Windows.Forms
         x = (int)((point.X - viewport.X) / this.ZoomFactor);
         y = (int)((point.Y - viewport.Y) / this.ZoomFactor);
 
-        if (x < 0)
+        if (fitToBounds)
         {
-          x = 0;
-        }
-        else if (x > this.ViewSize.Width)
-        {
-          x = this.ViewSize.Width;
-        }
+          if (x < 0)
+          {
+            x = 0;
+          }
+          else if (x > this.ViewSize.Width)
+          {
+            x = this.ViewSize.Width;
+          }
 
-        if (y < 0)
-        {
-          y = 0;
-        }
-        else if (y > this.ViewSize.Height)
-        {
-          y = this.ViewSize.Height;
+          if (y < 0)
+          {
+            y = 0;
+          }
+          else if (y > this.ViewSize.Height)
+          {
+            y = this.ViewSize.Height;
+          }
         }
       }
       else
@@ -4633,5 +4636,50 @@ namespace Cyotek.Windows.Forms
     }
 
     #endregion
+
+    private bool _allowUnfocusedMouseWheel;
+
+    [Category("Behavior"), DefaultValue(false)]
+    public virtual bool AllowUnfocusedMouseWheel
+    {
+      get { return _allowUnfocusedMouseWheel; }
+      set
+      {
+        if (this.AllowUnfocusedMouseWheel != value)
+        {
+          _allowUnfocusedMouseWheel = value;
+
+          this.OnAllowUnfocusedMouseWheelChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Occurs when the AllowUnfocusedMouseWheel property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler AllowUnfocusedMouseWheelChanged;
+
+    /// <summary>
+    /// Raises the <see cref="AllowUnfocusedMouseWheelChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnAllowUnfocusedMouseWheelChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      if (this.AllowUnfocusedMouseWheel)
+      {
+        // TODO: Not doing any reference counting so there's
+        // currently no way of disabling the message filter
+        // after the first time it has been enabled
+        ImageBoxMouseWheelMessageFilter.Active = true;
+      }
+
+      handler = this.AllowUnfocusedMouseWheelChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
   }
 }

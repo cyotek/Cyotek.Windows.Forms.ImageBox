@@ -1,6 +1,6 @@
 ﻿namespace Cyotek.Windows.Forms.Demo
 {
-  partial class ImageBoxDemoForm
+  partial class GeneralDemoForm
   {
     /// <summary>
     /// Required designer variable.
@@ -32,12 +32,12 @@
     /// </summary>
     private void InitializeComponent()
     {
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageBoxDemoForm));
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeneralDemoForm));
       this.viewSplitContainer = new System.Windows.Forms.SplitContainer();
       this.selectionSplitContainer = new System.Windows.Forms.SplitContainer();
       this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.previewImageBox = new Cyotek.Windows.Forms.ImageBox();
-      this.propertyGrid = new PropertyGrid();
+      this.propertyGrid = new Cyotek.Windows.Forms.Demo.PropertyGrid();
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.cursorToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -71,6 +71,8 @@
       this.selectNoneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.fitCursorLocationToBoundsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.viewSplitContainer.Panel1.SuspendLayout();
       this.viewSplitContainer.Panel2.SuspendLayout();
       this.viewSplitContainer.SuspendLayout();
@@ -97,7 +99,7 @@
       // 
       this.viewSplitContainer.Panel2.Controls.Add(this.propertyGrid);
       this.viewSplitContainer.Size = new System.Drawing.Size(1060, 536);
-      this.viewSplitContainer.SplitterDistance = 752;
+      this.viewSplitContainer.SplitterDistance = 751;
       this.viewSplitContainer.SplitterWidth = 5;
       this.viewSplitContainer.TabIndex = 0;
       // 
@@ -116,8 +118,8 @@
       // selectionSplitContainer.Panel2
       // 
       this.selectionSplitContainer.Panel2.Controls.Add(this.previewImageBox);
-      this.selectionSplitContainer.Size = new System.Drawing.Size(752, 536);
-      this.selectionSplitContainer.SplitterDistance = 378;
+      this.selectionSplitContainer.Size = new System.Drawing.Size(751, 536);
+      this.selectionSplitContainer.SplitterDistance = 377;
       this.selectionSplitContainer.SplitterWidth = 5;
       this.selectionSplitContainer.TabIndex = 1;
       // 
@@ -126,7 +128,7 @@
       this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
-      this.imageBox.Size = new System.Drawing.Size(752, 378);
+      this.imageBox.Size = new System.Drawing.Size(751, 377);
       this.imageBox.TabIndex = 0;
       this.imageBox.Selected += new System.EventHandler<System.EventArgs>(this.imageBox_Selected);
       this.imageBox.SelectionRegionChanged += new System.EventHandler(this.imageBox_SelectionRegionChanged);
@@ -148,7 +150,7 @@
       this.previewImageBox.ImageBorderStyle = Cyotek.Windows.Forms.ImageBoxBorderStyle.FixedSingle;
       this.previewImageBox.Location = new System.Drawing.Point(0, 0);
       this.previewImageBox.Name = "previewImageBox";
-      this.previewImageBox.Size = new System.Drawing.Size(752, 153);
+      this.previewImageBox.Size = new System.Drawing.Size(751, 154);
       this.previewImageBox.TabIndex = 0;
       // 
       // propertyGrid
@@ -159,7 +161,7 @@
       this.propertyGrid.Location = new System.Drawing.Point(0, 0);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(303, 536);
+      this.propertyGrid.Size = new System.Drawing.Size(304, 536);
       this.propertyGrid.TabIndex = 0;
       // 
       // statusStrip
@@ -353,6 +355,7 @@
       this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
+            this.viewToolStripMenuItem,
             this.helpToolStripMenuItem});
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.Name = "menuStrip";
@@ -448,11 +451,28 @@
       // aboutToolStripMenuItem
       // 
       this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.aboutToolStripMenuItem.Text = "&About...";
       this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
       // 
-      // ImageBoxDemoForm
+      // viewToolStripMenuItem
+      // 
+      this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fitCursorLocationToBoundsToolStripMenuItem});
+      this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+      this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+      this.viewToolStripMenuItem.Text = "&View";
+      // 
+      // fitCursorLocationToBoundsToolStripMenuItem
+      // 
+      this.fitCursorLocationToBoundsToolStripMenuItem.Checked = true;
+      this.fitCursorLocationToBoundsToolStripMenuItem.CheckOnClick = true;
+      this.fitCursorLocationToBoundsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.fitCursorLocationToBoundsToolStripMenuItem.Name = "fitCursorLocationToBoundsToolStripMenuItem";
+      this.fitCursorLocationToBoundsToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+      this.fitCursorLocationToBoundsToolStripMenuItem.Text = "Fit Cursor Location To &Bounds";
+      // 
+      // GeneralDemoForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -463,7 +483,7 @@
       this.Controls.Add(this.menuStrip);
       this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.MainMenuStrip = this.menuStrip;
-      this.Name = "ImageBoxDemoForm";
+      this.Name = "GeneralDemoForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "General Demonstration";
       this.viewSplitContainer.Panel1.ResumeLayout(false);
@@ -523,6 +543,8 @@
     private System.Windows.Forms.ToolStripComboBox zoomLevelsToolStripComboBox;
     private System.Windows.Forms.ToolStripMenuItem selectNoneToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+    private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem fitCursorLocationToBoundsToolStripMenuItem;
   }
 }
 

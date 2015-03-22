@@ -15,7 +15,7 @@ namespace Cyotek.Windows.Forms.Demo
 
   // If you use this control in your applications, attribution, donations or contributions are welcome.
 
-  internal partial class ImageBoxDemoForm : BaseForm
+  internal partial class GeneralDemoForm : BaseForm
   {
     #region Instance Fields
 
@@ -25,7 +25,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     #region Public Constructors
 
-    public ImageBoxDemoForm()
+    public GeneralDemoForm()
     {
       InitializeComponent();
     }
@@ -91,10 +91,12 @@ namespace Cyotek.Windows.Forms.Demo
 
     private void UpdateCursorPosition(Point location)
     {
-      if (imageBox.IsPointInImage(location))
+      if (!fitCursorLocationToBoundsToolStripMenuItem.Checked || imageBox.IsPointInImage(location))
       {
         Point point;
+
         point = imageBox.PointToImage(location);
+
         cursorToolStripStatusLabel.Text = this.FormatPoint(point);
       }
       else

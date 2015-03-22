@@ -104,11 +104,11 @@
     <Compile Include="GroupBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ImageBoxDemoForm.cs">
+    <Compile Include="GeneralDemoForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ImageBoxDemoForm.Designer.cs">
-      <DependentUpon>ImageBoxDemoForm.cs</DependentUpon>
+    <Compile Include="GeneralDemoForm.Designer.cs">
+      <DependentUpon>GeneralDemoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainMenuForm.cs">
       <SubType>Form</SubType>
@@ -211,8 +211,8 @@
     <EmbeddedResource Include="DragTestForm.resx">
       <DependentUpon>DragTestForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImageBoxDemoForm.resx">
-      <DependentUpon>ImageBoxDemoForm.cs</DependentUpon>
+    <EmbeddedResource Include="GeneralDemoForm.resx">
+      <DependentUpon>GeneralDemoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainMenuForm.resx">
       <DependentUpon>MainMenuForm.cs</DependentUpon>
