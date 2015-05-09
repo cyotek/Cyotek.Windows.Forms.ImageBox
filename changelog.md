@@ -1,5 +1,8 @@
 # Cyotek ImageBox Change Log
 
+## 1.1.5.1
+* **FIX:** Resizing the selection in the `ImageBoxEx` control now works correctly even if the mouse passes outside the bounds of the image.
+
 ## 1.1.5.0
 * **NEW:** Added `AllowUnfocusedMouseWheel` property. If set to `true` the control will support mouse wheel zooming even when it does not have focus
 * **FIX:** The `fitToBounds` parameter of the `PointToImage` wasn't being used correctly
