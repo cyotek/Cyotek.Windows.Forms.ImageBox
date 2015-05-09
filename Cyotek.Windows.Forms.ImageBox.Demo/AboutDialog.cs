@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using CommonMark;
-using HtmlRenderer;
+using TheArtOfDev.HtmlRenderer.WinForms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
