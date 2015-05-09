@@ -176,3 +176,5 @@ nuget/
 *.GhostDoc.xml
 
 packages
+
+NDependOut
