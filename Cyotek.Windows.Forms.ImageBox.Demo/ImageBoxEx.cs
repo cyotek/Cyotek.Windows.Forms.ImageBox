@@ -680,10 +680,8 @@ namespace Cyotek.Windows.Forms.Demo
         bool resizingBottomEdge;
         bool resizingLeftEdge;
         bool resizingRightEdge;
-        bool outsideBounds;
 
         imagePosition = this.PointToImage(cursorPosition);
-        outsideBounds = !this.IsPointInImage(cursorPosition);
 
         // get the current selection
         left = this.SelectionRegion.Left;
@@ -700,7 +698,7 @@ namespace Cyotek.Windows.Forms.Demo
         // and resize!
         if (resizingTopEdge)
         {
-          top = !outsideBounds ? imagePosition.Y : 0;
+          top = imagePosition.Y > 0 ? imagePosition.Y : 0;
 
           if (bottom - top < this.MinimumSelectionSize.Height)
           {
@@ -713,7 +711,7 @@ namespace Cyotek.Windows.Forms.Demo
         }
         else if (resizingBottomEdge)
         {
-          bottom = !outsideBounds ? imagePosition.Y : this.ViewSize.Height;
+          bottom = imagePosition.Y < this.ViewSize.Height ? imagePosition.Y : this.ViewSize.Height;
 
           if (bottom - top < this.MinimumSelectionSize.Height)
           {
@@ -727,7 +725,7 @@ namespace Cyotek.Windows.Forms.Demo
 
         if (resizingLeftEdge)
         {
-          left = !outsideBounds ? imagePosition.X : 0;
+          left = imagePosition.X > 0 ? imagePosition.X : 0;
 
           if (right - left < this.MinimumSelectionSize.Width)
           {
@@ -740,7 +738,7 @@ namespace Cyotek.Windows.Forms.Demo
         }
         else if (resizingRightEdge)
         {
-          right = !outsideBounds ? imagePosition.X : this.ViewSize.Width;
+          right = imagePosition.X < this.ViewSize.Width ? imagePosition.X : this.ViewSize.Width;
 
           if (right - left < this.MinimumSelectionSize.Width)
           {
