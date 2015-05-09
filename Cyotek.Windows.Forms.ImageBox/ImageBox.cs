@@ -1975,11 +1975,13 @@ namespace Cyotek.Windows.Forms
 
       if (x < 0)
       {
+        w -= -x;
         x = 0;
       }
 
       if (y < 0)
       {
+        h -= -y;
         y = 0;
       }
 
