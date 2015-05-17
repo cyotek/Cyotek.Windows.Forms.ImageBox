@@ -216,12 +216,12 @@ namespace Cyotek.Windows.Forms.Demo
     /// <param name="se">
     ///   A <see cref="T:System.Windows.Forms.ScrollEventArgs" /> that contains the event data.
     /// </param>
-    protected override void OnScroll(ScrollEventArgs se)
-    {
-      base.OnScroll(se);
+    //protected override void OnScroll(ScrollEventArgs se)
+    //{
+    //  base.OnScroll(se);
 
-      this.PositionDragHandles();
-    }
+    //  this.PositionDragHandles();
+    //}
 
     /// <summary>
     ///   Raises the <see cref="ImageBox.Selecting" /> event.

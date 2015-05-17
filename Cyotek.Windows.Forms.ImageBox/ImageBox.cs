@@ -22,7 +22,7 @@ namespace Cyotek.Windows.Forms
   [ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp")]
   [ToolboxItem(true)]
   /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */
-  public class ImageBox : VirtualScrollableControl
+  public class ImageBox : Control
   {
     #region Constants
 
@@ -130,14 +130,12 @@ namespace Cyotek.Windows.Forms
 
       // ReSharper disable DoNotCallOverridableMethodsInConstructor
       this.BeginUpdate();
-      this.WheelScrollsControl = false;
       this.AllowZoom = true;
       this.LimitSelectionToImage = true;
       this.DropShadowSize = 3;
       this.ImageBorderStyle = ImageBoxBorderStyle.None;
       this.BackColor = Color.White;
       this.AutoSize = false;
-      this.AutoScroll = true;
       this.GridScale = ImageBoxGridScale.Small;
       this.GridDisplayMode = ImageBoxGridDisplayMode.Client;
       this.GridColor = Color.Gainsboro;
@@ -464,19 +462,6 @@ namespace Cyotek.Windows.Forms
     #region Overridden Properties
 
     /// <summary>
-    ///   Gets or sets a value indicating whether the container enables the user to scroll to any content placed outside of its visible boundaries.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if the container enables auto-scrolling; otherwise, <c>false</c>.
-    /// </value>
-    [DefaultValue(true)]
-    public override bool AutoScroll
-    {
-      get { return base.AutoScroll; }
-      set { base.AutoScroll = value; }
-    }
-
-    /// <summary>
     ///   Specifies if the control should auto size to fit the image contents.
     /// </summary>
     /// <value></value>
@@ -610,7 +595,20 @@ namespace Cyotek.Windows.Forms
       {
         if (this.IsAnimating)
         {
+          // ReSharper disable once HeapView.DelegateAllocation
           ImageAnimator.StopAnimate(this.Image, this.OnFrameChangedHandler);
+        }
+
+        if (_hScrollBar != null)
+        {
+          // ReSharper disable once HeapView.DelegateAllocation
+          _hScrollBar.Scroll -= this._hScrollBar_Scroll;
+        }
+
+        if (_vScrollBar != null)
+        {
+          // ReSharper disable once HeapView.DelegateAllocation
+          _vScrollBar.Scroll -= this._vScrollBar_Scroll;
         }
 
         if (_texture != null)
@@ -665,19 +663,6 @@ namespace Cyotek.Windows.Forms
       base.OnBackColorChanged(e);
 
       this.Invalidate();
-    }
-
-    /// <summary>
-    ///   Raises the <see cref="ScrollControl.BorderStyleChanged" /> event.
-    /// </summary>
-    /// <param name="e">
-    ///   The <see cref="EventArgs" /> instance containing the event data.
-    /// </param>
-    protected override void OnBorderStyleChanged(EventArgs e)
-    {
-      base.OnBorderStyleChanged(e);
-
-      this.AdjustLayout();
     }
 
     /// <summary>
@@ -919,19 +904,6 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   Raises the <see cref="System.Windows.Forms.ScrollableControl.Scroll" /> event.
-    /// </summary>
-    /// <param name="se">
-    ///   A <see cref="T:System.Windows.Forms.ScrollEventArgs" /> that contains the event data.
-    /// </param>
-    protected override void OnScroll(ScrollEventArgs se)
-    {
-      this.Invalidate();
-
-      base.OnScroll(se);
-    }
-
-    /// <summary>
     /// Raises the <see cref="E:System.Windows.Forms.Control.TextChanged" /> event.
     /// </summary>
     /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
@@ -1050,22 +1022,6 @@ namespace Cyotek.Windows.Forms
           this.OnAutoPanChanged(EventArgs.Empty);
         }
       }
-    }
-
-    /// <summary>
-    ///   Gets or sets the minimum size of the auto-scroll.
-    /// </summary>
-    /// <value></value>
-    /// <returns>
-    ///   A <see cref="T:System.Drawing.Size" /> that determines the minimum size of the virtual area through which the user can scroll.
-    /// </returns>
-    [Browsable(false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public new Size AutoScrollMinSize
-    {
-      get { return base.AutoScrollMinSize; }
-      set { base.AutoScrollMinSize = value; }
     }
 
     /// <summary>
@@ -1812,7 +1768,7 @@ namespace Cyotek.Windows.Forms
     /// <value>The height of the scaled image.</value>
     protected virtual int ScaledImageHeight
     {
-      get { return Convert.ToInt32(this.ViewSize.Height * this.ZoomFactor); }
+      get { return this.Scale(this.ViewSize.Height); }
     }
 
     /// <summary>
@@ -1821,7 +1777,12 @@ namespace Cyotek.Windows.Forms
     /// <value>The width of the scaled image.</value>
     protected virtual int ScaledImageWidth
     {
-      get { return Convert.ToInt32(this.ViewSize.Width * this.ZoomFactor); }
+      get { return this.Scale(this.ViewSize.Width); }
+    }
+
+    protected int Scale(int value)
+    {
+      return Convert.ToInt32(value * this.ZoomFactor);
     }
 
     /// <summary>
@@ -1830,8 +1791,10 @@ namespace Cyotek.Windows.Forms
     /// <value>The size of the view.</value>
     protected virtual Size ViewSize
     {
-      get { return this.VirtualMode ? this.VirtualSize : this.GetImageSize(); }
+      get { return _viewSize; }
     }
+
+    private Size _viewSize;
 
     /// <summary>
     /// Gets or sets a value indicating whether a drag operation was cancelled.
@@ -1893,7 +1856,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     public virtual void CenterToImage()
     {
-      this.AutoScrollPosition = new Point((this.AutoScrollMinSize.Width - this.ClientSize.Width) / 2, (this.AutoScrollMinSize.Height - this.ClientSize.Height) / 2);
+      this.AutoScrollPosition = new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2);
     }
 
     /// <summary>
@@ -2079,18 +2042,33 @@ namespace Cyotek.Windows.Forms
       int top;
       int width;
       int height;
+      Size clientSize;
 
+      clientSize = this.ClientSize;
       left = 0;
       top = 0;
-      width = this.ClientSize.Width;
-      height = this.ClientSize.Height;
+      width = clientSize.Width;
+      height = clientSize.Height;
+
+      if (this.VScroll)
+      {
+        width -= _vScrollBar.Width;
+      }
+
+      if (this.HScroll)
+      {
+        height -= _hScrollBar.Height;
+      }
 
       if (includePadding)
       {
-        left += this.Padding.Left;
-        top += this.Padding.Top;
-        width -= this.Padding.Horizontal;
-        height -= this.Padding.Vertical;
+        Padding padding;
+
+        padding = this.Padding;
+        left += padding.Left;
+        top += padding.Top;
+        width -= padding.Horizontal;
+        height -= padding.Vertical;
       }
 
       return new Rectangle(left, top, width, height);
@@ -2566,22 +2544,26 @@ namespace Cyotek.Windows.Forms
 
         if (fitToBounds)
         {
+          Size viewSize;
+
+          viewSize = this.ViewSize;
+
           if (x < 0)
           {
             x = 0;
           }
-          else if (x > this.ViewSize.Width)
+          else if (x > viewSize.Width)
           {
-            x = this.ViewSize.Width;
+            x = viewSize.Width;
           }
 
           if (y < 0)
           {
             y = 0;
           }
-          else if (y > this.ViewSize.Height)
+          else if (y > viewSize.Height)
           {
-            y = this.ViewSize.Height;
+            y = viewSize.Height;
           }
         }
       }
@@ -2628,10 +2610,10 @@ namespace Cyotek.Windows.Forms
       int x;
       int y;
 
-      x = (int)(imageLocation.X * this.ZoomFactor) - relativeDisplayPoint.X;
-      y = (int)(imageLocation.Y * this.ZoomFactor) - relativeDisplayPoint.Y;
+      x = this.Scale(imageLocation.X) - relativeDisplayPoint.X;
+      y = this.Scale(imageLocation.Y) - relativeDisplayPoint.Y;
 
-      this.AutoScrollPosition = new Point(x, y);
+      this.AutoScrollPosition = new Point(-x, -y);
     }
 
     /// <summary>
@@ -2695,7 +2677,7 @@ namespace Cyotek.Windows.Forms
         double zoom;
         double aspectRatio;
 
-        this.AutoScrollMinSize = Size.Empty;
+        //this.AutoScrollMinSize = Size.Empty;
 
         innerRectangle = this.GetInsideViewPort(true);
 
@@ -2781,7 +2763,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     protected virtual void AdjustLayout()
     {
-      if (this.AllowPainting)
+      if (this.AllowPainting && !this.ViewSize.IsEmpty)
       {
         if (this.AutoSize)
         {
@@ -2791,7 +2773,7 @@ namespace Cyotek.Windows.Forms
         {
           this.ZoomToFit();
         }
-        else if (this.AutoScroll)
+        else
         {
           this.AdjustViewPort();
         }
@@ -2799,6 +2781,9 @@ namespace Cyotek.Windows.Forms
         this.Invalidate();
       }
     }
+
+    private HScrollBar _hScrollBar;
+    private VScrollBar _vScrollBar;
 
     /// <summary>
     ///   Adjusts the scroll.
@@ -2809,9 +2794,9 @@ namespace Cyotek.Windows.Forms
     {
       Point scrollPosition;
 
-      scrollPosition = new Point(this.HorizontalScroll.Value + x, this.VerticalScroll.Value + y);
+      //scrollPosition = new Point(this.HorizontalScroll.Value + x, this.VerticalScroll.Value + y);
 
-      this.UpdateScrollPosition(scrollPosition);
+      //this.UpdateScrollPosition(scrollPosition);
     }
 
     /// <summary>
@@ -2830,9 +2815,52 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     protected virtual void AdjustViewPort()
     {
-      if (this.AutoScroll && !this.ViewSize.IsEmpty)
+      Size viewSize;
+
+      viewSize = this.ViewSize;
+
+      if (!viewSize.IsEmpty)
       {
-        this.AutoScrollMinSize = new Size(this.ScaledImageWidth + this.Padding.Horizontal, this.ScaledImageHeight + this.Padding.Vertical);
+        Size size;
+        Size clientSize;
+        int w;
+        int h;
+        int cw;
+        int ch;
+        bool vScroll;
+        bool hScroll;
+
+        size = this.GetInsideViewPort(true).Size;
+        clientSize = this.ClientSize;
+        w = this.ScaledImageWidth;
+        h = this.ScaledImageHeight;
+
+        hScroll = w > size.Width;
+        vScroll = h > size.Height;
+
+        this.HScroll = hScroll;
+        this.VScroll = vScroll;
+
+        cw = vScroll ? clientSize.Width - _vScrollBar.Width : clientSize.Width;
+        ch = hScroll ? clientSize.Height - _hScrollBar.Height : clientSize.Height;
+
+        if (hScroll)
+        {
+          _hScrollBar.Width = cw;
+          _hScrollBar.Top = clientSize.Height - _hScrollBar.Height;
+        }
+
+        if (vScroll)
+        {
+          _vScrollBar.Height = ch;
+          _vScrollBar.Left = clientSize.Width - _vScrollBar.Width;
+        }
+
+        this.UpdateScrollbarMaximums();
+        //if (this.AutoScroll && !this.ViewSize.IsEmpty)
+        {
+          //this.AutoScrollMinSize = new Size(this.ScaledImageWidth + this.Padding.Horizontal, this.ScaledImageHeight + this.Padding.Vertical);
+        }
       }
     }
 
@@ -3654,6 +3682,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
+      this.DefineViewSize();
       this.IsAnimating = false;
 
       if (this.Image != null)
@@ -3679,6 +3708,32 @@ namespace Cyotek.Windows.Forms
       if (handler != null)
       {
         handler(this, e);
+      }
+    }
+
+    private void DefineViewSize()
+    {
+      _viewSize = this.VirtualMode ? this.VirtualSize : this.GetImageSize();
+
+      this.UpdateScrollbarMaximums();
+    }
+
+    private void UpdateScrollbarMaximums()
+    {
+      Size viewSize;
+
+      viewSize = this.GetInsideViewPort(true).Size;
+
+      if (this.HScroll)
+      {
+        _hScrollBar.Maximum = this.ScaledImageWidth;
+        _hScrollBar.LargeChange = viewSize.Width;
+      }
+
+      if (this.VScroll)
+      {
+        _vScrollBar.Maximum = this.ScaledImageHeight;
+        _vScrollBar.LargeChange = viewSize.Height;
       }
     }
 
@@ -4107,6 +4162,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
+      this.DefineViewSize();
       this.AdjustLayout();
 
       handler = this.VirtualModeChanged;
@@ -4299,24 +4355,24 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected virtual void ProcessScrollingShortcuts(KeyEventArgs e)
     {
-      switch (e.KeyCode)
-      {
-        case Keys.Left:
-          this.AdjustScroll(-(e.Modifiers == Keys.None ? this.HorizontalScroll.SmallChange : this.HorizontalScroll.LargeChange), 0);
-          break;
+      //switch (e.KeyCode)
+      //{
+      //  case Keys.Left:
+      //    this.AdjustScroll(-(e.Modifiers == Keys.None ? this.HorizontalScroll.SmallChange : this.HorizontalScroll.LargeChange), 0);
+      //    break;
 
-        case Keys.Right:
-          this.AdjustScroll(e.Modifiers == Keys.None ? this.HorizontalScroll.SmallChange : this.HorizontalScroll.LargeChange, 0);
-          break;
+      //  case Keys.Right:
+      //    this.AdjustScroll(e.Modifiers == Keys.None ? this.HorizontalScroll.SmallChange : this.HorizontalScroll.LargeChange, 0);
+      //    break;
 
-        case Keys.Up:
-          this.AdjustScroll(0, -(e.Modifiers == Keys.None ? this.VerticalScroll.SmallChange : this.VerticalScroll.LargeChange));
-          break;
+      //  case Keys.Up:
+      //    this.AdjustScroll(0, -(e.Modifiers == Keys.None ? this.VerticalScroll.SmallChange : this.VerticalScroll.LargeChange));
+      //    break;
 
-        case Keys.Down:
-          this.AdjustScroll(0, e.Modifiers == Keys.None ? this.VerticalScroll.SmallChange : this.VerticalScroll.LargeChange);
-          break;
-      }
+      //  case Keys.Down:
+      //    this.AdjustScroll(0, e.Modifiers == Keys.None ? this.VerticalScroll.SmallChange : this.VerticalScroll.LargeChange);
+      //    break;
+      //}
     }
 
     /// <summary>
@@ -4431,7 +4487,7 @@ namespace Cyotek.Windows.Forms
     {
       this.AutoScrollPosition = position;
       this.Invalidate();
-      this.OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+      //   this.OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, 0));
     }
 
     #endregion
@@ -4683,5 +4739,154 @@ namespace Cyotek.Windows.Forms
       if (handler != null)
         handler(this, e);
     }
+
+    private Point _autoScrollPosition;
+
+    public Point AutoScrollPosition
+    {
+      get { return _autoScrollPosition; }
+      set
+      {
+        if (_autoScrollPosition != value && !_ignoreScrollUpdates)
+        {
+          _ignoreScrollUpdates = true;
+
+          _autoScrollPosition = value;
+
+          if (this.HScroll)
+          {
+            _hScrollBar.Value = Math.Min(_hScrollBar.Maximum, Math.Max(0, -value.X));
+          }
+
+          if (this.VScroll)
+          {
+            _vScrollBar.Value = Math.Min(_vScrollBar.Maximum, Math.Max(0, -value.Y));
+          }
+
+          _ignoreScrollUpdates = false;
+
+          this.Invalidate();
+        }
+      }
+    }
+
+    private bool _ignoreScrollUpdates;
+
+    private bool _hScroll;
+
+    public bool HScroll
+    {
+      get { return _hScroll; }
+      set
+      {
+        if (_hScroll != value)
+        {
+          _hScroll = value;
+
+          this.OnHScrollChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    public event EventHandler VScrollChanged;
+
+    /// <summary>
+    /// Raises the <see cref="VScrollChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnVScrollChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      if (this.VScroll && _vScrollBar == null)
+      {
+        this.CreateVScroll();
+      }
+      else
+      {
+        _vScrollBar.Visible = this.VScroll;
+      }
+
+      handler = this.VScrollChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+
+    public event EventHandler HScrollChanged;
+
+    /// <summary>
+    /// Raises the <see cref="HScrollChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnHScrollChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      if (this.HScroll && _hScrollBar == null)
+      {
+        this.CreateHScroll();
+      }
+      else
+      {
+        _hScrollBar.Visible = this.HScroll;
+      }
+
+      handler = this.HScrollChanged;
+
+      if (handler != null)
+        handler(this, e);
+    }
+
+    private void CreateVScroll()
+    {
+      _vScrollBar = new VScrollBar();
+      _vScrollBar.Scroll += _vScrollBar_Scroll;
+
+      this.Controls.Add(_vScrollBar);
+    }
+
+    void _vScrollBar_Scroll(object sender, ScrollEventArgs e)
+    {
+      if (!_ignoreScrollUpdates)
+      {
+        this.AutoScrollPosition = new Point(this.AutoScrollPosition.X, -_vScrollBar.Value);
+      }
+    }
+
+    private void CreateHScroll()
+    {
+      _hScrollBar = new HScrollBar();
+      _hScrollBar.Scroll += _hScrollBar_Scroll;
+
+      this.Controls.Add(_hScrollBar);
+    }
+
+    void _hScrollBar_Scroll(object sender, ScrollEventArgs e)
+    {
+      if (!_ignoreScrollUpdates)
+      {
+        this.AutoScrollPosition = new Point(-_hScrollBar.Value, this.AutoScrollPosition.Y);
+      }
+    }
+
+
+    private bool _vScroll;
+
+    public bool VScroll
+    {
+      get { return _vScroll; }
+      set
+      {
+        if (_vScroll != value)
+        {
+          _vScroll = value;
+
+          this.OnVScrollChanged(EventArgs.Empty); ;
+        }
+      }
+    }
+
   }
 }
