@@ -24,7 +24,7 @@ namespace Cyotek.Windows.Forms.Demo
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new GeneralDemoForm());
+      Application.Run(new MethodsDemoForm());
     }
 
     #endregion

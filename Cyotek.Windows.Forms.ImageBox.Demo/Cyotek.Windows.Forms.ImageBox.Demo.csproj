@@ -90,6 +90,12 @@
     <Compile Include="ImageBoxEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MethodsDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MethodsDemoForm.Designer.cs">
+      <DependentUpon>MethodsDemoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ResizableSelectionDemoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -207,6 +213,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DisposedImageDemoForm.resx">
       <DependentUpon>DisposedImageDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MethodsDemoForm.resx">
+      <DependentUpon>MethodsDemoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ResizableSelectionDemoForm.resx">
       <DependentUpon>ResizableSelectionDemoForm.cs</DependentUpon>

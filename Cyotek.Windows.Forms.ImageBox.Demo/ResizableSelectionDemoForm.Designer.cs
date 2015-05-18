@@ -75,9 +75,9 @@
       this.menuStrip.SuspendLayout();
       this.statusStrip.SuspendLayout();
       this.SuspendLayout();
-      //
+      // 
       // demoLabel
-      //
+      // 
       this.demoLabel.AutoEllipsis = true;
       this.demoLabel.BackColor = System.Drawing.SystemColors.Info;
       this.demoLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -89,28 +89,28 @@
       this.demoLabel.Size = new System.Drawing.Size(419, 180);
       this.demoLabel.TabIndex = 1;
       this.demoLabel.Text = resources.GetString("demoLabel.Text");
-      //
+      // 
       // splitContainer
-      //
-      this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+      // 
+      this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.splitContainer.Location = new System.Drawing.Point(12, 27);
       this.splitContainer.Name = "splitContainer";
-      //
+      // 
       // splitContainer.Panel1
-      //
+      // 
       this.splitContainer.Panel1.Controls.Add(this.imageBox);
-      //
+      // 
       // splitContainer.Panel2
-      //
+      // 
       this.splitContainer.Panel2.Controls.Add(this.eventsSplitContainer);
       this.splitContainer.Size = new System.Drawing.Size(823, 418);
       this.splitContainer.SplitterDistance = 400;
       this.splitContainer.TabIndex = 5;
-      //
+      // 
       // imageBox
-      //
+      // 
       this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
@@ -128,33 +128,33 @@
       this.imageBox.SelectionRegionChanged += new System.EventHandler(this.imageBox_SelectionRegionChanged);
       this.imageBox.VirtualDraw += new System.Windows.Forms.PaintEventHandler(this.imageBox_VirtualDraw);
       this.imageBox.Zoomed += new System.EventHandler<Cyotek.Windows.Forms.ImageBoxZoomEventArgs>(this.imageBox_Zoomed);
-      //this.imageBox.Scroll += new System.Windows.Forms.ScrollEventHandler(this.imageBox_Scroll);
+      this.imageBox.Scroll += new System.Windows.Forms.ScrollEventHandler(this.imageBox_Scroll);
       this.imageBox.MouseLeave += new System.EventHandler(this.imageBox_MouseLeave);
       this.imageBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imageBox_MouseMove);
       this.imageBox.Resize += new System.EventHandler(this.imageBox_Resize);
-      //
+      // 
       // eventsSplitContainer
-      //
+      // 
       this.eventsSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
       this.eventsSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
       this.eventsSplitContainer.IsSplitterFixed = true;
       this.eventsSplitContainer.Location = new System.Drawing.Point(0, 0);
       this.eventsSplitContainer.Name = "eventsSplitContainer";
       this.eventsSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-      //
+      // 
       // eventsSplitContainer.Panel1
-      //
+      // 
       this.eventsSplitContainer.Panel1.Controls.Add(this.demoLabel);
-      //
+      // 
       // eventsSplitContainer.Panel2
-      //
+      // 
       this.eventsSplitContainer.Panel2.Controls.Add(this.tabControl1);
       this.eventsSplitContainer.Size = new System.Drawing.Size(419, 418);
       this.eventsSplitContainer.SplitterDistance = 180;
       this.eventsSplitContainer.TabIndex = 2;
-      //
+      // 
       // tabControl1
-      //
+      // 
       this.tabControl1.Controls.Add(this.eventsTabPage);
       this.tabControl1.Controls.Add(this.dragHandlesTabPage);
       this.tabControl1.Controls.Add(this.propertiesTabPage);
@@ -164,9 +164,9 @@
       this.tabControl1.SelectedIndex = 0;
       this.tabControl1.Size = new System.Drawing.Size(419, 234);
       this.tabControl1.TabIndex = 0;
-      //
+      // 
       // eventsTabPage
-      //
+      // 
       this.eventsTabPage.Controls.Add(this.eventsListBox);
       this.eventsTabPage.Location = new System.Drawing.Point(4, 24);
       this.eventsTabPage.Name = "eventsTabPage";
@@ -175,9 +175,9 @@
       this.eventsTabPage.TabIndex = 0;
       this.eventsTabPage.Text = "Events";
       this.eventsTabPage.UseVisualStyleBackColor = true;
-      //
+      // 
       // eventsListBox
-      //
+      // 
       this.eventsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
       this.eventsListBox.FormattingEnabled = true;
       this.eventsListBox.ItemHeight = 15;
@@ -185,9 +185,9 @@
       this.eventsListBox.Name = "eventsListBox";
       this.eventsListBox.Size = new System.Drawing.Size(399, 194);
       this.eventsListBox.TabIndex = 0;
-      //
+      // 
       // dragHandlesTabPage
-      //
+      // 
       this.dragHandlesTabPage.Controls.Add(this.splitContainer1);
       this.dragHandlesTabPage.Location = new System.Drawing.Point(4, 24);
       this.dragHandlesTabPage.Name = "dragHandlesTabPage";
@@ -196,30 +196,30 @@
       this.dragHandlesTabPage.TabIndex = 1;
       this.dragHandlesTabPage.Text = "Drag Handles";
       this.dragHandlesTabPage.UseVisualStyleBackColor = true;
-      //
+      // 
       // splitContainer1
-      //
+      // 
       this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.splitContainer1.Location = new System.Drawing.Point(6, 6);
       this.splitContainer1.Name = "splitContainer1";
-      //
+      // 
       // splitContainer1.Panel1
-      //
+      // 
       this.splitContainer1.Panel1.Controls.Add(this.enabledCheckedListBox);
       this.splitContainer1.Panel1.Controls.Add(this.label1);
-      //
+      // 
       // splitContainer1.Panel2
-      //
+      // 
       this.splitContainer1.Panel2.Controls.Add(this.visibleCheckedListBox);
       this.splitContainer1.Panel2.Controls.Add(this.label2);
       this.splitContainer1.Size = new System.Drawing.Size(399, 157);
       this.splitContainer1.SplitterDistance = 196;
       this.splitContainer1.TabIndex = 0;
-      //
+      // 
       // enabledCheckedListBox
-      //
-      this.enabledCheckedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+      // 
+      this.enabledCheckedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.enabledCheckedListBox.FormattingEnabled = true;
       this.enabledCheckedListBox.IntegralHeight = false;
@@ -228,20 +228,20 @@
       this.enabledCheckedListBox.Size = new System.Drawing.Size(190, 136);
       this.enabledCheckedListBox.TabIndex = 1;
       this.enabledCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.enabledCheckedListBox_ItemCheck);
-      //
+      // 
       // label1
-      //
+      // 
       this.label1.AutoSize = true;
       this.label1.Location = new System.Drawing.Point(-3, 0);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(98, 15);
       this.label1.TabIndex = 0;
       this.label1.Text = "Enabled Handles:";
-      //
+      // 
       // visibleCheckedListBox
-      //
-      this.visibleCheckedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+      // 
+      this.visibleCheckedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.visibleCheckedListBox.FormattingEnabled = true;
       this.visibleCheckedListBox.IntegralHeight = false;
@@ -250,18 +250,18 @@
       this.visibleCheckedListBox.Size = new System.Drawing.Size(193, 136);
       this.visibleCheckedListBox.TabIndex = 1;
       this.visibleCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.visibleCheckedListBox_ItemCheck);
-      //
+      // 
       // label2
-      //
+      // 
       this.label2.AutoSize = true;
       this.label2.Location = new System.Drawing.Point(0, 0);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(90, 15);
       this.label2.TabIndex = 0;
       this.label2.Text = "Visible Handles:";
-      //
+      // 
       // propertiesTabPage
-      //
+      // 
       this.propertiesTabPage.Controls.Add(this.propertyGrid);
       this.propertiesTabPage.Location = new System.Drawing.Point(4, 24);
       this.propertiesTabPage.Name = "propertiesTabPage";
@@ -270,9 +270,9 @@
       this.propertiesTabPage.TabIndex = 2;
       this.propertiesTabPage.Text = "Properties";
       this.propertiesTabPage.UseVisualStyleBackColor = true;
-      //
+      // 
       // propertyGrid
-      //
+      // 
       this.propertyGrid.CommandsVisibleIfAvailable = false;
       this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
       this.propertyGrid.HelpVisible = false;
@@ -282,9 +282,9 @@
       this.propertyGrid.Size = new System.Drawing.Size(399, 157);
       this.propertyGrid.TabIndex = 0;
       this.propertyGrid.ToolbarVisible = false;
-      //
+      // 
       // menuStrip
-      //
+      // 
       this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
@@ -293,63 +293,63 @@
       this.menuStrip.Name = "menuStrip";
       this.menuStrip.Size = new System.Drawing.Size(847, 24);
       this.menuStrip.TabIndex = 6;
-      //
+      // 
       // fileToolStripMenuItem
-      //
+      // 
       this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.closeToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
       this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
       this.fileToolStripMenuItem.Text = "&File";
-      //
+      // 
       // closeToolStripMenuItem
-      //
+      // 
       this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
       this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
       this.closeToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
       this.closeToolStripMenuItem.Text = "&Close";
       this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
-      //
+      // 
       // editToolStripMenuItem
-      //
+      // 
       this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectAllToolStripMenuItem,
             this.selectNoneToolStripMenuItem});
       this.editToolStripMenuItem.Name = "editToolStripMenuItem";
       this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
       this.editToolStripMenuItem.Text = "&Edit";
-      //
+      // 
       // selectAllToolStripMenuItem
-      //
+      // 
       this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
       this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
       this.selectAllToolStripMenuItem.Text = "Select &All";
       this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
-      //
+      // 
       // selectNoneToolStripMenuItem
-      //
+      // 
       this.selectNoneToolStripMenuItem.Name = "selectNoneToolStripMenuItem";
       this.selectNoneToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
       this.selectNoneToolStripMenuItem.Text = "Select &None";
       this.selectNoneToolStripMenuItem.Click += new System.EventHandler(this.selectNoneToolStripMenuItem_Click);
-      //
+      // 
       // helpToolStripMenuItem
-      //
+      // 
       this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
       this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
       this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
       this.helpToolStripMenuItem.Text = "&Help";
-      //
+      // 
       // aboutToolStripMenuItem
-      //
+      // 
       this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
       this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
       this.aboutToolStripMenuItem.Text = "&About...";
       this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-      //
+      // 
       // statusStrip
-      //
+      // 
       this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cursorToolStripStatusLabel,
             this.statusToolStripStatusLabel,
@@ -361,52 +361,52 @@
       this.statusStrip.Name = "statusStrip";
       this.statusStrip.Size = new System.Drawing.Size(847, 22);
       this.statusStrip.TabIndex = 7;
-      //
+      // 
       // cursorToolStripStatusLabel
-      //
+      // 
       this.cursorToolStripStatusLabel.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.Cursor;
       this.cursorToolStripStatusLabel.Name = "cursorToolStripStatusLabel";
       this.cursorToolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
       this.cursorToolStripStatusLabel.ToolTipText = "Current Cursor Position";
-      //
+      // 
       // statusToolStripStatusLabel
-      //
+      // 
       this.statusToolStripStatusLabel.Name = "statusToolStripStatusLabel";
       this.statusToolStripStatusLabel.Size = new System.Drawing.Size(784, 17);
       this.statusToolStripStatusLabel.Spring = true;
       this.statusToolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      //
+      // 
       // autoScrollPositionToolStripStatusLabel
-      //
+      // 
       this.autoScrollPositionToolStripStatusLabel.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.Position;
       this.autoScrollPositionToolStripStatusLabel.Name = "autoScrollPositionToolStripStatusLabel";
       this.autoScrollPositionToolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
       this.autoScrollPositionToolStripStatusLabel.ToolTipText = "Auto Scroll Position";
       this.autoScrollPositionToolStripStatusLabel.Visible = false;
-      //
+      // 
       // imageSizeToolStripStatusLabel
-      //
+      // 
       this.imageSizeToolStripStatusLabel.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.Size;
       this.imageSizeToolStripStatusLabel.Name = "imageSizeToolStripStatusLabel";
       this.imageSizeToolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
       this.imageSizeToolStripStatusLabel.ToolTipText = "Image Size";
       this.imageSizeToolStripStatusLabel.Visible = false;
-      //
+      // 
       // zoomToolStripStatusLabel
-      //
+      // 
       this.zoomToolStripStatusLabel.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.Zoom;
       this.zoomToolStripStatusLabel.Name = "zoomToolStripStatusLabel";
       this.zoomToolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
       this.zoomToolStripStatusLabel.ToolTipText = "Zoom";
-      //
+      // 
       // selectionToolStripStatusLabel
-      //
+      // 
       this.selectionToolStripStatusLabel.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.SelectAll;
       this.selectionToolStripStatusLabel.Name = "selectionToolStripStatusLabel";
       this.selectionToolStripStatusLabel.Size = new System.Drawing.Size(16, 17);
-      //
+      // 
       // ResizableSelectionDemoForm
-      //
+      // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(847, 470);
