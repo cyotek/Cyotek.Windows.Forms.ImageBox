@@ -1867,8 +1867,11 @@ namespace Cyotek.Windows.Forms
     /// <param name="imageLocation">The point of the image to attempt to center.</param>
     public virtual void CenterAt(Point imageLocation)
     {
-      this.ScrollTo(imageLocation, new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2));
+      this.ScrollTo(imageLocation, this.RelativeCenterPoint);
     }
+
+    private Point RelativeCenterPoint
+    { get { return new Point((this.ScaledImageWidth - this.ClientSize.Width) / 2, (this.ScaledImageHeight - this.ClientSize.Height) / 2); } }
 
     /// <summary>
     ///   Centers the given point in the image in the center of the control
@@ -1895,7 +1898,7 @@ namespace Cyotek.Windows.Forms
     /// </summary>
     public virtual void CenterToImage()
     {
-      this.AutoScrollPosition = new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2);
+      this.AutoScrollPosition = this.RelativeCenterPoint;
     }
 
     /// <summary>
