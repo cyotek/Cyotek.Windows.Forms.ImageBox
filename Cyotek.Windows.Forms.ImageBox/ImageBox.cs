@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -2754,6 +2755,27 @@ namespace Cyotek.Windows.Forms
       this.CenterAt(new Point(cx, cy));
     }
 
+    /// <summary>
+    /// Clamps the specified value within the given range.
+    /// </summary>
+    /// <param name="value">The value to clamp.</param>
+    /// <param name="min">The minimum value allowed.</param>
+    /// <param name="max">The maximum value allowed.</param>
+    /// <returns></returns>
+    private int Clamp(int value, int min, int max)
+    {
+      if (value < min)
+      {
+        value = min;
+      }
+      else if (value > max)
+      {
+        value = max;
+      }
+
+      return value;
+    }
+
     #endregion
 
     #region Protected Members
@@ -2856,7 +2878,7 @@ namespace Cyotek.Windows.Forms
           _vScrollBar.Left = clientSize.Width - _vScrollBar.Width;
         }
 
-        this.UpdateScrollbarMaximums();
+        this.UpdateScrollbars();
         //if (this.AutoScroll && !this.ViewSize.IsEmpty)
         {
           //this.AutoScrollMinSize = new Size(this.ScaledImageWidth + this.Padding.Horizontal, this.ScaledImageHeight + this.Padding.Vertical);
@@ -3715,10 +3737,10 @@ namespace Cyotek.Windows.Forms
     {
       _viewSize = this.VirtualMode ? this.VirtualSize : this.GetImageSize();
 
-      this.UpdateScrollbarMaximums();
+      this.UpdateScrollbars();
     }
 
-    private void UpdateScrollbarMaximums()
+    private void UpdateScrollbars()
     {
       Size viewSize;
 
@@ -3728,14 +3750,18 @@ namespace Cyotek.Windows.Forms
       {
         _hScrollBar.Maximum = this.ScaledImageWidth;
         _hScrollBar.LargeChange = viewSize.Width;
+        _hScrollBar.SmallChange = this.Scale(_smallChange);
       }
 
       if (this.VScroll)
       {
         _vScrollBar.Maximum = this.ScaledImageHeight;
         _vScrollBar.LargeChange = viewSize.Height;
+        _hScrollBar.SmallChange = this.Scale(_smallChange);
       }
     }
+
+    private const int _smallChange = 10; // TODO: Add properties for this?
 
     /// <summary>
     ///   Raises the <see cref="InterpolationModeChanged" /> event.
@@ -4747,20 +4773,23 @@ namespace Cyotek.Windows.Forms
       get { return _autoScrollPosition; }
       set
       {
+        value = new Point(this.Clamp(value.X, -this.ScaledImageWidth, 0), this.Clamp(value.Y, -this.ScaledImageHeight, 0));
+
         if (_autoScrollPosition != value && !_ignoreScrollUpdates)
         {
-          _ignoreScrollUpdates = true;
+          Debug.WriteLine(value);
+          //_ignoreScrollUpdates = true;
 
           _autoScrollPosition = value;
 
           if (this.HScroll)
           {
-            _hScrollBar.Value = Math.Min(_hScrollBar.Maximum, Math.Max(0, -value.X));
+            _hScrollBar.Value = this.Clamp(-value.X, 0, _hScrollBar.Maximum);
           }
 
           if (this.VScroll)
           {
-            _vScrollBar.Value = Math.Min(_vScrollBar.Maximum, Math.Max(0, -value.Y));
+            _vScrollBar.Value = this.Clamp(-value.Y, 0, _vScrollBar.Maximum);
           }
 
           _ignoreScrollUpdates = false;
@@ -4852,6 +4881,8 @@ namespace Cyotek.Windows.Forms
       if (!_ignoreScrollUpdates)
       {
         this.AutoScrollPosition = new Point(this.AutoScrollPosition.X, -_vScrollBar.Value);
+
+        this.OnScroll(e);
       }
     }
 
@@ -4868,6 +4899,8 @@ namespace Cyotek.Windows.Forms
       if (!_ignoreScrollUpdates)
       {
         this.AutoScrollPosition = new Point(-_hScrollBar.Value, this.AutoScrollPosition.Y);
+
+        this.OnScroll(e);
       }
     }
 
@@ -4888,5 +4921,28 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    ///   Occurs when the user or code scrolls through the client area.
+    /// </summary>
+    [Category("Action")]
+    public event ScrollEventHandler Scroll;
+
+    /// <summary>
+    ///   Raises the <see cref="Scroll" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   The <see cref="ScrollEventArgs" /> instance containing the event data.
+    /// </param>
+    protected virtual void OnScroll(ScrollEventArgs e)
+    {
+      ScrollEventHandler handler;
+
+      handler = this.Scroll;
+
+      if (handler != null)
+      {
+        handler(this, e);
+      }
+    }
   }
 }
