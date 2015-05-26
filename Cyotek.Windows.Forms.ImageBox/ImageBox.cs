@@ -25,6 +25,81 @@ namespace Cyotek.Windows.Forms
   /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */
   public class ImageBox : Control
   {
+    #region Instance Fields
+
+    private BorderStyle _borderStyle;
+
+    #endregion
+
+    #region Events
+
+    [Category("Property Changed")]
+    public event EventHandler BorderStyleChanged;
+
+    #endregion
+
+    #region Overridden Properties
+
+    protected override CreateParams CreateParams
+    {
+      get
+      {
+        CreateParams createParams;
+
+        createParams = base.CreateParams;
+
+        switch (_borderStyle)
+        {
+          case BorderStyle.FixedSingle:
+            createParams.Style |= NativeMethods.WS_BORDER;
+            break;
+          case BorderStyle.Fixed3D:
+            createParams.ExStyle |= NativeMethods.WS_EX_CLIENTEDGE;
+            break;
+        }
+
+        return createParams;
+      }
+    }
+
+    #endregion
+
+    #region Public Properties
+
+    [Category("Appearance")]
+    [DefaultValue(typeof(BorderStyle), "Fixed3D")]
+    public virtual BorderStyle BorderStyle
+    {
+      get { return _borderStyle; }
+      set
+      {
+        if (this.BorderStyle != value)
+        {
+          _borderStyle = value;
+          base.UpdateStyles();
+
+          this.OnBorderStyleChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    #endregion
+
+    #region Protected Members
+
+    protected virtual void OnBorderStyleChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      handler = this.BorderStyleChanged;
+
+      if (handler != null)
+      {
+        handler(this, e);
+      }
+    }
+
+    #endregion
     #region Constants
 
     private const int MaxZoom = 3500;
@@ -148,6 +223,7 @@ namespace Cyotek.Windows.Forms
       this.VerticalScroll = new ImageBoxScrollProperties(_vScrollBar);
 
       // ReSharper disable DoNotCallOverridableMethodsInConstructor
+      this.BorderStyle = BorderStyle.Fixed3D;
       this.AllowZoom = true;
       this.LimitSelectionToImage = true;
       this.DropShadowSize = 3;

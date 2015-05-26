@@ -32,6 +32,10 @@ namespace Cyotek.Windows.Forms
     internal const int WM_MOUSEHWHEEL = 0x20e;
 
     internal const int WM_MOUSEWHEEL = 0x20a;
+    
+    internal const int WS_BORDER = 0x00800000;
+
+    internal const int WS_EX_CLIENTEDGE = 0x200;
 
     #endregion
 
