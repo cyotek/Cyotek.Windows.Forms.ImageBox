@@ -190,7 +190,7 @@ namespace Cyotek.Windows.Forms
 
     private int _zoom;
 
-    private ZoomLevelCollection _zoomLevels;
+    private ImageBoxZoomLevelCollection _zoomLevels;
 
     #endregion
 
@@ -241,7 +241,7 @@ namespace Cyotek.Windows.Forms
       this.SelectionColor = SystemColors.Highlight;
       this.ActualSize();
       this.ShortcutsEnabled = true;
-      this.ZoomLevels = ZoomLevelCollection.Default;
+      this.ZoomLevels = ImageBoxZoomLevelCollection.Default;
       this.ImageBorderColor = SystemColors.ControlDark;
       this.PixelGridColor = Color.DimGray;
       this.PixelGridThreshold = 5;
@@ -1842,7 +1842,7 @@ namespace Cyotek.Windows.Forms
     /// <value>The zoom levels.</value>
     [Browsable(false) /*Category("Behavior"), DefaultValue(typeof(ZoomLevelCollection), "7, 10, 15, 20, 25, 30, 50, 70, 100, 150, 200, 300, 400, 500, 600, 700, 800, 1200, 1600")*/]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public virtual ZoomLevelCollection ZoomLevels
+    public virtual ImageBoxZoomLevelCollection ZoomLevels
     {
       get { return _zoomLevels; }
       set
