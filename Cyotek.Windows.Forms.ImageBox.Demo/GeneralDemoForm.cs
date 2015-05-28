@@ -40,9 +40,6 @@ namespace Cyotek.Windows.Forms.Demo
 
       this.FillZoomLevels();
       this.OpenImage(Resources.Sample);
-
-      imageBox.SelectionMode = ImageBoxSelectionMode.Zoom;
-      imageBox.AllowClickZoom = true;
     }
 
     #endregion

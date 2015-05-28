@@ -14,6 +14,24 @@ namespace Cyotek.Windows.Forms
 
     #endregion
 
+    #region Fields
+
+    private bool _enabled;
+
+    private int _largeChange;
+
+    private int _maximum;
+
+    private int _minimum;
+
+    private int _smallChange;
+
+    private int _value;
+
+    private bool _visible;
+
+    #endregion
+
     #region Constructors
 
     internal ImageBoxScrollProperties(ScrollBar scrollBar)
@@ -32,8 +50,15 @@ namespace Cyotek.Windows.Forms
     [DefaultValue(true)]
     public bool Enabled
     {
-      get { return _scrollBar.Enabled; }
-      internal set { _scrollBar.Enabled = value; }
+      get { return _enabled; }
+      internal set
+      {
+        if (_enabled != value)
+        {
+          _enabled = value;
+          _scrollBar.Enabled = value;
+        }
+      }
     }
 
     /// <summary>
@@ -43,8 +68,15 @@ namespace Cyotek.Windows.Forms
     [DefaultValue(10)]
     public int LargeChange
     {
-      get { return _scrollBar.LargeChange; }
-      internal set { _scrollBar.LargeChange = value; }
+      get { return _largeChange; }
+      internal set
+      {
+        if (_largeChange != value)
+        {
+          _largeChange = value;
+          _scrollBar.LargeChange = value;
+        }
+      }
     }
 
     /// <summary>
@@ -54,8 +86,15 @@ namespace Cyotek.Windows.Forms
     [DefaultValue(100)]
     public int Maximum
     {
-      get { return _scrollBar.Maximum; }
-      internal set { _scrollBar.Maximum = value; }
+      get { return _maximum; }
+      internal set
+      {
+        if (_maximum != value)
+        {
+          _maximum = value;
+          _scrollBar.Maximum = value;
+        }
+      }
     }
 
     /// <summary>
@@ -65,8 +104,15 @@ namespace Cyotek.Windows.Forms
     [DefaultValue(0)]
     public int Minimum
     {
-      get { return _scrollBar.Minimum; }
-      internal set { _scrollBar.Minimum = value; }
+      get { return _minimum; }
+      internal set
+      {
+        if (_minimum != value)
+        {
+          _minimum = value;
+          _scrollBar.Minimum = value;
+        }
+      }
     }
 
     /// <summary>
@@ -76,8 +122,15 @@ namespace Cyotek.Windows.Forms
     [DefaultValue(1)]
     public int SmallChange
     {
-      get { return _scrollBar.SmallChange; }
-      internal set { _scrollBar.SmallChange = value; }
+      get { return _smallChange; }
+      internal set
+      {
+        if (_smallChange != value)
+        {
+          _smallChange = value;
+          _scrollBar.SmallChange = value;
+        }
+      }
     }
 
     /// <summary>
@@ -88,7 +141,7 @@ namespace Cyotek.Windows.Forms
     [DefaultValue(0)]
     public int Value
     {
-      get { return _scrollBar.Value; }
+      get { return _value; }
       internal set
       {
         if (value < this.Minimum)
@@ -100,7 +153,11 @@ namespace Cyotek.Windows.Forms
           value = this.Maximum;
         }
 
-        _scrollBar.Value = value;
+        if (_value != value)
+        {
+          _value = value;
+          _scrollBar.Value = value;
+        }
       }
     }
 
@@ -111,8 +168,15 @@ namespace Cyotek.Windows.Forms
     [DefaultValue(false)]
     public bool Visible
     {
-      get { return _scrollBar.Visible; }
-      internal set { _scrollBar.Visible = value; }
+      get { return _visible; }
+      internal set
+      {
+        if (_visible != value)
+        {
+          _visible = value;
+          _scrollBar.Visible = value;
+        }
+      }
     }
 
     #endregion

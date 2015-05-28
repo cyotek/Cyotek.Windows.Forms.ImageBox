@@ -2093,10 +2093,15 @@ namespace Cyotek.Windows.Forms
         Point offset;
         int width;
         int height;
+        bool hScroll;
+        bool vScroll;
 
         innerRectangle = this.GetInsideViewPort(true);
 
-        if (!this.HScroll && !this.VScroll) // if no scrolling is present, tinker the view port so that the image and any applicable borders all fit inside
+        hScroll = this.HScroll;
+        vScroll = this.VScroll;
+
+        if (!hScroll && !vScroll) // if no scrolling is present, tinker the view port so that the image and any applicable borders all fit inside
         {
           innerRectangle.Inflate(-this.GetImageBorderOffset(), -this.GetImageBorderOffset());
         }
@@ -2108,8 +2113,8 @@ namespace Cyotek.Windows.Forms
             int x;
             int y;
 
-            x = !this.HScroll ? (innerRectangle.Width - (this.ScaledImageWidth + this.Padding.Horizontal)) / 2 : 0;
-            y = !this.VScroll ? (innerRectangle.Height - (this.ScaledImageHeight + this.Padding.Vertical)) / 2 : 0;
+            x = !hScroll ? (innerRectangle.Width - (this.ScaledImageWidth + this.Padding.Horizontal)) / 2 : 0;
+            y = !vScroll ? (innerRectangle.Height - (this.ScaledImageHeight + this.Padding.Vertical)) / 2 : 0;
 
             offset = new Point(x, y);
           }
@@ -2168,12 +2173,12 @@ namespace Cyotek.Windows.Forms
       width = clientSize.Width;
       height = clientSize.Height;
 
-      if (this.VScroll)
+      if (this.VerticalScroll.Visible)
       {
         width -= _vScrollBar.Width;
       }
 
-      if (this.HScroll)
+      if (this.HorizontalScroll.Visible)
       {
         height -= _hScrollBar.Height;
       }
@@ -3843,6 +3848,20 @@ namespace Cyotek.Windows.Forms
       this.UpdateScrollbars();
     }
 
+    /// <summary>
+    /// Returns if horizontal scrolling is enabled
+    /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool HScroll { get; protected set; }
+
+    /// <summary>
+    /// Returns if the vertical scrolling is enabled
+    /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool VScroll { get; protected set; }
+
     private void UpdateScrollbars()
     {
       Size viewSize;
@@ -3854,23 +3873,53 @@ namespace Cyotek.Windows.Forms
         ImageBoxScrollProperties horizontal;
         ImageBoxScrollProperties vertical;
         Point autoScrollPosition;
+        bool hScroll;
+        bool vScroll;
+        bool enabled;
 
         autoScrollPosition = this.AutoScrollPosition;
+        hScroll = this.HScroll;
+        vScroll = this.VScroll;
+        enabled = this.Enabled;
 
         horizontal = this.HorizontalScroll;
         horizontal.Maximum = this.ScaledImageWidth;
         horizontal.LargeChange = viewSize.Width;
         horizontal.SmallChange = 10;
         horizontal.Value = -autoScrollPosition.X;
-        horizontal.Visible = this.HScroll;
+        horizontal.Visible = this.ShouldShowScrollbar(this.HorizontalScrollBarStyle, hScroll);
+        horizontal.Enabled = enabled && hScroll;
 
         vertical = this.VerticalScroll;
         vertical.Maximum = this.ScaledImageHeight;
         vertical.LargeChange = viewSize.Height;
         vertical.SmallChange = 10;
         vertical.Value = -autoScrollPosition.Y;
-        vertical.Visible = this.VScroll;
+        vertical.Visible = this.ShouldShowScrollbar(this.VerticalScrollBarStyle, vScroll);
+        vertical.Enabled = enabled && vScroll;
       }
+    }
+
+    private bool ShouldShowScrollbar(ImageBoxScrollBarStyle style, bool visible)
+    {
+      bool result;
+
+      switch (style)
+      {
+        case ImageBoxScrollBarStyle.Auto:
+          result = visible;
+          break;
+        case ImageBoxScrollBarStyle.Show:
+          result = true;
+          break;
+        case ImageBoxScrollBarStyle.Hide:
+          result = false;
+          break;
+        default:
+          throw new ArgumentOutOfRangeException("style", style, null);
+      }
+
+      return result;
     }
 
     /// <summary>
@@ -4453,7 +4502,11 @@ namespace Cyotek.Windows.Forms
     {
       if (this.AutoPan && !this.ViewSize.IsEmpty && this.SelectionMode == ImageBoxSelectionMode.None)
       {
-        if (!this.IsPanning && (this.HScroll | this.VScroll))
+        Size clientSize;
+
+        clientSize = this.GetInsideViewPort(true).Size;
+
+        if (!this.IsPanning && (this.ScaledImageWidth > clientSize.Width || this.ScaledImageHeight > clientSize.Height))
         {
           _startMousePosition = e.Location;
           this.IsPanning = true;
@@ -4930,91 +4983,11 @@ namespace Cyotek.Windows.Forms
       }
     }
 
-    private bool _hScroll;
-
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public bool HScroll
-    {
-      get { return _hScroll; }
-      protected set
-      {
-        if (_hScroll != value)
-        {
-          _hScroll = value;
-
-          this.OnHScrollChanged(EventArgs.Empty);
-        }
-      }
-    }
-
-    public event EventHandler VScrollChanged;
-
-    /// <summary>
-    /// Raises the <see cref="VScrollChanged" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
-    protected virtual void OnVScrollChanged(EventArgs e)
-    {
-      EventHandler handler;
-
-      this.VerticalScroll.Visible = this.VScroll;
-      if (!this.VScroll)
-      {
-        this.UpdateScrollPosition(new Point(-this.AutoScrollPosition.X, 0));
-      }
-
-      handler = this.VScrollChanged;
-
-      if (handler != null)
-        handler(this, e);
-    }
-
-
-    public event EventHandler HScrollChanged;
-
-    /// <summary>
-    /// Raises the <see cref="HScrollChanged" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
-    protected virtual void OnHScrollChanged(EventArgs e)
-    {
-      EventHandler handler;
-
-      this.HorizontalScroll.Visible = this.HScroll;
-      if (!this.HScroll)
-      {
-        this.UpdateScrollPosition(new Point(0, -this.AutoScrollPosition.Y));
-      }
-
-      handler = this.HScrollChanged;
-
-      if (handler != null)
-        handler(this, e);
-    }
-
     private void ScrollBarScrollHandler(object sender, ScrollEventArgs e)
     {
       this.UpdateScrollPosition(new Point(_hScrollBar.Value, _vScrollBar.Value));
     }
 
-    private bool _vScroll;
-
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public bool VScroll
-    {
-      get { return _vScroll; }
-      protected set
-      {
-        if (_vScroll != value)
-        {
-          _vScroll = value;
-
-          this.OnVScrollChanged(EventArgs.Empty); ;
-        }
-      }
-    }
 
     /// <summary>
     ///   Occurs when the user or code scrolls through the client area.
@@ -5039,5 +5012,91 @@ namespace Cyotek.Windows.Forms
         handler(this, e);
       }
     }
+
+    private ImageBoxScrollBarStyle _horizontalScrollBarStyle;
+
+    [Category("Behavior"), DefaultValue(typeof(ImageBoxScrollBarStyle), "Auto")]
+    public virtual ImageBoxScrollBarStyle HorizontalScrollBarStyle
+    {
+      get { return _horizontalScrollBarStyle; }
+      set
+      {
+        if (this.HorizontalScrollBarStyle != value)
+        {
+          _horizontalScrollBarStyle = value;
+
+          this.OnHorizontalScrollBarStyleChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Occurs when the HorizontalScrollBarStyle property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler HorizontalScrollBarStyleChanged;
+
+    /// <summary>
+    /// Raises the <see cref="HorizontalScrollBarStyleChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnHorizontalScrollBarStyleChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      this.AdjustViewPort();
+      this.Invalidate();
+
+      handler = this.HorizontalScrollBarStyleChanged;
+
+      if (handler != null)
+      {
+        handler(this, e);
+      }
+    }
+
+    private ImageBoxScrollBarStyle _verticalScrollBarStyle;
+
+    [Category("Behavior"), DefaultValue(typeof(ImageBoxScrollBarStyle), "Auto")]
+    public virtual ImageBoxScrollBarStyle VerticalScrollBarStyle
+    {
+      get { return _verticalScrollBarStyle; }
+      set
+      {
+        if (this.VerticalScrollBarStyle != value)
+        {
+          _verticalScrollBarStyle = value;
+
+          this.OnVerticalScrollBarStyleChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Occurs when the VerticalScrollBarStyle property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler VerticalScrollBarStyleChanged;
+
+    /// <summary>
+    /// Raises the <see cref="VerticalScrollBarStyleChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnVerticalScrollBarStyleChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      this.AdjustViewPort();
+      this.Invalidate();
+
+      handler = this.VerticalScrollBarStyleChanged;
+
+      if (handler != null)
+      {
+        handler(this, e);
+      }
+    }
+
+
   }
 }
