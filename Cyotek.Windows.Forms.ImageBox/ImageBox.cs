@@ -33,6 +33,9 @@ namespace Cyotek.Windows.Forms
 
     #region Events
 
+    /// <summary>
+    /// Occurs when the BorderStyle property is changed
+    /// </summary>
     [Category("Property Changed")]
     public event EventHandler BorderStyleChanged;
 
@@ -40,6 +43,9 @@ namespace Cyotek.Windows.Forms
 
     #region Overridden Properties
 
+    /// <summary>
+    /// Gets the required creation parameters when the control handle is created.
+    /// </summary>
     protected override CreateParams CreateParams
     {
       get
@@ -66,6 +72,9 @@ namespace Cyotek.Windows.Forms
 
     #region Public Properties
 
+    /// <summary>
+    /// Indicates the border style for the control.
+    /// </summary>
     [Category("Appearance")]
     [DefaultValue(typeof(BorderStyle), "Fixed3D")]
     public virtual BorderStyle BorderStyle
@@ -76,7 +85,6 @@ namespace Cyotek.Windows.Forms
         if (this.BorderStyle != value)
         {
           _borderStyle = value;
-          base.UpdateStyles();
 
           this.OnBorderStyleChanged(EventArgs.Empty);
         }
@@ -87,9 +95,17 @@ namespace Cyotek.Windows.Forms
 
     #region Protected Members
 
+    /// <summary>
+    ///   Raises the <see cref="BorderStyleChanged" /> event.
+    /// </summary>
+    /// <param name="e">
+    ///   An <see cref="T:System.EventArgs" /> that contains the event data.
+    /// </param>
     protected virtual void OnBorderStyleChanged(EventArgs e)
     {
       EventHandler handler;
+
+      base.UpdateStyles();
 
       handler = this.BorderStyleChanged;
 
@@ -208,12 +224,14 @@ namespace Cyotek.Windows.Forms
       {
         Visible = false
       };
+      // ReSharper disable once HeapView.DelegateAllocation
       _vScrollBar.Scroll += this.ScrollBarScrollHandler;
 
       _hScrollBar = new HScrollBar
       {
         Visible = false
       };
+      // ReSharper disable once HeapView.DelegateAllocation
       _hScrollBar.Scroll += this.ScrollBarScrollHandler;
 
       this.Controls.Add(_vScrollBar);
@@ -547,7 +565,7 @@ namespace Cyotek.Windows.Forms
     /// <returns></returns>
     public static Bitmap CreateCheckerBoxTile()
     {
-      return CreateCheckerBoxTile(8, Color.Gainsboro, Color.WhiteSmoke);
+      return ImageBox.CreateCheckerBoxTile(8, Color.Gainsboro, Color.WhiteSmoke);
     }
 
     #endregion
@@ -573,6 +591,7 @@ namespace Cyotek.Windows.Forms
         if (base.AutoSize != value)
         {
           base.AutoSize = value;
+
           this.AdjustLayout();
         }
       }
@@ -1752,6 +1771,9 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Gets or sets padding of text within the control.
+    /// </summary>
     [Category("Appearance")]
     [DefaultValue(typeof(Padding), "0, 0, 0, 0")]
     public virtual Padding TextPadding
@@ -1895,6 +1917,11 @@ namespace Cyotek.Windows.Forms
       get { return this.Scale(this.ViewSize.Width); }
     }
 
+    /// <summary>
+    /// Scales the specified integer according to the current zoom factor.
+    /// </summary>
+    /// <param name="value">The value to scale.</param>
+    /// <returns>The specified value scaled by the current zoom factor.</returns>
     protected int Scale(int value)
     {
       return Convert.ToInt32(value * this.ZoomFactor);
@@ -1946,6 +1973,9 @@ namespace Cyotek.Windows.Forms
       this.ScrollTo(imageLocation, this.RelativeCenterPoint);
     }
 
+    /// <summary>
+    /// Returns the point in the center of the control based on the current zoom level
+    /// </summary>
     private Point RelativeCenterPoint
     { get { return new Point((this.ScaledImageWidth - this.ClientSize.Width) / 2, (this.ScaledImageHeight - this.ClientSize.Height) / 2); } }
 
@@ -3524,6 +3554,10 @@ namespace Cyotek.Windows.Forms
       return offset;
     }
 
+    /// <summary>
+    /// Determines a suitable interpolation mode based in the value of the <see cref="InterpolationMode"/> and <see cref="Zoom"/> properties.
+    /// </summary>
+    /// <returns>A <see cref="InterpolationMode"/> for rendering the image.</returns>
     protected virtual InterpolationMode GetInterpolationMode()
     {
       InterpolationMode mode;
@@ -3841,6 +3875,9 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Defines the view sized based on the current image and if the control is operating in virtual mode or not
+    /// </summary>
     private void DefineViewSize()
     {
       _viewSize = this.VirtualMode ? this.VirtualSize : this.GetImageSize();
@@ -3862,6 +3899,9 @@ namespace Cyotek.Windows.Forms
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool VScroll { get; protected set; }
 
+    /// <summary>
+    /// Updates all properties of the embedded scroll bar controls.
+    /// </summary>
     private void UpdateScrollbars()
     {
       Size viewSize;
@@ -3900,6 +3940,12 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Determines if a scroll bar should be displayed.
+    /// </summary>
+    /// <param name="style">The user defined style of the scroll bar.</param>
+    /// <param name="visible">The visibility state for automatic styles.</param>
+    /// <returns><c>true</c> if the scroll bar should be displayed, otherwise <c>false</c>.</returns>
     private bool ShouldShowScrollbar(ImageBoxScrollBarStyle style, bool visible)
     {
       bool result;
@@ -4564,10 +4610,16 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Gets the characteristics associated with the horizontal scroll bar.
+    /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public ImageBoxScrollProperties HorizontalScroll { get; private set; }
 
+    /// <summary>
+    /// Gets the characteristics associated with the vertical scroll bar.
+    /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public ImageBoxScrollProperties VerticalScroll { get; private set; }
@@ -4896,6 +4948,9 @@ namespace Cyotek.Windows.Forms
 
     private bool _allowUnfocusedMouseWheel;
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the control can respond to mouse wheel events regardless of if the control has focus or not.
+    /// </summary>
     [Category("Behavior"), DefaultValue(false)]
     public virtual bool AllowUnfocusedMouseWheel
     {
@@ -4943,6 +4998,9 @@ namespace Cyotek.Windows.Forms
 
     private bool _updatingPosition;
 
+    /// <summary>
+    /// Gets or sets the location of the auto-scroll position.
+    /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Category("Layout")]
@@ -4957,6 +5015,7 @@ namespace Cyotek.Windows.Forms
           {
             int maxH;
             int maxW;
+
             _updatingPosition = true;
 
             maxW = this.HScroll ? this.ScaledImageWidth - this.HorizontalScroll.LargeChange : 0;
@@ -4983,6 +5042,11 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Handles the Scroll event of the embedded horizontal and vertical scroll bar controls.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">A <see cref="ScrollEventArgs"/> that contains the event data.</param>
     private void ScrollBarScrollHandler(object sender, ScrollEventArgs e)
     {
       this.UpdateScrollPosition(new Point(_hScrollBar.Value, _vScrollBar.Value));
@@ -5015,6 +5079,9 @@ namespace Cyotek.Windows.Forms
 
     private ImageBoxScrollBarStyle _horizontalScrollBarStyle;
 
+    /// <summary>
+    /// Gets or sets the style of the horizontal scroll bar.
+    /// </summary>
     [Category("Behavior"), DefaultValue(typeof(ImageBoxScrollBarStyle), "Auto")]
     public virtual ImageBoxScrollBarStyle HorizontalScrollBarStyle
     {
@@ -5057,6 +5124,9 @@ namespace Cyotek.Windows.Forms
 
     private ImageBoxScrollBarStyle _verticalScrollBarStyle;
 
+    /// <summary>
+    /// Gets or sets the style of the vertical scroll bar.
+    /// </summary>
     [Category("Behavior"), DefaultValue(typeof(ImageBoxScrollBarStyle), "Auto")]
     public virtual ImageBoxScrollBarStyle VerticalScrollBarStyle
     {
