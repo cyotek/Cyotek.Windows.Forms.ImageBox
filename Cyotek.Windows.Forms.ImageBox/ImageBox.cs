@@ -378,13 +378,13 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Occurs when panning the control completes.
     /// </summary>
-    [Category("Property Changed")]
+    [Category("Action")]
     public event EventHandler PanEnd;
 
     /// <summary>
     ///   Occurs when panning the control starts.
     /// </summary>
-    [Category("Property Changed")]
+    [Category("Action")]
     public event EventHandler PanStart;
 
     /// <summary>
