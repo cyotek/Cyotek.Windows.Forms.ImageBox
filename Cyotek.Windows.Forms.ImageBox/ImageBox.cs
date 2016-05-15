@@ -168,247 +168,713 @@ namespace Cyotek.Windows.Forms
     ///   Occurs when the AllowClickZoom property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler AllowClickZoomChanged;
+    public event EventHandler AllowClickZoomChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventAllowClickZoomChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventAllowClickZoomChanged, value);
+      }
+    }
+
+    private static readonly object EventAllowClickZoomChanged = new object();
 
     /// <summary>
     ///   Occurs when the AllowDoubleClick property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler AllowDoubleClickChanged;
+    public event EventHandler AllowDoubleClickChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventAllowDoubleClickChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventAllowDoubleClickChanged, value);
+      }
+    }
+
+    private static readonly object EventAllowDoubleClickChanged = new object();
 
     /// <summary>
     ///   Occurs when the AllowZoom property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler AllowZoomChanged;
+    public event EventHandler AllowZoomChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventAllowZoomChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventAllowZoomChanged, value);
+      }
+    }
+    private static readonly object EventAllowZoomChanged = new object();
+
 
     /// <summary>
     ///   Occurs when the AutoCenter property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler AutoCenterChanged;
+    public event EventHandler AutoCenterChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventAutoCenterChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventAutoCenterChanged, value);
+      }
+    }
+
+    private static readonly object EventAutoCenterChanged = new object();
 
     /// <summary>
     ///   Occurs when the AutoPan property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler AutoPanChanged;
+    public event EventHandler AutoPanChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventAutoPanChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventAutoPanChanged, value);
+      }
+    }
+
+    private static readonly object EventAutoPanChanged = new object();
+
 
     /// <summary>
     ///   Occurs when the DropShadowSize property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler DropShadowSizeChanged;
+    public event EventHandler DropShadowSizeChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventDropShadowSizeChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventDropShadowSizeChanged, value);
+      }
+    }
+    private static readonly object EventDropShadowSizeChanged = new object();
 
     /// <summary>
     ///   Occurs when the GridSizeCell property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler GridCellSizeChanged;
+    public event EventHandler GridCellSizeChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventGridCellSizeChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventGridCellSizeChanged, value);
+      }
+    }
+    private static readonly object EventGridCellSizeChanged = new object();
 
     /// <summary>
     ///   Occurs when the GridColorAlternate property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler GridColorAlternateChanged;
+    public event EventHandler GridColorAlternateChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventGridColorAlternateChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventGridColorAlternateChanged, value);
+      }
+    }
+    private static readonly object EventGridColorAlternateChanged = new object();
 
     /// <summary>
     ///   Occurs when the GridColor property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler GridColorChanged;
+    public event EventHandler GridColorChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventGridColorChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventGridColorChanged, value);
+      }
+    }
+    private static readonly object EventGridColorChanged = new object();
 
     /// <summary>
     ///   Occurs when the GridDisplayMode property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler GridDisplayModeChanged;
+    public event EventHandler GridDisplayModeChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventGridDisplayModeChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventGridDisplayModeChanged, value);
+      }
+    }
+    private static readonly object EventGridDisplayModeChanged = new object();
 
     /// <summary>
     ///   Occurs when the GridScale property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler GridScaleChanged;
+    public event EventHandler GridScaleChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventGridScaleChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventGridScaleChanged, value);
+      }
+    }
+    private static readonly object EventGridScaleChanged = new object();
 
     /// <summary>
     ///   Occurs when the ImageBorderColor property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler ImageBorderColorChanged;
+    public event EventHandler ImageBorderColorChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventImageBorderColorChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventImageBorderColorChanged, value);
+      }
+    }
+    private static readonly object EventImageBorderColorChanged = new object();
 
     /// <summary>
     ///   Occurs when the ImageBorderStyle property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler ImageBorderStyleChanged;
+    public event EventHandler ImageBorderStyleChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventImageBorderStyleChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventImageBorderStyleChanged, value);
+      }
+    }
+    private static readonly object EventImageBorderStyleChanged = new object();
+
 
     /// <summary>
     ///   Occurs when the Image property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler ImageChanged;
+    public event EventHandler ImageChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventImageChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventImageChanged, value);
+      }
+    }
+    private static readonly object EventImageChanged = new object();
 
     /// <summary>
     ///   Occurs when the InterpolationMode property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler InterpolationModeChanged;
+    public event EventHandler InterpolationModeChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventInterpolationModeChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventInterpolationModeChanged, value);
+      }
+    }
+    private static readonly object EventInterpolationModeChanged = new object();
 
     /// <summary>
     ///   Occurs when the InvertMouse property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler InvertMouseChanged;
+    public event EventHandler InvertMouseChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventInvertMouseChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventInvertMouseChanged, value);
+      }
+    }
+    private static readonly object EventInvertMouseChanged = new object();
 
     /// <summary>
     ///   Occurs when the LimitSelectionToImage property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler LimitSelectionToImageChanged;
+    public event EventHandler LimitSelectionToImageChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventLimitSelectionToImageChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventLimitSelectionToImageChanged, value);
+      }
+    }
+    private static readonly object EventLimitSelectionToImageChanged = new object();
 
     /// <summary>
     ///   Occurs when panning the control completes.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler PanEnd;
+    public event EventHandler PanEnd
+    {
+      add
+      {
+        this.Events.AddHandler(EventPanEnd, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventPanEnd, value);
+      }
+    }
+    private static readonly object EventPanEnd = new object();
 
     /// <summary>
     ///   Occurs when panning the control starts.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler PanStart;
+    public event EventHandler PanStart
+    {
+      add
+      {
+        this.Events.AddHandler(EventPanStart, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventPanStart, value);
+      }
+    }
+    private static readonly object EventPanStart = new object();
 
     /// <summary>
     ///   Occurs when the PixelGridColor property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler PixelGridColorChanged;
+    public event EventHandler PixelGridColorChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventPixelGridColorChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventPixelGridColorChanged, value);
+      }
+    }
+    private static readonly object EventPixelGridColorChanged = new object();
+
 
     /// <summary>
     /// Occurs when the PixelGridThreshold property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler PixelGridThresholdChanged;
+    public event EventHandler PixelGridThresholdChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventPixelGridThresholdChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventPixelGridThresholdChanged, value);
+      }
+    }
+    private static readonly object EventPixelGridThresholdChanged = new object();
 
     /// <summary>
     /// Occurs when the ScaleText property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler ScaleTextChanged;
+    public event EventHandler ScaleTextChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventScaleTextChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventScaleTextChanged, value);
+      }
+    }
+    private static readonly object EventScaleTextChanged = new object();
 
     /// <summary>
     ///   Occurs when a selection region has been defined
     /// </summary>
     [Category("Action")]
-    public event EventHandler<EventArgs> Selected;
+    public event EventHandler<EventArgs> Selected
+    {
+      // TODO: The event signature is wrong and should just be EventHandler - breaking change however. Do in the 2.0 scroll changes branch.
+      add
+      {
+        this.Events.AddHandler(EventSelected, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventSelected, value);
+      }
+    }
+    private static readonly object EventSelected = new object();
 
     /// <summary>
     ///   Occurs when the user starts to define a selection region.
     /// </summary>
     [Category("Action")]
-    public event EventHandler<ImageBoxCancelEventArgs> Selecting;
+    public event EventHandler<ImageBoxCancelEventArgs> Selecting
+    {
+      add
+      {
+        this.Events.AddHandler(EventSelecting, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventSelecting, value);
+      }
+    }
+    private static readonly object EventSelecting = new object();
+
 
     /// <summary>
     ///   Occurs when the SelectionColor property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler SelectionColorChanged;
+    public event EventHandler SelectionColorChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventSelectionColorChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventSelectionColorChanged, value);
+      }
+    }
+    private static readonly object EventSelectionColorChanged = new object();
 
     /// <summary>
     ///   Occurs when the SelectionMode property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler SelectionModeChanged;
+    public event EventHandler SelectionModeChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventSelectionModeChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventSelectionModeChanged, value);
+      }
+    }
+    private static readonly object EventSelectionModeChanged = new object();
+
 
     /// <summary>
     ///   Occurs when the SelectionRegion property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler SelectionRegionChanged;
+    public event EventHandler SelectionRegionChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventSelectionRegionChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventSelectionRegionChanged, value);
+      }
+    }
+    private static readonly object EventSelectionRegionChanged = new object();
 
     /// <summary>
     ///   Occurs when the ShortcutsEnabled property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler ShortcutsEnabledChanged;
+    public event EventHandler ShortcutsEnabledChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventShortcutsEnabledChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventShortcutsEnabledChanged, value);
+      }
+    }
+    private static readonly object EventShortcutsEnabledChanged = new object();
 
     /// <summary>
     ///   Occurs when the ShowPixelGrid property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler ShowPixelGridChanged;
+    public event EventHandler ShowPixelGridChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventShowPixelGridChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventShowPixelGridChanged, value);
+      }
+    }
+    private static readonly object EventShowPixelGridChanged = new object();
 
     /// <summary>
     /// Occurs when the SizeMode property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler SizeModeChanged;
+    public event EventHandler SizeModeChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventSizeModeChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventSizeModeChanged, value);
+      }
+    }
+    private static readonly object EventSizeModeChanged = new object();
 
     /// <summary>
     ///   Occurs when the SizeToFit property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler SizeToFitChanged;
+    public event EventHandler SizeToFitChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventSizeToFitChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventSizeToFitChanged, value);
+      }
+    }
+    private static readonly object EventSizeToFitChanged = new object();
 
     /// <summary>
     /// Occurs when the TextAlign property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler TextAlignChanged;
+    public event EventHandler TextAlignChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventTextAlignChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventTextAlignChanged, value);
+      }
+    }
+    private static readonly object EventTextAlignChanged = new object();
 
     /// <summary>
     /// Occurs when the TextBackColor property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler TextBackColorChanged;
+    public event EventHandler TextBackColorChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventTextBackColorChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventTextBackColorChanged, value);
+      }
+    }
+    private static readonly object EventTextBackColorChanged = new object();
 
     /// <summary>
     /// Occurs when the TextDisplayMode property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler TextDisplayModeChanged;
+    public event EventHandler TextDisplayModeChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventTextDisplayModeChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventTextDisplayModeChanged, value);
+      }
+    }
+    private static readonly object EventTextDisplayModeChanged = new object();
+
 
     /// <summary>
     /// Occurs when the TextPadding property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler TextPaddingChanged;
+    public event EventHandler TextPaddingChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventTextPaddingChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventTextPaddingChanged, value);
+      }
+    }
+    private static readonly object EventTextPaddingChanged = new object();
 
     /// <summary>
     ///   Occurs when virtual painting should occur
     /// </summary>
     [Category("Appearance")]
-    public event PaintEventHandler VirtualDraw;
+    public event PaintEventHandler VirtualDraw
+    {
+      add
+      {
+        this.Events.AddHandler(EventVirtualDraw, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventVirtualDraw, value);
+      }
+    }
+    private static readonly object EventVirtualDraw = new object();
 
     /// <summary>
     ///   Occurs when the VirtualMode property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler VirtualModeChanged;
+    public event EventHandler VirtualModeChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventVirtualModeChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventVirtualModeChanged, value);
+      }
+    }
+    private static readonly object EventVirtualModeChanged = new object();
+
 
     /// <summary>
     ///   Occurs when the VirtualSize property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler VirtualSizeChanged;
+    public event EventHandler VirtualSizeChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventVirtualSizeChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventVirtualSizeChanged, value);
+      }
+    }
+    private static readonly object EventVirtualSizeChanged = new object();
+
 
     /// <summary>
     ///   Occurs when the Zoom property is changed.
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler ZoomChanged;
+    public event EventHandler ZoomChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventZoomChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventZoomChanged, value);
+      }
+    }
+    private static readonly object EventZoomChanged = new object();
+
 
     /// <summary>
     ///   Occurs when the ZoomLevels property is changed
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler ZoomLevelsChanged;
+    public event EventHandler ZoomLevelsChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventZoomLevelsChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventZoomLevelsChanged, value);
+      }
+    }
+    private static readonly object EventZoomLevelsChanged = new object();
 
     /// <summary>
     /// Occurs when then a zoom action is performed.
     /// </summary>
     [Category("Action")]
-    public event EventHandler<ImageBoxZoomEventArgs> Zoomed;
+    public event EventHandler<ImageBoxZoomEventArgs> Zoomed
+    {
+      add
+      {
+        this.Events.AddHandler(EventZoomed, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventZoomed, value);
+      }
+    }
+    private static readonly object EventZoomed = new object();
 
     #endregion
 
@@ -2954,9 +3420,9 @@ namespace Cyotek.Windows.Forms
           alpha = feather - ((feather / glowSize) * i);
 
           using (Pen pen = new Pen(Color.FromArgb(alpha, this.ImageBorderColor), i)
-                           {
-                             LineJoin = LineJoin.Round
-                           })
+          {
+            LineJoin = LineJoin.Round
+          })
           {
             g.DrawPath(pen, path);
           }
@@ -3273,9 +3739,9 @@ namespace Cyotek.Windows.Forms
         offsetY = Math.Abs(this.AutoScrollPosition.Y) % pixelSize;
 
         using (Pen pen = new Pen(this.PixelGridColor)
-                         {
-                           DashStyle = DashStyle.Dot
-                         })
+        {
+          DashStyle = DashStyle.Dot
+        })
         {
           for (float x = viewport.Left + pixelSize - offsetX; x < viewport.Right; x += pixelSize)
           {
@@ -3399,7 +3865,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.AllowClickZoomChanged;
+      handler = (EventHandler)this.Events[EventAllowClickZoomChanged];
 
       if (handler != null)
       {
@@ -3419,7 +3885,7 @@ namespace Cyotek.Windows.Forms
 
       this.SetStyle(ControlStyles.StandardDoubleClick, this.AllowDoubleClick);
 
-      handler = this.AllowDoubleClickChanged;
+      handler = (EventHandler)this.Events[EventAllowDoubleClickChanged];
 
       if (handler != null)
       {
@@ -3437,7 +3903,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.AllowZoomChanged;
+      handler = (EventHandler)this.Events[EventAllowZoomChanged];
 
       if (handler != null)
       {
@@ -3457,7 +3923,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.AutoCenterChanged;
+      handler = (EventHandler)this.Events[EventAutoCenterChanged];
 
       if (handler != null)
       {
@@ -3475,7 +3941,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.AutoPanChanged;
+      handler = (EventHandler)this.Events[EventAutoPanChanged];
 
       if (handler != null)
       {
@@ -3495,7 +3961,7 @@ namespace Cyotek.Windows.Forms
 
       EventHandler handler;
 
-      handler = this.DropShadowSizeChanged;
+      handler = (EventHandler)this.Events[EventDropShadowSizeChanged];
 
       if (handler != null)
       {
@@ -3515,7 +3981,7 @@ namespace Cyotek.Windows.Forms
 
       this.InitializeGridTile();
 
-      handler = this.GridCellSizeChanged;
+      handler = (EventHandler)this.Events[EventGridCellSizeChanged];
 
       if (handler != null)
       {
@@ -3535,7 +4001,7 @@ namespace Cyotek.Windows.Forms
 
       this.InitializeGridTile();
 
-      handler = this.GridColorAlternateChanged;
+      handler = (EventHandler)this.Events[EventGridColorAlternateChanged];
 
       if (handler != null)
       {
@@ -3555,7 +4021,7 @@ namespace Cyotek.Windows.Forms
 
       this.InitializeGridTile();
 
-      handler = this.GridColorChanged;
+      handler = (EventHandler)this.Events[EventGridColorChanged];
 
       if (handler != null)
       {
@@ -3576,7 +4042,7 @@ namespace Cyotek.Windows.Forms
       this.InitializeGridTile();
       this.Invalidate();
 
-      handler = this.GridDisplayModeChanged;
+      handler = (EventHandler)this.Events[EventGridDisplayModeChanged];
 
       if (handler != null)
       {
@@ -3596,7 +4062,7 @@ namespace Cyotek.Windows.Forms
 
       this.InitializeGridTile();
 
-      handler = this.GridScaleChanged;
+      handler = (EventHandler)this.Events[EventGridScaleChanged];
 
       if (handler != null)
       {
@@ -3616,7 +4082,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.ImageBorderColorChanged;
+      handler = (EventHandler)this.Events[EventImageBorderColorChanged];
 
       if (handler != null)
       {
@@ -3636,7 +4102,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.ImageBorderStyleChanged;
+      handler = (EventHandler)this.Events[EventImageBorderStyleChanged];
 
       if (handler != null)
       {
@@ -3674,7 +4140,7 @@ namespace Cyotek.Windows.Forms
 
       this.AdjustLayout();
 
-      handler = this.ImageChanged;
+      handler = (EventHandler)this.Events[EventImageChanged];
 
       if (handler != null)
       {
@@ -3694,7 +4160,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.InterpolationModeChanged;
+      handler = (EventHandler)this.Events[EventInterpolationModeChanged];
 
       if (handler != null)
       {
@@ -3712,7 +4178,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.InvertMouseChanged;
+      handler = (EventHandler)this.Events[EventInvertMouseChanged];
 
       if (handler != null)
       {
@@ -3730,7 +4196,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.LimitSelectionToImageChanged;
+      handler = (EventHandler)this.Events[EventLimitSelectionToImageChanged];
 
       if (handler != null)
       {
@@ -3748,7 +4214,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.PanEnd;
+      handler = (EventHandler)this.Events[EventPanEnd];
 
       if (handler != null)
       {
@@ -3766,7 +4232,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.PanStart;
+      handler = (EventHandler)this.Events[EventPanStart];
 
       if (handler != null)
       {
@@ -3786,7 +4252,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.PixelGridColorChanged;
+      handler = (EventHandler)this.Events[EventPixelGridColorChanged];
 
       if (handler != null)
       {
@@ -3802,7 +4268,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.PixelGridThresholdChanged;
+      handler = (EventHandler)this.Events[EventPixelGridThresholdChanged];
 
       if (handler != null)
       {
@@ -3820,7 +4286,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.ScaleTextChanged;
+      handler = (EventHandler)this.Events[EventScaleTextChanged];
 
       if (handler != null)
       {
@@ -3849,7 +4315,7 @@ namespace Cyotek.Windows.Forms
           break;
       }
 
-      handler = this.Selected;
+      handler = (EventHandler<EventArgs>)this.Events[EventSelected];
 
       if (handler != null)
       {
@@ -3867,7 +4333,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler<ImageBoxCancelEventArgs> handler;
 
-      handler = this.Selecting;
+      handler = (EventHandler<ImageBoxCancelEventArgs>)this.Events[EventSelecting];
 
       if (handler != null)
       {
@@ -3885,7 +4351,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.SelectionColorChanged;
+      handler = (EventHandler)this.Events[EventSelectionColorChanged];
 
       if (handler != null)
       {
@@ -3903,7 +4369,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.SelectionModeChanged;
+      handler = (EventHandler)this.Events[EventSelectionModeChanged];
 
       if (handler != null)
       {
@@ -3923,7 +4389,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.SelectionRegionChanged;
+      handler = (EventHandler)this.Events[EventSelectionRegionChanged];
 
       if (handler != null)
       {
@@ -3941,7 +4407,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.ShortcutsEnabledChanged;
+      handler = (EventHandler)this.Events[EventShortcutsEnabledChanged];
 
       if (handler != null)
       {
@@ -3961,7 +4427,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.ShowPixelGridChanged;
+      handler = (EventHandler)this.Events[EventShowPixelGridChanged];
 
       if (handler != null)
       {
@@ -3979,7 +4445,7 @@ namespace Cyotek.Windows.Forms
 
       this.AdjustLayout();
 
-      handler = this.SizeModeChanged;
+      handler = (EventHandler)this.Events[EventSizeModeChanged];
 
       if (handler != null)
       {
@@ -3999,7 +4465,7 @@ namespace Cyotek.Windows.Forms
 
       this.AdjustLayout();
 
-      handler = this.SizeToFitChanged;
+      handler = (EventHandler)this.Events[EventSizeToFitChanged];
 
       if (handler != null)
       {
@@ -4017,7 +4483,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.TextAlignChanged;
+      handler = (EventHandler)this.Events[EventTextAlignChanged];
 
       if (handler != null)
       {
@@ -4035,7 +4501,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.TextBackColorChanged;
+      handler = (EventHandler)this.Events[EventTextBackColorChanged];
 
       if (handler != null)
       {
@@ -4053,7 +4519,7 @@ namespace Cyotek.Windows.Forms
 
       this.Invalidate();
 
-      handler = this.TextDisplayModeChanged;
+      handler = (EventHandler)this.Events[EventTextDisplayModeChanged];
 
       if (handler != null)
       {
@@ -4069,7 +4535,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.TextPaddingChanged;
+      handler = (EventHandler)this.Events[EventTextPaddingChanged];
 
       this.Invalidate();
 
@@ -4089,7 +4555,7 @@ namespace Cyotek.Windows.Forms
     {
       PaintEventHandler handler;
 
-      handler = this.VirtualDraw;
+      handler = (PaintEventHandler)this.Events[EventVirtualDraw];
 
       if (handler != null)
       {
@@ -4109,7 +4575,7 @@ namespace Cyotek.Windows.Forms
 
       this.AdjustLayout();
 
-      handler = this.VirtualModeChanged;
+      handler = (EventHandler)this.Events[EventVirtualModeChanged];
 
       if (handler != null)
       {
@@ -4129,7 +4595,7 @@ namespace Cyotek.Windows.Forms
 
       this.AdjustLayout();
 
-      handler = this.VirtualSizeChanged;
+      handler = (EventHandler)this.Events[EventVirtualSizeChanged];
 
       if (handler != null)
       {
@@ -4149,7 +4615,7 @@ namespace Cyotek.Windows.Forms
 
       this.AdjustLayout();
 
-      handler = this.ZoomChanged;
+      handler = (EventHandler)this.Events[EventZoomChanged];
 
       if (handler != null)
       {
@@ -4167,7 +4633,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
-      handler = this.ZoomLevelsChanged;
+      handler = (EventHandler)this.Events[EventZoomLevelsChanged];
 
       if (handler != null)
       {
@@ -4183,7 +4649,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler<ImageBoxZoomEventArgs> handler;
 
-      handler = this.Zoomed;
+      handler = (EventHandler<ImageBoxZoomEventArgs>)this.Events[EventZoomed];
 
       if (handler != null)
       {
@@ -4641,6 +5107,7 @@ namespace Cyotek.Windows.Forms
 
     private bool _allowUnfocusedMouseWheel;
 
+
     [Category("Behavior"), DefaultValue(false)]
     public virtual bool AllowUnfocusedMouseWheel
     {
@@ -4660,7 +5127,19 @@ namespace Cyotek.Windows.Forms
     /// Occurs when the AllowUnfocusedMouseWheel property value changes
     /// </summary>
     [Category("Property Changed")]
-    public event EventHandler AllowUnfocusedMouseWheelChanged;
+    public event EventHandler AllowUnfocusedMouseWheelChanged
+    {
+      add
+      {
+        this.Events.AddHandler(EventAllowUnfocusedMouseWheelChanged, value);
+      }
+      remove
+      {
+        this.Events.RemoveHandler(EventAllowUnfocusedMouseWheelChanged, value);
+      }
+    }
+
+    private static readonly object EventAllowUnfocusedMouseWheelChanged = new object();
 
     /// <summary>
     /// Raises the <see cref="AllowUnfocusedMouseWheelChanged" /> event.
@@ -4678,7 +5157,7 @@ namespace Cyotek.Windows.Forms
         ImageBoxMouseWheelMessageFilter.Active = true;
       }
 
-      handler = this.AllowUnfocusedMouseWheelChanged;
+      handler = (EventHandler)this.Events[EventAllowUnfocusedMouseWheelChanged];
 
       if (handler != null)
         handler(this, e);
