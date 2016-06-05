@@ -45,15 +45,6 @@ namespace Cyotek.Windows.Forms.Demo
       this.TabControl.SelectedTab = demoPage;
 
       this.Text = "Cyotek ImageBox Control for Windows Forms";
-
-#if DEBUG
-      unsafe
-      {
-        object obj = new ImageBox(); // whatever you want to get the size of
-        RuntimeTypeHandle th = obj.GetType().TypeHandle;
-        int size = *(*(int**)&th + 1);
-      }
-#endif
     }
 
     /// <summary>
