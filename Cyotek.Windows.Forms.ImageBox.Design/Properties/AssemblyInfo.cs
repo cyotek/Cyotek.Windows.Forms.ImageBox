@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cyotek Ltd")]
 [assembly: AssemblyProduct("Cyotek ImageBox Control")]
-[assembly: AssemblyCopyright("Copyright © 2013-2015 Cyotek Ltd.")]
+[assembly: AssemblyCopyright("Copyright © 2013-2016 Cyotek Ltd.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

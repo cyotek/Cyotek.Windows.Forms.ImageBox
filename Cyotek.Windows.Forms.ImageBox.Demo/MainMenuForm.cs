@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
+  // Copyright (c) 2010-2016 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -46,16 +45,6 @@ namespace Cyotek.Windows.Forms.Demo
       this.TabControl.SelectedTab = demoPage;
 
       this.Text = "Cyotek ImageBox Control for Windows Forms";
-
-#if DEBUG
-      unsafe
-      {
-        object obj = new ImageBox(); // whatever you want to get the size of
-        RuntimeTypeHandle th = obj.GetType().TypeHandle;
-        int size = *(*(int**)&th + 1);
-        MessageBox.Show(size.ToString());
-      }
-#endif
     }
 
     /// <summary>

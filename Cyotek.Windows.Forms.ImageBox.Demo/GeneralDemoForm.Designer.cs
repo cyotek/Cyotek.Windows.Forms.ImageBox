@@ -130,7 +130,7 @@
       this.imageBox.Name = "imageBox";
       this.imageBox.Size = new System.Drawing.Size(751, 377);
       this.imageBox.TabIndex = 0;
-      this.imageBox.Selected += new System.EventHandler<System.EventArgs>(this.imageBox_Selected);
+      this.imageBox.Selected += new System.EventHandler(this.imageBox_Selected);
       this.imageBox.SelectionRegionChanged += new System.EventHandler(this.imageBox_SelectionRegionChanged);
       this.imageBox.ZoomChanged += new System.EventHandler(this.imageBox_ZoomChanged);
       this.imageBox.ZoomLevelsChanged += new System.EventHandler(this.imageBox_ZoomLevelsChanged);

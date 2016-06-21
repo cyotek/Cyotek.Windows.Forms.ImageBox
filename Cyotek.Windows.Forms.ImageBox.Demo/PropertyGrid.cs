@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
+  // Copyright (c) 2010-2016 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -32,10 +32,10 @@ namespace Cyotek.Windows.Forms.Demo
       {
         rootItem = rootItem.Parent;
       }
-      
+
       // Search the tree.
       searchItems = new Queue<GridItem>();
-      
+
       searchItems.Enqueue(rootItem);
 
       while (searchItems.Count != 0 && matchingItem == null)
@@ -43,7 +43,7 @@ namespace Cyotek.Windows.Forms.Demo
         GridItem checkItem;
 
         checkItem = searchItems.Dequeue();
-        
+
         if (checkItem.Label == itemLabel)
         {
           matchingItem = checkItem;

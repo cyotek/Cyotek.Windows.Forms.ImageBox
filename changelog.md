@@ -1,5 +1,12 @@
 # Cyotek ImageBox Change Log
 
+## 2.0.0
+
+### Breaking
+* Signature of the `Selected` event has changed from the incorrect `EventHandler<EventArgs>` to `EventHandler`
+* The `ImageBox` control no longers inherits from `VirtualScrollableControl` but instead just from `Control`
+* The `VirtualScrollableControl` and `ScrollControl` controls have been removed, although members that these controls offered are now part of the base `ImageBox`
+
 ## 1.1.5.1
 * **FIX:** Fixes the `FitRectangle` method from increasing the width or height of the source rectangle if `X` or `Y` were negative (generally seen when the `SelectionMode` is set to `Rectangle` and you draw outside the bounds of the image area)
 * **FIX:** Resizing the selection in the `ImageBoxEx` control now works correctly even if the mouse passes outside the bounds of the image.

@@ -1,7 +1,7 @@
 ﻿namespace Cyotek.Windows.Forms
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
+  // Copyright (c) 2010-2016 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
