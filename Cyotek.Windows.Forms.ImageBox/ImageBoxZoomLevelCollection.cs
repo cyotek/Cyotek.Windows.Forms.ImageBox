@@ -16,24 +16,24 @@ namespace Cyotek.Windows.Forms
   /// <summary>
   /// Represents available levels of zoom in an <see cref="ImageBox"/> control
   /// </summary>
-  public class ZoomLevelCollection : IList<int>
+  public class ImageBoxZoomLevelCollection : IList<int>
   {
     #region Public Constructors
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ZoomLevelCollection"/> class.
+    /// Initializes a new instance of the <see cref="ImageBoxZoomLevelCollection"/> class.
     /// </summary>
-    public ZoomLevelCollection()
+    public ImageBoxZoomLevelCollection()
     {
       this.List = new SortedList<int, int>();
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ZoomLevelCollection"/> class.
+    /// Initializes a new instance of the <see cref="ImageBoxZoomLevelCollection"/> class.
     /// </summary>
     /// <param name="collection">The default values to populate the collection with.</param>
     /// <exception cref="System.ArgumentNullException">Thrown if the <c>collection</c> parameter is null</exception>
-    public ZoomLevelCollection(IEnumerable<int> collection)
+    public ImageBoxZoomLevelCollection(IEnumerable<int> collection)
       : this()
     {
       if (collection == null)
@@ -51,11 +51,11 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     /// Returns the default zoom levels
     /// </summary>
-    public static ZoomLevelCollection Default
+    public static ImageBoxZoomLevelCollection Default
     {
       get
       {
-        return new ZoomLevelCollection(new[]
+        return new ImageBoxZoomLevelCollection(new[]
                                        {
                                          7, 10, 15, 20, 25, 30, 50, 70, 100, 150, 200, 300, 400, 500, 600, 700, 800, 1200, 1600
                                        });
@@ -67,10 +67,10 @@ namespace Cyotek.Windows.Forms
     #region Public Properties
 
     /// <summary>
-    /// Gets the number of elements contained in the <see cref="ZoomLevelCollection" />.
+    /// Gets the number of elements contained in the <see cref="ImageBoxZoomLevelCollection" />.
     /// </summary>
     /// <returns>
-    /// The number of elements contained in the <see cref="ZoomLevelCollection" />.
+    /// The number of elements contained in the <see cref="ImageBoxZoomLevelCollection" />.
     /// </returns>
     public int Count
     {
@@ -125,7 +125,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Adds a range of items to the <see cref="ZoomLevelCollection"/>.
+    /// Adds a range of items to the <see cref="ImageBoxZoomLevelCollection"/>.
     /// </summary>
     /// <param name="collection">The items to add to the collection.</param>
     /// <exception cref="System.ArgumentNullException">Thrown if the <c>collection</c> parameter is null.</exception>
@@ -271,7 +271,7 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Removes the element at the specified index of the <see cref="ZoomLevelCollection"/>.
+    /// Removes the element at the specified index of the <see cref="ImageBoxZoomLevelCollection"/>.
     /// </summary>
     /// <param name="index">The zero-based index of the element to remove.</param>
     public void RemoveAt(int index)
@@ -280,9 +280,9 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Copies the elements of the <see cref="ZoomLevelCollection"/> to a new array.
+    /// Copies the elements of the <see cref="ImageBoxZoomLevelCollection"/> to a new array.
     /// </summary>
-    /// <returns>An array containing copies of the elements of the <see cref="ZoomLevelCollection"/>.</returns>
+    /// <returns>An array containing copies of the elements of the <see cref="ImageBoxZoomLevelCollection"/>.</returns>
     public int[] ToArray()
     {
       int[] results;
@@ -300,7 +300,7 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     /// Returns an enumerator that iterates through a collection.
     /// </summary>
-    /// <returns>An <see cref="ZoomLevelCollection" /> object that can be used to iterate through the collection.</returns>
+    /// <returns>An <see cref="ImageBoxZoomLevelCollection" /> object that can be used to iterate through the collection.</returns>
     IEnumerator IEnumerable.GetEnumerator()
     {
       return this.GetEnumerator();

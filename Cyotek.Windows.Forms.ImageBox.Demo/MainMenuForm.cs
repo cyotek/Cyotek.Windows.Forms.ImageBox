@@ -138,5 +138,10 @@ namespace Cyotek.Windows.Forms.Demo
     }
 
     #endregion
+
+    private void methodsDemoButton_Click(object sender, EventArgs e)
+    {
+      this.ShowDemo<MethodsDemoForm>();
+    }
   }
 }

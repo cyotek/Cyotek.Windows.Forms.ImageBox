@@ -33,6 +33,7 @@
       this.pixelGridDemoButton = new System.Windows.Forms.Button();
       this.virtualModeDemoButton = new System.Windows.Forms.Button();
       this.demoGroupBox = new Cyotek.Windows.Forms.GroupBox();
+      this.methodsDemoButton = new System.Windows.Forms.Button();
       this.resizableSelectionDemoButton = new System.Windows.Forms.Button();
       this.textDemoButton = new System.Windows.Forms.Button();
       this.animatedGifDemoButton = new System.Windows.Forms.Button();
@@ -84,6 +85,7 @@
       this.demoGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.demoGroupBox.Controls.Add(this.methodsDemoButton);
       this.demoGroupBox.Controls.Add(this.resizableSelectionDemoButton);
       this.demoGroupBox.Controls.Add(this.textDemoButton);
       this.demoGroupBox.Controls.Add(this.animatedGifDemoButton);
@@ -96,10 +98,22 @@
       this.demoGroupBox.Controls.Add(this.pixelGridDemoButton);
       this.demoGroupBox.Location = new System.Drawing.Point(31, 65);
       this.demoGroupBox.Name = "demoGroupBox";
-      this.demoGroupBox.Size = new System.Drawing.Size(444, 360);
+      this.demoGroupBox.Size = new System.Drawing.Size(444, 426);
       this.demoGroupBox.TabIndex = 0;
       this.demoGroupBox.TabStop = false;
       this.demoGroupBox.Text = "Available Demonstrations";
+      // 
+      // methodsDemoButton
+      // 
+      this.methodsDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.methodsDemoButton.Location = new System.Drawing.Point(6, 353);
+      this.methodsDemoButton.Name = "methodsDemoButton";
+      this.methodsDemoButton.Size = new System.Drawing.Size(432, 27);
+      this.methodsDemoButton.TabIndex = 11;
+      this.methodsDemoButton.Text = "M&ethods Demonstration";
+      this.methodsDemoButton.UseVisualStyleBackColor = true;
+      this.methodsDemoButton.Click += new System.EventHandler(this.methodsDemoButton_Click);
       // 
       // resizableSelectionDemoButton
       // 
@@ -189,7 +203,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(615, 552);
+      this.ClientSize = new System.Drawing.Size(615, 585);
       this.Controls.Add(this.demoGroupBox);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "MainMenuForm";
@@ -216,6 +230,7 @@
     private System.Windows.Forms.Button animatedGifDemoButton;
     private System.Windows.Forms.Button textDemoButton;
     private System.Windows.Forms.Button resizableSelectionDemoButton;
+    private System.Windows.Forms.Button methodsDemoButton;
 
 
 

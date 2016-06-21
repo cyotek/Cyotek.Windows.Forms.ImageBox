@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-#if USEWIN32PINVOKELIB
-using Cyotek.Win32;
-#endif
 
 // Cyotek ImageBox
 // Copyright (c) 2010-2015 Cyotek Ltd.

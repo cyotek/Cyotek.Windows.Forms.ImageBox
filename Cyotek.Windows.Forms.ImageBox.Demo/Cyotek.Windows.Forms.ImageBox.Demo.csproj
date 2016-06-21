@@ -14,7 +14,7 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,14 +48,14 @@
   <ItemGroup>
     <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\CommonMark.NET.0.9.0\lib\net35-client\CommonMark.dll</HintPath>
+      <HintPath>C:\Checkout\packages\CommonMark.NET.0.9.0\lib\net35-client\CommonMark.dll</HintPath>
     </Reference>
     <Reference Include="HtmlRenderer, Version=1.5.0.5, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\HtmlRenderer.Core.1.5.0.5\lib\net35-client\HtmlRenderer.dll</HintPath>
+      <HintPath>C:\Checkout\packages\HtmlRenderer.Core.1.5.0.5\lib\net35-client\HtmlRenderer.dll</HintPath>
     </Reference>
     <Reference Include="HtmlRenderer.WinForms">
-      <HintPath>..\packages\HtmlRenderer.WinForms.1.5.0.6\lib\net35-client\HtmlRenderer.WinForms.dll</HintPath>
+      <HintPath>C:\Checkout\packages\HtmlRenderer.WinForms.1.5.0.6\lib\net35-client\HtmlRenderer.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -90,6 +90,12 @@
     </Compile>
     <Compile Include="ImageBoxEx.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MethodsDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MethodsDemoForm.Designer.cs">
+      <DependentUpon>MethodsDemoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ResizableSelectionDemoForm.cs">
       <SubType>Form</SubType>
@@ -209,6 +215,9 @@
     <EmbeddedResource Include="DisposedImageDemoForm.resx">
       <DependentUpon>DisposedImageDemoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MethodsDemoForm.resx">
+      <DependentUpon>MethodsDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ResizableSelectionDemoForm.resx">
       <DependentUpon>ResizableSelectionDemoForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -264,13 +273,6 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
