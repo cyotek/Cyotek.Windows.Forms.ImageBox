@@ -38,7 +38,7 @@ namespace Cyotek.Windows.Forms
     {
       if (collection == null)
       {
-        throw new ArgumentNullException("collection");
+        throw new ArgumentNullException(nameof(collection));
       }
 
       this.AddRange(collection);
@@ -133,7 +133,7 @@ namespace Cyotek.Windows.Forms
     {
       if (collection == null)
       {
-        throw new ArgumentNullException("collection");
+        throw new ArgumentNullException(nameof(collection));
       }
 
       foreach (int value in collection)

@@ -364,12 +364,12 @@ namespace Cyotek.Windows.Forms
       {
         if (value.Width < 0)
         {
-          throw new ArgumentOutOfRangeException("value", "Width must be a positive integer.");
+          throw new ArgumentOutOfRangeException(nameof(value), "Width must be a positive integer.");
         }
 
         if (value.Height < 0)
         {
-          throw new ArgumentOutOfRangeException("value", "Height must be a positive integer.");
+          throw new ArgumentOutOfRangeException(nameof(value), "Height must be a positive integer.");
         }
 
         if (this.PageSize != value)
@@ -395,12 +395,12 @@ namespace Cyotek.Windows.Forms
       {
         if (value.Width < 0)
         {
-          throw new ArgumentOutOfRangeException("value", "Width must be a positive integer.");
+          throw new ArgumentOutOfRangeException(nameof(value), "Width must be a positive integer.");
         }
 
         if (value.Height < 0)
         {
-          throw new ArgumentOutOfRangeException("value", "Height must be a positive integer.");
+          throw new ArgumentOutOfRangeException(nameof(value), "Height must be a positive integer.");
         }
 
         if (this.ScrollSize != value)
@@ -426,12 +426,12 @@ namespace Cyotek.Windows.Forms
       {
         if (value.Width < 0)
         {
-          throw new ArgumentOutOfRangeException("value", "Width must be a positive integer.");
+          throw new ArgumentOutOfRangeException(nameof(value), "Width must be a positive integer.");
         }
 
         if (value.Height < 0)
         {
-          throw new ArgumentOutOfRangeException("value", "Height must be a positive integer.");
+          throw new ArgumentOutOfRangeException(nameof(value), "Height must be a positive integer.");
         }
 
         if (this.StepSize != value)
