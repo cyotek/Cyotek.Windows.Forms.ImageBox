@@ -30,18 +30,24 @@
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScaledAdornmentsDemoForm));
       this.splitContainer = new System.Windows.Forms.SplitContainer();
+      this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.demoLabel = new System.Windows.Forms.Label();
+      this.panel1 = new System.Windows.Forms.Panel();
+      this.scaleAdornmentsCheckBox = new System.Windows.Forms.CheckBox();
       this.menuStrip = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip = new System.Windows.Forms.StatusStrip();
-      this.imageBox = new Cyotek.Windows.Forms.ImageBox();
+      this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+      this.positionToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.splitContainer.Panel1.SuspendLayout();
       this.splitContainer.Panel2.SuspendLayout();
       this.splitContainer.SuspendLayout();
+      this.panel1.SuspendLayout();
       this.menuStrip.SuspendLayout();
+      this.statusStrip.SuspendLayout();
       this.SuspendLayout();
       // 
       // splitContainer
@@ -59,10 +65,24 @@
       // splitContainer.Panel2
       // 
       this.splitContainer.Panel2.Controls.Add(this.demoLabel);
+      this.splitContainer.Panel2.Controls.Add(this.panel1);
       this.splitContainer.Size = new System.Drawing.Size(920, 433);
       this.splitContainer.SplitterDistance = 670;
       this.splitContainer.SplitterWidth = 5;
       this.splitContainer.TabIndex = 5;
+      // 
+      // imageBox
+      // 
+      this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.imageBox.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.Map;
+      this.imageBox.Location = new System.Drawing.Point(0, 0);
+      this.imageBox.Name = "imageBox";
+      this.imageBox.Size = new System.Drawing.Size(670, 433);
+      this.imageBox.TabIndex = 0;
+      this.imageBox.Paint += new System.Windows.Forms.PaintEventHandler(this.imageBox_Paint);
+      this.imageBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.imageBox_MouseClick);
+      this.imageBox.MouseLeave += new System.EventHandler(this.imageBox_MouseLeave);
+      this.imageBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imageBox_MouseMove);
       // 
       // demoLabel
       // 
@@ -74,9 +94,31 @@
       this.demoLabel.Location = new System.Drawing.Point(0, 0);
       this.demoLabel.Name = "demoLabel";
       this.demoLabel.Padding = new System.Windows.Forms.Padding(10);
-      this.demoLabel.Size = new System.Drawing.Size(245, 433);
+      this.demoLabel.Size = new System.Drawing.Size(245, 407);
       this.demoLabel.TabIndex = 1;
       this.demoLabel.Text = resources.GetString("demoLabel.Text");
+      // 
+      // panel1
+      // 
+      this.panel1.Controls.Add(this.scaleAdornmentsCheckBox);
+      this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.panel1.Location = new System.Drawing.Point(0, 407);
+      this.panel1.Name = "panel1";
+      this.panel1.Size = new System.Drawing.Size(245, 26);
+      this.panel1.TabIndex = 2;
+      // 
+      // scaleAdornmentsCheckBox
+      // 
+      this.scaleAdornmentsCheckBox.AutoSize = true;
+      this.scaleAdornmentsCheckBox.Checked = true;
+      this.scaleAdornmentsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.scaleAdornmentsCheckBox.Location = new System.Drawing.Point(0, 3);
+      this.scaleAdornmentsCheckBox.Name = "scaleAdornmentsCheckBox";
+      this.scaleAdornmentsCheckBox.Size = new System.Drawing.Size(122, 19);
+      this.scaleAdornmentsCheckBox.TabIndex = 0;
+      this.scaleAdornmentsCheckBox.Text = "&Scale Adornments";
+      this.scaleAdornmentsCheckBox.UseVisualStyleBackColor = true;
+      this.scaleAdornmentsCheckBox.CheckedChanged += new System.EventHandler(this.scaleAdornmentsCheckBox_CheckedChanged);
       // 
       // menuStrip
       // 
@@ -88,7 +130,6 @@
       this.menuStrip.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
       this.menuStrip.Size = new System.Drawing.Size(944, 24);
       this.menuStrip.TabIndex = 6;
-      
       // 
       // fileToolStripMenuItem
       // 
@@ -123,25 +164,27 @@
       // 
       // statusStrip
       // 
+      this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.positionToolStripStatusLabel});
       this.statusStrip.Location = new System.Drawing.Point(0, 463);
       this.statusStrip.Name = "statusStrip";
       this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
       this.statusStrip.Size = new System.Drawing.Size(944, 22);
       this.statusStrip.TabIndex = 7;
-      
       // 
-      // imageBox
+      // toolStripStatusLabel1
       // 
-      this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.imageBox.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.Map;
-      this.imageBox.Location = new System.Drawing.Point(0, 0);
-      this.imageBox.Name = "imageBox";
-      this.imageBox.Size = new System.Drawing.Size(670, 433);
-      this.imageBox.TabIndex = 0;
-      this.imageBox.Paint += new System.Windows.Forms.PaintEventHandler(this.imageBox_Paint);
-      this.imageBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.imageBox_MouseClick);
+      this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+      this.toolStripStatusLabel1.Size = new System.Drawing.Size(927, 17);
+      this.toolStripStatusLabel1.Spring = true;
       // 
-      // ScaledAdornmentsForm
+      // positionToolStripStatusLabel
+      // 
+      this.positionToolStripStatusLabel.Name = "positionToolStripStatusLabel";
+      this.positionToolStripStatusLabel.Size = new System.Drawing.Size(0, 17);
+      // 
+      // ScaledAdornmentsDemoForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -150,13 +193,17 @@
       this.Controls.Add(this.menuStrip);
       this.Controls.Add(this.statusStrip);
       this.Font = new System.Drawing.Font("Segoe UI", 9F);
-      this.Name = "ScaledAdornmentsForm";
+      this.Name = "ScaledAdornmentsDemoForm";
       this.Text = "Scaled Adornments";
       this.splitContainer.Panel1.ResumeLayout(false);
       this.splitContainer.Panel2.ResumeLayout(false);
       this.splitContainer.ResumeLayout(false);
+      this.panel1.ResumeLayout(false);
+      this.panel1.PerformLayout();
       this.menuStrip.ResumeLayout(false);
       this.menuStrip.PerformLayout();
+      this.statusStrip.ResumeLayout(false);
+      this.statusStrip.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -173,5 +220,9 @@
     private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     private System.Windows.Forms.StatusStrip statusStrip;
+    private System.Windows.Forms.Panel panel1;
+    private System.Windows.Forms.CheckBox scaleAdornmentsCheckBox;
+    private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+    private System.Windows.Forms.ToolStripStatusLabel positionToolStripStatusLabel;
   }
 }
