@@ -45,8 +45,7 @@
             this.helpToolStripMenuItem});
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.Name = "menuStrip";
-      this.menuStrip.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-      this.menuStrip.Size = new System.Drawing.Size(842, 24);
+      this.menuStrip.Size = new System.Drawing.Size(722, 24);
       this.menuStrip.TabIndex = 3;
       // 
       // fileToolStripMenuItem
@@ -82,10 +81,9 @@
       // 
       // statusStrip
       // 
-      this.statusStrip.Location = new System.Drawing.Point(0, 457);
+      this.statusStrip.Location = new System.Drawing.Point(0, 393);
       this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-      this.statusStrip.Size = new System.Drawing.Size(842, 22);
+      this.statusStrip.Size = new System.Drawing.Size(722, 22);
       this.statusStrip.TabIndex = 4;
       // 
       // imageBox
@@ -96,7 +94,7 @@
       this.imageBox.Name = "imageBox";
       this.imageBox.ScaleText = true;
       this.imageBox.ShowPixelGrid = true;
-      this.imageBox.Size = new System.Drawing.Size(842, 433);
+      this.imageBox.Size = new System.Drawing.Size(722, 369);
       this.imageBox.TabIndex = 5;
       this.imageBox.Text = "This is a demonstration of the ImageBox text functionality";
       this.imageBox.TextBackColor = System.Drawing.Color.Teal;
@@ -104,13 +102,12 @@
       // 
       // DisposedImageDemoForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(842, 479);
+      this.ClientSize = new System.Drawing.Size(722, 415);
       this.Controls.Add(this.imageBox);
       this.Controls.Add(this.menuStrip);
       this.Controls.Add(this.statusStrip);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.Name = "DisposedImageDemoForm";
       this.Text = "Disposed Image Demonstration";
       this.menuStrip.ResumeLayout(false);

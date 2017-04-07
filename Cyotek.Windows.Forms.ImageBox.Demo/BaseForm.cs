@@ -28,7 +28,10 @@ namespace Cyotek.Windows.Forms.Demo
 
     protected override void OnLoad(EventArgs e)
     {
-      this.Font = SystemFonts.MessageBoxFont;
+      if (!this.DesignMode)
+      {
+        this.Font = SystemFonts.MessageBoxFont;
+      }
 
       base.OnLoad(e);
     }

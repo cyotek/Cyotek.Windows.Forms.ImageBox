@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using CommonMark;
+using Cyotek.Windows.Forms.Demo.Properties;
 using TheArtOfDev.HtmlRenderer.WinForms;
 
 namespace Cyotek.Windows.Forms.Demo
@@ -20,7 +21,7 @@ namespace Cyotek.Windows.Forms.Demo
 
   internal partial class AboutDialog : BaseForm
   {
-    #region Public Constructors
+    #region Constructors
 
     public AboutDialog()
     {
@@ -29,7 +30,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Class Members
+    #region Static Methods
 
     internal static void ShowAboutDialog()
     {
@@ -41,7 +42,23 @@ namespace Cyotek.Windows.Forms.Demo
 
     #endregion
 
-    #region Overridden Methods
+    #region Properties
+
+    protected TabControl TabControl
+    {
+      get { return docsTabControl; }
+    }
+
+    #endregion
+
+    #region Methods
+
+    protected override void OnFontChanged(EventArgs e)
+    {
+      base.OnFontChanged(e);
+
+      this.PositionTabControl();
+    }
 
     protected override void OnLoad(EventArgs e)
     {
@@ -75,45 +92,20 @@ namespace Cyotek.Windows.Forms.Demo
     {
       base.OnResize(e);
 
-      if (docsTabControl != null)
-      {
-        docsTabControl.SetBounds(docsTabControl.Left, docsTabControl.Top, this.ClientSize.Width - (docsTabControl.Left * 2), this.ClientSize.Height - (docsTabControl.Top + footerGroupBox.Height + docsTabControl.Left));
-      }
+      this.PositionTabControl();
     }
-
-    #endregion
-
-    #region Protected Properties
-
-    protected TabControl TabControl
-    {
-      get { return docsTabControl; }
-    }
-
-    #endregion
-
-    #region Private Members
 
     private void AddReadme(string fileName)
     {
-      this.docsTabControl.TabPages.Add(new TabPage
-                                       {
-                                         UseVisualStyleBackColor = true,
-                                         Padding = new Padding(9),
-                                         ToolTipText = this.GetFullReadmePath(fileName),
-                                         Text = fileName,
-                                         Tag = fileName
-                                       });
+      docsTabControl.TabPages.Add(new TabPage
+                                  {
+                                    UseVisualStyleBackColor = true,
+                                    Padding = new Padding(9),
+                                    ToolTipText = this.GetFullReadmePath(fileName),
+                                    Text = fileName,
+                                    Tag = fileName
+                                  });
     }
-
-    private string GetFullReadmePath(string fileName)
-    {
-      return Path.GetFullPath(Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"), fileName));
-    }
-
-    #endregion
-
-    #region Event Handlers
 
     private void closeButton_Click(object sender, EventArgs e)
     {
@@ -123,6 +115,17 @@ namespace Cyotek.Windows.Forms.Demo
     private void docsTabControl_Selecting(object sender, TabControlCancelEventArgs e)
     {
       this.LoadDocumentForTab(e.TabPage);
+    }
+
+    private void footerGroupBox_Paint(object sender, PaintEventArgs e)
+    {
+      e.Graphics.DrawLine(SystemPens.ControlDark, 0, 0, footerGroupBox.Width, 0);
+      e.Graphics.DrawLine(SystemPens.ControlLightLight, 0, 1, footerGroupBox.Width, 1);
+    }
+
+    private string GetFullReadmePath(string fileName)
+    {
+      return Path.GetFullPath(Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"), fileName));
     }
 
     private void LoadDocumentForTab(TabPage page)
@@ -149,22 +152,22 @@ namespace Cyotek.Windows.Forms.Demo
         {
           case ".md":
             documentView = new HtmlPanel
-            {
-              Dock = DockStyle.Fill,
-              BaseStylesheet = Properties.Resources.CSS,
-              Text = string.Concat("<html><body>", CommonMarkConverter.Convert(text), "</body></html>") // HACK: HTML panel screws up rendering if a <body> tag isn't present
-            };
+                           {
+                             Dock = DockStyle.Fill,
+                             BaseStylesheet = Resources.CSS,
+                             Text = string.Concat("<html><body>", CommonMarkConverter.Convert(text), "</body></html>") // HACK: HTML panel screws up rendering if a <body> tag isn't present
+                           };
             break;
           default:
             documentView = new TextBox
-            {
-              ReadOnly = true,
-              Multiline = true,
-              WordWrap = true,
-              ScrollBars = ScrollBars.Vertical,
-              Dock = DockStyle.Fill,
-              Text = text
-            };
+                           {
+                             ReadOnly = true,
+                             Multiline = true,
+                             WordWrap = true,
+                             ScrollBars = ScrollBars.Vertical,
+                             Dock = DockStyle.Fill,
+                             Text = text
+                           };
             break;
         }
 
@@ -174,10 +177,9 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void footerGroupBox_Paint(object sender, PaintEventArgs e)
+    private void PositionTabControl()
     {
-      e.Graphics.DrawLine(SystemPens.ControlDark, 0, 0, footerGroupBox.Width, 0);
-      e.Graphics.DrawLine(SystemPens.ControlLightLight, 0, 1, footerGroupBox.Width, 1);
+      docsTabControl?.SetBounds(docsTabControl.Left, docsTabControl.Top, this.ClientSize.Width - docsTabControl.Left * 2, this.ClientSize.Height - (docsTabControl.Top + footerGroupBox.Height + docsTabControl.Left));
     }
 
     private void webLinkLabel_Click(object sender, EventArgs e)
@@ -188,7 +190,7 @@ namespace Cyotek.Windows.Forms.Demo
       }
       catch (Exception ex)
       {
-        MessageBox.Show(string.Format("Unable to start the specified URI.\n\n{0}", ex.Message), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        MessageBox.Show(string.Format("Unable to start the specified URI.\n\n{0}", ex.Message), this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
       }
     }
 

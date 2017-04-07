@@ -30,7 +30,7 @@
     {
       this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.splitContainer = new System.Windows.Forms.SplitContainer();
-      this.propertyGrid = new PropertyGrid();
+      this.propertyGrid = new Cyotek.Windows.Forms.Demo.PropertyGrid();
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.menuStrip = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +49,7 @@
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
       this.imageBox.SelectionMode = Cyotek.Windows.Forms.ImageBoxSelectionMode.Rectangle;
-      this.imageBox.Size = new System.Drawing.Size(543, 327);
+      this.imageBox.Size = new System.Drawing.Size(423, 277);
       this.imageBox.TabIndex = 0;
       this.imageBox.VirtualMode = true;
       this.imageBox.VirtualSize = new System.Drawing.Size(300, 200);
@@ -69,8 +69,9 @@
       // splitContainer.Panel2
       // 
       this.splitContainer.Panel2.Controls.Add(this.imageBox);
-      this.splitContainer.Size = new System.Drawing.Size(847, 327);
+      this.splitContainer.Size = new System.Drawing.Size(726, 277);
       this.splitContainer.SplitterDistance = 300;
+      this.splitContainer.SplitterWidth = 3;
       this.splitContainer.TabIndex = 0;
       // 
       // propertyGrid
@@ -79,16 +80,16 @@
       this.propertyGrid.Location = new System.Drawing.Point(0, 0);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(300, 327);
+      this.propertyGrid.Size = new System.Drawing.Size(300, 277);
       this.propertyGrid.TabIndex = 0;
       // 
       // statusStrip
       // 
-      this.statusStrip.Location = new System.Drawing.Point(0, 351);
+      this.statusStrip.Location = new System.Drawing.Point(0, 301);
       this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Size = new System.Drawing.Size(847, 22);
+      this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
+      this.statusStrip.Size = new System.Drawing.Size(726, 22);
       this.statusStrip.TabIndex = 8;
-      
       // 
       // menuStrip
       // 
@@ -97,9 +98,9 @@
             this.helpToolStripMenuItem});
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.Name = "menuStrip";
-      this.menuStrip.Size = new System.Drawing.Size(847, 24);
+      this.menuStrip.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+      this.menuStrip.Size = new System.Drawing.Size(726, 24);
       this.menuStrip.TabIndex = 7;
-      
       // 
       // fileToolStripMenuItem
       // 
@@ -113,7 +114,7 @@
       // 
       this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
       this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-      this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.closeToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
       this.closeToolStripMenuItem.Text = "&Close";
       this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
       // 
@@ -128,19 +129,18 @@
       // aboutToolStripMenuItem
       // 
       this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
       this.aboutToolStripMenuItem.Text = "&About...";
       this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
       // 
       // VirtualModeDemonstrationForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(847, 373);
+      this.ClientSize = new System.Drawing.Size(726, 323);
       this.Controls.Add(this.splitContainer);
       this.Controls.Add(this.statusStrip);
       this.Controls.Add(this.menuStrip);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.Name = "VirtualModeDemonstrationForm";
       this.Text = "Virtual Mode Demonstration";
       this.splitContainer.Panel1.ResumeLayout(false);

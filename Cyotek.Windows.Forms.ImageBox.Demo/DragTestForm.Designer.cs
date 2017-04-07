@@ -50,7 +50,7 @@
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
       this.imageBox.SelectionMode = Cyotek.Windows.Forms.ImageBoxSelectionMode.Rectangle;
-      this.imageBox.Size = new System.Drawing.Size(400, 321);
+      this.imageBox.Size = new System.Drawing.Size(342, 278);
       this.imageBox.TabIndex = 0;
       this.imageBox.VirtualMode = true;
       this.imageBox.VirtualSize = new System.Drawing.Size(256, 256);
@@ -70,8 +70,8 @@
       this.demoLabel.ForeColor = System.Drawing.SystemColors.InfoText;
       this.demoLabel.Location = new System.Drawing.Point(0, 0);
       this.demoLabel.Name = "demoLabel";
-      this.demoLabel.Padding = new System.Windows.Forms.Padding(9);
-      this.demoLabel.Size = new System.Drawing.Size(419, 321);
+      this.demoLabel.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+      this.demoLabel.Size = new System.Drawing.Size(360, 278);
       this.demoLabel.TabIndex = 1;
       this.demoLabel.Text = resources.GetString("demoLabel.Text");
       // 
@@ -80,7 +80,7 @@
       this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.splitContainer.Location = new System.Drawing.Point(12, 27);
+      this.splitContainer.Location = new System.Drawing.Point(10, 23);
       this.splitContainer.Name = "splitContainer";
       // 
       // splitContainer.Panel1
@@ -90,8 +90,9 @@
       // splitContainer.Panel2
       // 
       this.splitContainer.Panel2.Controls.Add(this.demoLabel);
-      this.splitContainer.Size = new System.Drawing.Size(823, 321);
-      this.splitContainer.SplitterDistance = 400;
+      this.splitContainer.Size = new System.Drawing.Size(705, 278);
+      this.splitContainer.SplitterDistance = 342;
+      this.splitContainer.SplitterWidth = 3;
       this.splitContainer.TabIndex = 2;
       // 
       // menuStrip
@@ -101,7 +102,8 @@
             this.helpToolStripMenuItem});
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.Name = "menuStrip";
-      this.menuStrip.Size = new System.Drawing.Size(847, 24);
+      this.menuStrip.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+      this.menuStrip.Size = new System.Drawing.Size(726, 24);
       this.menuStrip.TabIndex = 3;
       // 
       // fileToolStripMenuItem
@@ -137,20 +139,20 @@
       // 
       // statusStrip
       // 
-      this.statusStrip.Location = new System.Drawing.Point(0, 351);
+      this.statusStrip.Location = new System.Drawing.Point(0, 301);
       this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Size = new System.Drawing.Size(847, 22);
+      this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
+      this.statusStrip.Size = new System.Drawing.Size(726, 22);
       this.statusStrip.TabIndex = 4;
       // 
       // DragTestForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(847, 373);
+      this.ClientSize = new System.Drawing.Size(726, 323);
       this.Controls.Add(this.statusStrip);
       this.Controls.Add(this.splitContainer);
       this.Controls.Add(this.menuStrip);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.MainMenuStrip = this.menuStrip;
       this.Name = "DragTestForm";
       this.Text = "Drag Test";

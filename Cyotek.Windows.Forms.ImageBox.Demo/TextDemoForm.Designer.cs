@@ -50,8 +50,7 @@
             this.helpToolStripMenuItem});
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.Name = "menuStrip";
-      this.menuStrip.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-      this.menuStrip.Size = new System.Drawing.Size(900, 24);
+      this.menuStrip.Size = new System.Drawing.Size(771, 24);
       this.menuStrip.TabIndex = 0;
       // 
       // fileToolStripMenuItem
@@ -87,10 +86,9 @@
       // 
       // statusStrip
       // 
-      this.statusStrip.Location = new System.Drawing.Point(0, 472);
+      this.statusStrip.Location = new System.Drawing.Point(0, 406);
       this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-      this.statusStrip.Size = new System.Drawing.Size(900, 22);
+      this.statusStrip.Size = new System.Drawing.Size(771, 22);
       this.statusStrip.TabIndex = 2;
       // 
       // splitContainer
@@ -107,8 +105,9 @@
       // splitContainer.Panel2
       // 
       this.splitContainer.Panel2.Controls.Add(this.imageBox);
-      this.splitContainer.Size = new System.Drawing.Size(900, 448);
+      this.splitContainer.Size = new System.Drawing.Size(771, 382);
       this.splitContainer.SplitterDistance = 300;
+      this.splitContainer.SplitterWidth = 3;
       this.splitContainer.TabIndex = 1;
       // 
       // propertyGrid
@@ -117,7 +116,7 @@
       this.propertyGrid.Location = new System.Drawing.Point(0, 0);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(300, 448);
+      this.propertyGrid.Size = new System.Drawing.Size(300, 382);
       this.propertyGrid.TabIndex = 0;
       // 
       // imageBox
@@ -129,7 +128,7 @@
       this.imageBox.Name = "imageBox";
       this.imageBox.ScaleText = true;
       this.imageBox.ShowPixelGrid = true;
-      this.imageBox.Size = new System.Drawing.Size(596, 448);
+      this.imageBox.Size = new System.Drawing.Size(468, 382);
       this.imageBox.TabIndex = 0;
       this.imageBox.Text = "This is a demonstration of the ImageBox text functionality";
       this.imageBox.TextBackColor = System.Drawing.Color.Teal;
@@ -138,13 +137,12 @@
       // 
       // TextDemoForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(900, 494);
+      this.ClientSize = new System.Drawing.Size(771, 428);
       this.Controls.Add(this.splitContainer);
       this.Controls.Add(this.menuStrip);
       this.Controls.Add(this.statusStrip);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.Name = "TextDemoForm";
       this.Text = "Text Demonstation";
       this.menuStrip.ResumeLayout(false);

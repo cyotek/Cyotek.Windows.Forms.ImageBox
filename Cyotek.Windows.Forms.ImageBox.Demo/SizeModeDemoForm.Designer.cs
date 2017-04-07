@@ -59,10 +59,8 @@
             this.helpToolStripMenuItem});
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.Name = "menuStrip";
-      this.menuStrip.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-      this.menuStrip.Size = new System.Drawing.Size(900, 24);
+      this.menuStrip.Size = new System.Drawing.Size(771, 24);
       this.menuStrip.TabIndex = 8;
-      
       // 
       // fileToolStripMenuItem
       // 
@@ -97,12 +95,10 @@
       // 
       // statusStrip
       // 
-      this.statusStrip.Location = new System.Drawing.Point(0, 472);
+      this.statusStrip.Location = new System.Drawing.Point(0, 406);
       this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-      this.statusStrip.Size = new System.Drawing.Size(900, 22);
+      this.statusStrip.Size = new System.Drawing.Size(771, 22);
       this.statusStrip.TabIndex = 9;
-      
       // 
       // splitContainer1
       // 
@@ -118,8 +114,9 @@
       // splitContainer1.Panel2
       // 
       this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-      this.splitContainer1.Size = new System.Drawing.Size(900, 448);
-      this.splitContainer1.SplitterDistance = 300;
+      this.splitContainer1.Size = new System.Drawing.Size(771, 382);
+      this.splitContainer1.SplitterDistance = 257;
+      this.splitContainer1.SplitterWidth = 3;
       this.splitContainer1.TabIndex = 10;
       // 
       // imageBox1
@@ -128,7 +125,7 @@
       this.imageBox1.Image = ((System.Drawing.Image)(resources.GetObject("imageBox1.Image")));
       this.imageBox1.Location = new System.Drawing.Point(0, 0);
       this.imageBox1.Name = "imageBox1";
-      this.imageBox1.Size = new System.Drawing.Size(300, 424);
+      this.imageBox1.Size = new System.Drawing.Size(257, 361);
       this.imageBox1.TabIndex = 0;
       // 
       // cyotekPreviewHeaderLabel
@@ -137,9 +134,9 @@
       this.cyotekPreviewHeaderLabel.BackColor = System.Drawing.SystemColors.ActiveCaption;
       this.cyotekPreviewHeaderLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.cyotekPreviewHeaderLabel.ForeColor = System.Drawing.SystemColors.HighlightText;
-      this.cyotekPreviewHeaderLabel.Location = new System.Drawing.Point(0, 424);
+      this.cyotekPreviewHeaderLabel.Location = new System.Drawing.Point(0, 361);
       this.cyotekPreviewHeaderLabel.Name = "cyotekPreviewHeaderLabel";
-      this.cyotekPreviewHeaderLabel.Size = new System.Drawing.Size(300, 24);
+      this.cyotekPreviewHeaderLabel.Size = new System.Drawing.Size(257, 21);
       this.cyotekPreviewHeaderLabel.TabIndex = 8;
       this.cyotekPreviewHeaderLabel.Text = "Normal";
       this.cyotekPreviewHeaderLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -159,8 +156,9 @@
       // 
       this.splitContainer2.Panel2.Controls.Add(this.imageBox3);
       this.splitContainer2.Panel2.Controls.Add(this.label2);
-      this.splitContainer2.Size = new System.Drawing.Size(596, 448);
-      this.splitContainer2.SplitterDistance = 298;
+      this.splitContainer2.Size = new System.Drawing.Size(511, 382);
+      this.splitContainer2.SplitterDistance = 255;
+      this.splitContainer2.SplitterWidth = 3;
       this.splitContainer2.TabIndex = 11;
       // 
       // imageBox2
@@ -169,10 +167,10 @@
       this.imageBox2.Image = ((System.Drawing.Image)(resources.GetObject("imageBox2.Image")));
       this.imageBox2.Location = new System.Drawing.Point(0, 0);
       this.imageBox2.Name = "imageBox2";
-      this.imageBox2.Size = new System.Drawing.Size(298, 424);
+      this.imageBox2.Size = new System.Drawing.Size(255, 361);
       this.imageBox2.SizeMode = Cyotek.Windows.Forms.ImageBoxSizeMode.Stretch;
       this.imageBox2.TabIndex = 1;
-      this.imageBox2.Zoom = 196;
+      this.imageBox2.Zoom = 167;
       // 
       // label1
       // 
@@ -180,9 +178,9 @@
       this.label1.BackColor = System.Drawing.SystemColors.ActiveCaption;
       this.label1.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.label1.ForeColor = System.Drawing.SystemColors.HighlightText;
-      this.label1.Location = new System.Drawing.Point(0, 424);
+      this.label1.Location = new System.Drawing.Point(0, 361);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(298, 24);
+      this.label1.Size = new System.Drawing.Size(255, 21);
       this.label1.TabIndex = 8;
       this.label1.Text = "Stretch";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -193,10 +191,10 @@
       this.imageBox3.Image = ((System.Drawing.Image)(resources.GetObject("imageBox3.Image")));
       this.imageBox3.Location = new System.Drawing.Point(0, 0);
       this.imageBox3.Name = "imageBox3";
-      this.imageBox3.Size = new System.Drawing.Size(294, 424);
+      this.imageBox3.Size = new System.Drawing.Size(253, 361);
       this.imageBox3.SizeMode = Cyotek.Windows.Forms.ImageBoxSizeMode.Fit;
       this.imageBox3.TabIndex = 1;
-      this.imageBox3.Zoom = 193;
+      this.imageBox3.Zoom = 166;
       // 
       // label2
       // 
@@ -204,22 +202,21 @@
       this.label2.BackColor = System.Drawing.SystemColors.ActiveCaption;
       this.label2.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.label2.ForeColor = System.Drawing.SystemColors.HighlightText;
-      this.label2.Location = new System.Drawing.Point(0, 424);
+      this.label2.Location = new System.Drawing.Point(0, 361);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(294, 24);
+      this.label2.Size = new System.Drawing.Size(253, 21);
       this.label2.TabIndex = 8;
       this.label2.Text = "Fit";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
       // SizeModeDemoForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(900, 494);
+      this.ClientSize = new System.Drawing.Size(771, 428);
       this.Controls.Add(this.splitContainer1);
       this.Controls.Add(this.menuStrip);
       this.Controls.Add(this.statusStrip);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.Name = "SizeModeDemoForm";
       this.Text = "SizeMode Demonstation";
       this.menuStrip.ResumeLayout(false);

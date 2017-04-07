@@ -41,8 +41,7 @@
             this.helpToolStripMenuItem});
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.Name = "menuStrip";
-      this.menuStrip.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-      this.menuStrip.Size = new System.Drawing.Size(871, 24);
+      this.menuStrip.Size = new System.Drawing.Size(747, 24);
       this.menuStrip.TabIndex = 10;
       // 
       // fileToolStripMenuItem
@@ -83,16 +82,15 @@
             this.cursorToolStripStatusLabel,
             this.zoomToolStripStatusLabel,
             this.mapNameToolStripStatusLabel});
-      this.statusStrip.Location = new System.Drawing.Point(0, 576);
+      this.statusStrip.Location = new System.Drawing.Point(0, 496);
       this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-      this.statusStrip.Size = new System.Drawing.Size(871, 22);
+      this.statusStrip.Size = new System.Drawing.Size(747, 22);
       this.statusStrip.TabIndex = 11;
       // 
       // statusToolStripStatusLabel
       // 
       this.statusToolStripStatusLabel.Name = "statusToolStripStatusLabel";
-      this.statusToolStripStatusLabel.Size = new System.Drawing.Size(771, 17);
+      this.statusToolStripStatusLabel.Size = new System.Drawing.Size(649, 17);
       this.statusToolStripStatusLabel.Spring = true;
       this.statusToolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
@@ -123,7 +121,7 @@
       this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
       this.imageBox.Location = new System.Drawing.Point(0, 24);
       this.imageBox.Name = "imageBox";
-      this.imageBox.Size = new System.Drawing.Size(871, 528);
+      this.imageBox.Size = new System.Drawing.Size(747, 451);
       this.imageBox.TabIndex = 12;
       this.imageBox.ZoomChanged += new System.EventHandler(this.imageBox_ZoomChanged);
       this.imageBox.Zoomed += new System.EventHandler<Cyotek.Windows.Forms.ImageBoxZoomEventArgs>(this.imageBox_Zoomed);
@@ -136,9 +134,9 @@
       this.messageLabel.BackColor = System.Drawing.SystemColors.ActiveCaption;
       this.messageLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.messageLabel.ForeColor = System.Drawing.SystemColors.HighlightText;
-      this.messageLabel.Location = new System.Drawing.Point(0, 552);
+      this.messageLabel.Location = new System.Drawing.Point(0, 475);
       this.messageLabel.Name = "messageLabel";
-      this.messageLabel.Size = new System.Drawing.Size(871, 24);
+      this.messageLabel.Size = new System.Drawing.Size(747, 21);
       this.messageLabel.TabIndex = 13;
       this.messageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
@@ -154,14 +152,13 @@
       // 
       // SwitchImageDuringZoomDemoForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(871, 598);
+      this.ClientSize = new System.Drawing.Size(747, 518);
       this.Controls.Add(this.imageBox);
       this.Controls.Add(this.menuStrip);
       this.Controls.Add(this.messageLabel);
       this.Controls.Add(this.statusStrip);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.Name = "SwitchImageDuringZoomDemoForm";
       this.Text = "Switch Image During Zoom Demonstration";
       this.menuStrip.ResumeLayout(false);

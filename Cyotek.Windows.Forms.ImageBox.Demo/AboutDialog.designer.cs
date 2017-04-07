@@ -46,9 +46,9 @@ namespace Cyotek.Windows.Forms.Demo
       // 
       this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.closeButton.Location = new System.Drawing.Point(528, 12);
+      this.closeButton.Location = new System.Drawing.Point(453, 10);
       this.closeButton.Name = "closeButton";
-      this.closeButton.Size = new System.Drawing.Size(75, 23);
+      this.closeButton.Size = new System.Drawing.Size(64, 20);
       this.closeButton.TabIndex = 1;
       this.closeButton.Text = "Close";
       this.closeButton.UseVisualStyleBackColor = true;
@@ -60,7 +60,7 @@ namespace Cyotek.Windows.Forms.Demo
             | System.Windows.Forms.AnchorStyles.Right)));
       this.nameLabel.AutoSize = true;
       this.nameLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.nameLabel.Location = new System.Drawing.Point(50, 12);
+      this.nameLabel.Location = new System.Drawing.Point(43, 10);
       this.nameLabel.Name = "nameLabel";
       this.nameLabel.Size = new System.Drawing.Size(38, 13);
       this.nameLabel.TabIndex = 0;
@@ -72,7 +72,7 @@ namespace Cyotek.Windows.Forms.Demo
             | System.Windows.Forms.AnchorStyles.Right)));
       this.versionLabel.AutoSize = true;
       this.versionLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.versionLabel.Location = new System.Drawing.Point(50, 25);
+      this.versionLabel.Location = new System.Drawing.Point(43, 22);
       this.versionLabel.Name = "versionLabel";
       this.versionLabel.Size = new System.Drawing.Size(45, 13);
       this.versionLabel.TabIndex = 1;
@@ -81,16 +81,16 @@ namespace Cyotek.Windows.Forms.Demo
       // copyrightLabel
       // 
       this.copyrightLabel.AutoSize = true;
-      this.copyrightLabel.Location = new System.Drawing.Point(53, 47);
+      this.copyrightLabel.Location = new System.Drawing.Point(45, 41);
       this.copyrightLabel.Name = "copyrightLabel";
-      this.copyrightLabel.Size = new System.Drawing.Size(58, 15);
+      this.copyrightLabel.Size = new System.Drawing.Size(50, 13);
       this.copyrightLabel.TabIndex = 2;
       this.copyrightLabel.Text = "copyright";
       // 
       // iconPictureBox
       // 
       this.iconPictureBox.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.Icon;
-      this.iconPictureBox.Location = new System.Drawing.Point(12, 12);
+      this.iconPictureBox.Location = new System.Drawing.Point(10, 10);
       this.iconPictureBox.Name = "iconPictureBox";
       this.iconPictureBox.Size = new System.Drawing.Size(32, 32);
       this.iconPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -103,9 +103,9 @@ namespace Cyotek.Windows.Forms.Demo
       this.footerGroupBox.Controls.Add(this.webLinkLabel);
       this.footerGroupBox.Controls.Add(this.closeButton);
       this.footerGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.footerGroupBox.Location = new System.Drawing.Point(0, 448);
+      this.footerGroupBox.Location = new System.Drawing.Point(0, 388);
       this.footerGroupBox.Name = "footerGroupBox";
-      this.footerGroupBox.Size = new System.Drawing.Size(615, 47);
+      this.footerGroupBox.Size = new System.Drawing.Size(527, 41);
       this.footerGroupBox.TabIndex = 4;
       this.footerGroupBox.Paint += new System.Windows.Forms.PaintEventHandler(this.footerGroupBox_Paint);
       // 
@@ -114,9 +114,9 @@ namespace Cyotek.Windows.Forms.Demo
       this.webLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.webLinkLabel.AutoSize = true;
       this.webLinkLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
-      this.webLinkLabel.Location = new System.Drawing.Point(12, 16);
+      this.webLinkLabel.Location = new System.Drawing.Point(10, 14);
       this.webLinkLabel.Name = "webLinkLabel";
-      this.webLinkLabel.Size = new System.Drawing.Size(99, 15);
+      this.webLinkLabel.Size = new System.Drawing.Size(89, 13);
       this.webLinkLabel.TabIndex = 0;
       this.webLinkLabel.TabStop = true;
       this.webLinkLabel.Tag = "www.cyotek.com";
@@ -126,27 +126,26 @@ namespace Cyotek.Windows.Forms.Demo
       // 
       // docsTabControl
       // 
-      this.docsTabControl.Location = new System.Drawing.Point(12, 77);
+      this.docsTabControl.Location = new System.Drawing.Point(10, 67);
       this.docsTabControl.Name = "docsTabControl";
       this.docsTabControl.SelectedIndex = 0;
-      this.docsTabControl.Size = new System.Drawing.Size(591, 365);
+      this.docsTabControl.Size = new System.Drawing.Size(505, 315);
       this.docsTabControl.TabIndex = 3;
       this.docsTabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.docsTabControl_Selecting);
       // 
       // AboutDialog
       // 
       this.AcceptButton = this.closeButton;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.BackColor = System.Drawing.SystemColors.Window;
       this.CancelButton = this.closeButton;
-      this.ClientSize = new System.Drawing.Size(615, 495);
+      this.ClientSize = new System.Drawing.Size(527, 429);
       this.Controls.Add(this.docsTabControl);
       this.Controls.Add(this.footerGroupBox);
       this.Controls.Add(this.iconPictureBox);
       this.Controls.Add(this.copyrightLabel);
       this.Controls.Add(this.versionLabel);
       this.Controls.Add(this.nameLabel);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.MaximizeBox = false;
       this.Name = "AboutDialog";

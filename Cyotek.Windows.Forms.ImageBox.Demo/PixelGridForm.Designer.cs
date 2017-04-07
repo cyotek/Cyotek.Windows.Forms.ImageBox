@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.splitContainer = new System.Windows.Forms.SplitContainer();
-      this.propertyGrid = new PropertyGrid();
+      this.propertyGrid = new Cyotek.Windows.Forms.Demo.PropertyGrid();
       this.imageBox = new Cyotek.Windows.Forms.ImageBox();
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.menuStrip = new System.Windows.Forms.MenuStrip();
@@ -57,8 +57,9 @@
       // splitContainer.Panel2
       // 
       this.splitContainer.Panel2.Controls.Add(this.imageBox);
-      this.splitContainer.Size = new System.Drawing.Size(989, 572);
+      this.splitContainer.Size = new System.Drawing.Size(848, 490);
       this.splitContainer.SplitterDistance = 300;
+      this.splitContainer.SplitterWidth = 3;
       this.splitContainer.TabIndex = 0;
       // 
       // propertyGrid
@@ -67,7 +68,7 @@
       this.propertyGrid.Location = new System.Drawing.Point(0, 0);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(300, 572);
+      this.propertyGrid.Size = new System.Drawing.Size(300, 490);
       this.propertyGrid.TabIndex = 0;
       // 
       // imageBox
@@ -80,15 +81,16 @@
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
       this.imageBox.ShowPixelGrid = true;
-      this.imageBox.Size = new System.Drawing.Size(685, 572);
+      this.imageBox.Size = new System.Drawing.Size(545, 490);
       this.imageBox.TabIndex = 0;
       this.imageBox.Zoom = 1600;
       // 
       // statusStrip
       // 
-      this.statusStrip.Location = new System.Drawing.Point(0, 596);
+      this.statusStrip.Location = new System.Drawing.Point(0, 514);
       this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Size = new System.Drawing.Size(989, 22);
+      this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
+      this.statusStrip.Size = new System.Drawing.Size(848, 22);
       this.statusStrip.TabIndex = 6;
       // 
       // menuStrip
@@ -98,7 +100,8 @@
             this.helpToolStripMenuItem});
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.Name = "menuStrip";
-      this.menuStrip.Size = new System.Drawing.Size(989, 24);
+      this.menuStrip.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+      this.menuStrip.Size = new System.Drawing.Size(848, 24);
       this.menuStrip.TabIndex = 5;
       // 
       // fileToolStripMenuItem
@@ -134,13 +137,12 @@
       // 
       // PixelGridForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(989, 618);
+      this.ClientSize = new System.Drawing.Size(848, 536);
       this.Controls.Add(this.splitContainer);
       this.Controls.Add(this.statusStrip);
       this.Controls.Add(this.menuStrip);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.Name = "PixelGridForm";
       this.Text = "Pixel Grid";
       this.splitContainer.Panel1.ResumeLayout(false);

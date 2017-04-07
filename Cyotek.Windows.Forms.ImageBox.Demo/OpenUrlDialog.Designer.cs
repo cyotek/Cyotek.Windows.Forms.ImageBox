@@ -38,18 +38,18 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(12, 9);
+      this.label1.Location = new System.Drawing.Point(10, 8);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(307, 15);
+      this.label1.Size = new System.Drawing.Size(275, 13);
       this.label1.TabIndex = 0;
       this.label1.Text = "Type the Internet address of an image document to open";
       // 
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(12, 39);
+      this.label2.Location = new System.Drawing.Point(10, 34);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(39, 15);
+      this.label2.Size = new System.Drawing.Size(36, 13);
       this.label2.TabIndex = 1;
       this.label2.Text = "&Open:";
       // 
@@ -57,19 +57,19 @@
       // 
       this.urlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.urlTextBox.Location = new System.Drawing.Point(57, 36);
-      this.urlTextBox.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
+      this.urlTextBox.Location = new System.Drawing.Point(49, 31);
+      this.urlTextBox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
       this.urlTextBox.Name = "urlTextBox";
-      this.urlTextBox.Size = new System.Drawing.Size(309, 23);
+      this.urlTextBox.Size = new System.Drawing.Size(265, 20);
       this.urlTextBox.TabIndex = 2;
       this.urlTextBox.Text = "https://www.cyotek.com/files/articleimages/aeg1e.png";
       // 
       // okButton
       // 
       this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.okButton.Location = new System.Drawing.Point(210, 83);
+      this.okButton.Location = new System.Drawing.Point(180, 72);
       this.okButton.Name = "okButton";
-      this.okButton.Size = new System.Drawing.Size(75, 23);
+      this.okButton.Size = new System.Drawing.Size(64, 20);
       this.okButton.TabIndex = 3;
       this.okButton.Text = "OK";
       this.okButton.UseVisualStyleBackColor = true;
@@ -79,9 +79,9 @@
       // 
       this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.cancelButton.Location = new System.Drawing.Point(291, 83);
+      this.cancelButton.Location = new System.Drawing.Point(249, 72);
       this.cancelButton.Name = "cancelButton";
-      this.cancelButton.Size = new System.Drawing.Size(75, 23);
+      this.cancelButton.Size = new System.Drawing.Size(64, 20);
       this.cancelButton.TabIndex = 4;
       this.cancelButton.Text = "Cancel";
       this.cancelButton.UseVisualStyleBackColor = true;
@@ -90,16 +90,15 @@
       // OpenUrlDialog
       // 
       this.AcceptButton = this.okButton;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.cancelButton;
-      this.ClientSize = new System.Drawing.Size(378, 118);
+      this.ClientSize = new System.Drawing.Size(324, 102);
       this.Controls.Add(this.cancelButton);
       this.Controls.Add(this.okButton);
       this.Controls.Add(this.urlTextBox);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.MaximizeBox = false;
       this.Name = "OpenUrlDialog";

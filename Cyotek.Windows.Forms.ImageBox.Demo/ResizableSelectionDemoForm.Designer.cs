@@ -85,8 +85,8 @@
       this.demoLabel.ForeColor = System.Drawing.SystemColors.InfoText;
       this.demoLabel.Location = new System.Drawing.Point(0, 0);
       this.demoLabel.Name = "demoLabel";
-      this.demoLabel.Padding = new System.Windows.Forms.Padding(9);
-      this.demoLabel.Size = new System.Drawing.Size(419, 180);
+      this.demoLabel.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+      this.demoLabel.Size = new System.Drawing.Size(360, 180);
       this.demoLabel.TabIndex = 1;
       this.demoLabel.Text = resources.GetString("demoLabel.Text");
       // 
@@ -95,7 +95,7 @@
       this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.splitContainer.Location = new System.Drawing.Point(12, 27);
+      this.splitContainer.Location = new System.Drawing.Point(10, 23);
       this.splitContainer.Name = "splitContainer";
       // 
       // splitContainer.Panel1
@@ -105,8 +105,9 @@
       // splitContainer.Panel2
       // 
       this.splitContainer.Panel2.Controls.Add(this.eventsSplitContainer);
-      this.splitContainer.Size = new System.Drawing.Size(823, 418);
-      this.splitContainer.SplitterDistance = 400;
+      this.splitContainer.Size = new System.Drawing.Size(705, 362);
+      this.splitContainer.SplitterDistance = 342;
+      this.splitContainer.SplitterWidth = 3;
       this.splitContainer.TabIndex = 5;
       // 
       // imageBox
@@ -115,7 +116,7 @@
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
       this.imageBox.SelectionMode = Cyotek.Windows.Forms.ImageBoxSelectionMode.Rectangle;
-      this.imageBox.Size = new System.Drawing.Size(400, 418);
+      this.imageBox.Size = new System.Drawing.Size(342, 362);
       this.imageBox.TabIndex = 0;
       this.imageBox.VirtualMode = true;
       this.imageBox.VirtualSize = new System.Drawing.Size(256, 256);
@@ -149,8 +150,9 @@
       // eventsSplitContainer.Panel2
       // 
       this.eventsSplitContainer.Panel2.Controls.Add(this.tabControl1);
-      this.eventsSplitContainer.Size = new System.Drawing.Size(419, 418);
+      this.eventsSplitContainer.Size = new System.Drawing.Size(360, 362);
       this.eventsSplitContainer.SplitterDistance = 180;
+      this.eventsSplitContainer.SplitterWidth = 3;
       this.eventsSplitContainer.TabIndex = 2;
       // 
       // tabControl1
@@ -162,16 +164,16 @@
       this.tabControl1.Location = new System.Drawing.Point(0, 0);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(419, 234);
+      this.tabControl1.Size = new System.Drawing.Size(360, 179);
       this.tabControl1.TabIndex = 0;
       // 
       // eventsTabPage
       // 
       this.eventsTabPage.Controls.Add(this.eventsListBox);
-      this.eventsTabPage.Location = new System.Drawing.Point(4, 24);
+      this.eventsTabPage.Location = new System.Drawing.Point(4, 22);
       this.eventsTabPage.Name = "eventsTabPage";
-      this.eventsTabPage.Padding = new System.Windows.Forms.Padding(6);
-      this.eventsTabPage.Size = new System.Drawing.Size(411, 206);
+      this.eventsTabPage.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
+      this.eventsTabPage.Size = new System.Drawing.Size(352, 153);
       this.eventsTabPage.TabIndex = 0;
       this.eventsTabPage.Text = "Events";
       this.eventsTabPage.UseVisualStyleBackColor = true;
@@ -180,10 +182,9 @@
       // 
       this.eventsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
       this.eventsListBox.FormattingEnabled = true;
-      this.eventsListBox.ItemHeight = 15;
-      this.eventsListBox.Location = new System.Drawing.Point(6, 6);
+      this.eventsListBox.Location = new System.Drawing.Point(5, 5);
       this.eventsListBox.Name = "eventsListBox";
-      this.eventsListBox.Size = new System.Drawing.Size(399, 194);
+      this.eventsListBox.Size = new System.Drawing.Size(342, 143);
       this.eventsListBox.TabIndex = 0;
       // 
       // dragHandlesTabPage
@@ -191,8 +192,8 @@
       this.dragHandlesTabPage.Controls.Add(this.splitContainer1);
       this.dragHandlesTabPage.Location = new System.Drawing.Point(4, 24);
       this.dragHandlesTabPage.Name = "dragHandlesTabPage";
-      this.dragHandlesTabPage.Padding = new System.Windows.Forms.Padding(6);
-      this.dragHandlesTabPage.Size = new System.Drawing.Size(411, 169);
+      this.dragHandlesTabPage.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
+      this.dragHandlesTabPage.Size = new System.Drawing.Size(351, 175);
       this.dragHandlesTabPage.TabIndex = 1;
       this.dragHandlesTabPage.Text = "Drag Handles";
       this.dragHandlesTabPage.UseVisualStyleBackColor = true;
@@ -200,7 +201,7 @@
       // splitContainer1
       // 
       this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.splitContainer1.Location = new System.Drawing.Point(6, 6);
+      this.splitContainer1.Location = new System.Drawing.Point(5, 5);
       this.splitContainer1.Name = "splitContainer1";
       // 
       // splitContainer1.Panel1
@@ -212,8 +213,9 @@
       // 
       this.splitContainer1.Panel2.Controls.Add(this.visibleCheckedListBox);
       this.splitContainer1.Panel2.Controls.Add(this.label2);
-      this.splitContainer1.Size = new System.Drawing.Size(399, 157);
-      this.splitContainer1.SplitterDistance = 196;
+      this.splitContainer1.Size = new System.Drawing.Size(341, 165);
+      this.splitContainer1.SplitterDistance = 167;
+      this.splitContainer1.SplitterWidth = 3;
       this.splitContainer1.TabIndex = 0;
       // 
       // enabledCheckedListBox
@@ -223,9 +225,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.enabledCheckedListBox.FormattingEnabled = true;
       this.enabledCheckedListBox.IntegralHeight = false;
-      this.enabledCheckedListBox.Location = new System.Drawing.Point(3, 18);
+      this.enabledCheckedListBox.Location = new System.Drawing.Point(3, 16);
       this.enabledCheckedListBox.Name = "enabledCheckedListBox";
-      this.enabledCheckedListBox.Size = new System.Drawing.Size(190, 136);
+      this.enabledCheckedListBox.Size = new System.Drawing.Size(162, 147);
       this.enabledCheckedListBox.TabIndex = 1;
       this.enabledCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.enabledCheckedListBox_ItemCheck);
       // 
@@ -234,7 +236,7 @@
       this.label1.AutoSize = true;
       this.label1.Location = new System.Drawing.Point(-3, 0);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(98, 15);
+      this.label1.Size = new System.Drawing.Size(91, 13);
       this.label1.TabIndex = 0;
       this.label1.Text = "Enabled Handles:";
       // 
@@ -245,9 +247,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.visibleCheckedListBox.FormattingEnabled = true;
       this.visibleCheckedListBox.IntegralHeight = false;
-      this.visibleCheckedListBox.Location = new System.Drawing.Point(3, 18);
+      this.visibleCheckedListBox.Location = new System.Drawing.Point(3, 16);
       this.visibleCheckedListBox.Name = "visibleCheckedListBox";
-      this.visibleCheckedListBox.Size = new System.Drawing.Size(193, 136);
+      this.visibleCheckedListBox.Size = new System.Drawing.Size(166, 147);
       this.visibleCheckedListBox.TabIndex = 1;
       this.visibleCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.visibleCheckedListBox_ItemCheck);
       // 
@@ -256,7 +258,7 @@
       this.label2.AutoSize = true;
       this.label2.Location = new System.Drawing.Point(0, 0);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(90, 15);
+      this.label2.Size = new System.Drawing.Size(82, 13);
       this.label2.TabIndex = 0;
       this.label2.Text = "Visible Handles:";
       // 
@@ -265,8 +267,8 @@
       this.propertiesTabPage.Controls.Add(this.propertyGrid);
       this.propertiesTabPage.Location = new System.Drawing.Point(4, 24);
       this.propertiesTabPage.Name = "propertiesTabPage";
-      this.propertiesTabPage.Padding = new System.Windows.Forms.Padding(6);
-      this.propertiesTabPage.Size = new System.Drawing.Size(411, 169);
+      this.propertiesTabPage.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
+      this.propertiesTabPage.Size = new System.Drawing.Size(351, 175);
       this.propertiesTabPage.TabIndex = 2;
       this.propertiesTabPage.Text = "Properties";
       this.propertiesTabPage.UseVisualStyleBackColor = true;
@@ -276,10 +278,10 @@
       this.propertyGrid.CommandsVisibleIfAvailable = false;
       this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
       this.propertyGrid.HelpVisible = false;
-      this.propertyGrid.Location = new System.Drawing.Point(6, 6);
+      this.propertyGrid.Location = new System.Drawing.Point(5, 5);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(399, 157);
+      this.propertyGrid.Size = new System.Drawing.Size(341, 165);
       this.propertyGrid.TabIndex = 0;
       this.propertyGrid.ToolbarVisible = false;
       // 
@@ -291,7 +293,8 @@
             this.helpToolStripMenuItem});
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.Name = "menuStrip";
-      this.menuStrip.Size = new System.Drawing.Size(847, 24);
+      this.menuStrip.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+      this.menuStrip.Size = new System.Drawing.Size(726, 24);
       this.menuStrip.TabIndex = 6;
       // 
       // fileToolStripMenuItem
@@ -357,9 +360,10 @@
             this.imageSizeToolStripStatusLabel,
             this.zoomToolStripStatusLabel,
             this.selectionToolStripStatusLabel});
-      this.statusStrip.Location = new System.Drawing.Point(0, 448);
+      this.statusStrip.Location = new System.Drawing.Point(0, 385);
       this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Size = new System.Drawing.Size(847, 22);
+      this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
+      this.statusStrip.Size = new System.Drawing.Size(726, 22);
       this.statusStrip.TabIndex = 7;
       // 
       // cursorToolStripStatusLabel
@@ -372,7 +376,7 @@
       // statusToolStripStatusLabel
       // 
       this.statusToolStripStatusLabel.Name = "statusToolStripStatusLabel";
-      this.statusToolStripStatusLabel.Size = new System.Drawing.Size(784, 17);
+      this.statusToolStripStatusLabel.Size = new System.Drawing.Size(665, 17);
       this.statusToolStripStatusLabel.Spring = true;
       this.statusToolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
@@ -407,13 +411,12 @@
       // 
       // ResizableSelectionDemoForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(847, 470);
+      this.ClientSize = new System.Drawing.Size(726, 407);
       this.Controls.Add(this.splitContainer);
       this.Controls.Add(this.menuStrip);
       this.Controls.Add(this.statusStrip);
-      this.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.Name = "ResizableSelectionDemoForm";
       this.Text = "Resizable Selection Demonstration";
       this.splitContainer.Panel1.ResumeLayout(false);
