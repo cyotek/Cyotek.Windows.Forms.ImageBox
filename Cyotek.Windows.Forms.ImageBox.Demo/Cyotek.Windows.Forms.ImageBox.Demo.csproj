@@ -91,6 +91,12 @@
     <Compile Include="ImageBoxEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="OpenUrlDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenUrlDialog.Designer.cs">
+      <DependentUpon>OpenUrlDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="ResizableSelectionDemoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -192,6 +198,7 @@
     <Content Include="Resources\Newtons_cradle_animation_book_2.gif" />
     <Content Include="Resources\Object Position.ico" />
     <Content Include="Resources\Object Size.ico" />
+    <None Include="Resources\Open.png" />
     <Content Include="Resources\sample.jpg" />
     <None Include="Resources\samplecrop.png" />
     <Content Include="Resources\selection-select.png" />
@@ -208,6 +215,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DisposedImageDemoForm.resx">
       <DependentUpon>DisposedImageDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenUrlDialog.resx">
+      <DependentUpon>OpenUrlDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ResizableSelectionDemoForm.resx">
       <DependentUpon>ResizableSelectionDemoForm.cs</DependentUpon>

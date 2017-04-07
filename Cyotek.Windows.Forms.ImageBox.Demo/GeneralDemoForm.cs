@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
+using System.Net;
 using System.Windows.Forms;
 using Cyotek.Windows.Forms.Demo.Properties;
 
 namespace Cyotek.Windows.Forms.Demo
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
+  // Copyright (c) 2010-2017 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -17,22 +19,22 @@ namespace Cyotek.Windows.Forms.Demo
 
   internal partial class GeneralDemoForm : BaseForm
   {
-    #region Instance Fields
+    #region Fields
 
     private Image _previewImage;
 
     #endregion
 
-    #region Public Constructors
+    #region Constructors
 
     public GeneralDemoForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     #endregion
 
-    #region Overridden Methods
+    #region Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -44,90 +46,6 @@ namespace Cyotek.Windows.Forms.Demo
       imageBox.SelectionMode = ImageBoxSelectionMode.Zoom;
       imageBox.AllowClickZoom = true;
     }
-
-    #endregion
-
-    #region Private Members
-
-    private void DrawBox(Graphics graphics, Color color, RectangleF rectangle, double scale)
-    {
-      float penWidth;
-
-      penWidth = 2 * (float)scale;
-
-      using (SolidBrush brush = new SolidBrush(Color.FromArgb(64, color)))
-      {
-        graphics.FillRectangle(brush, rectangle);
-      }
-
-      using (Pen pen = new Pen(color, penWidth)
-                       {
-                         DashStyle = DashStyle.Dot,
-                         DashCap = DashCap.Round
-                       })
-      {
-        graphics.DrawRectangle(pen, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
-      }
-    }
-
-    private void FillZoomLevels()
-    {
-      zoomLevelsToolStripComboBox.Items.Clear();
-
-      foreach (int zoom in imageBox.ZoomLevels)
-      {
-        zoomLevelsToolStripComboBox.Items.Add(string.Format("{0}%", zoom));
-      }
-    }
-
-    private void OpenImage(Image image)
-    {
-      imageBox.Image = image;
-      imageBox.ZoomToFit();
-
-      this.UpdateStatusBar();
-      this.UpdatePreviewImage();
-    }
-
-    private void UpdateCursorPosition(Point location)
-    {
-      if (!fitCursorLocationToBoundsToolStripMenuItem.Checked || imageBox.IsPointInImage(location))
-      {
-        Point point;
-
-        point = imageBox.PointToImage(location);
-
-        cursorToolStripStatusLabel.Text = this.FormatPoint(point);
-      }
-      else
-      {
-        cursorToolStripStatusLabel.Text = string.Empty;
-      }
-    }
-
-    private void UpdatePreviewImage()
-    {
-      if (_previewImage != null)
-      {
-        _previewImage.Dispose();
-      }
-
-      _previewImage = imageBox.GetSelectedImage();
-
-      previewImageBox.Image = _previewImage;
-    }
-
-    private void UpdateStatusBar()
-    {
-      zoomLevelsToolStripComboBox.Text = string.Format("{0}%", imageBox.Zoom);
-      autoScrollPositionToolStripStatusLabel.Text = this.FormatPoint(imageBox.AutoScrollPosition);
-      imageSizeToolStripStatusLabel.Text = this.FormatRectangle(imageBox.GetImageViewPort());
-      zoomToolStripStatusLabel.Text = string.Format("{0}%", imageBox.Zoom);
-    }
-
-    #endregion
-
-    #region Event Handlers
 
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -152,9 +70,51 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
+    private void DrawBox(Graphics graphics, Color color, RectangleF rectangle, double scale)
+    {
+      float penWidth;
+
+      penWidth = 2 * (float)scale;
+
+      using (SolidBrush brush = new SolidBrush(Color.FromArgb(64, color)))
+      {
+        graphics.FillRectangle(brush, rectangle);
+      }
+
+      using (Pen pen = new Pen(color, penWidth)
+                       {
+                         DashStyle = DashStyle.Dot,
+                         DashCap = DashCap.Round
+                       })
+      {
+        graphics.DrawRectangle(pen, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+      }
+    }
+
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
     {
       this.Close();
+    }
+
+    private void FillZoomLevels()
+    {
+      zoomLevelsToolStripComboBox.Items.Clear();
+
+      foreach (int zoom in imageBox.ZoomLevels)
+      {
+        zoomLevelsToolStripComboBox.Items.Add(string.Format("{0}%", zoom));
+      }
+    }
+
+    private void fromURLToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      using (OpenUrlDialog dialog = new OpenUrlDialog())
+      {
+        if (dialog.ShowDialog(this) == DialogResult.OK)
+        {
+          this.OpenImageFromUrl(dialog.Url);
+        }
+      }
     }
 
     private void imageBox_MouseLeave(object sender, EventArgs e)
@@ -212,7 +172,7 @@ namespace Cyotek.Windows.Forms.Demo
       this.FillZoomLevels();
     }
 
-    private void openToolStripMenuItem_Click(object sender, EventArgs e)
+    private void openFromFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
       using (FileDialog dialog = new OpenFileDialog())
       {
@@ -233,6 +193,37 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
+    private void OpenImage(Image image)
+    {
+      imageBox.Image = image;
+      imageBox.ZoomToFit();
+
+      this.UpdateStatusBar();
+      this.UpdatePreviewImage();
+    }
+
+    private void OpenImageFromUrl(string url)
+    {
+      try
+      {
+        using (WebClient client = new WebClient())
+        {
+          byte[] data;
+
+          data = client.DownloadData(url);
+
+          using (Stream stream = new MemoryStream(data))
+          {
+            this.OpenImage(Image.FromStream(stream));
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
     private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
     {
       imageBox.SelectAll();
@@ -246,6 +237,42 @@ namespace Cyotek.Windows.Forms.Demo
     private void showImageRegionToolStripButton_Click(object sender, EventArgs e)
     {
       imageBox.Invalidate();
+    }
+
+    private void UpdateCursorPosition(Point location)
+    {
+      if (!fitCursorLocationToBoundsToolStripMenuItem.Checked || imageBox.IsPointInImage(location))
+      {
+        Point point;
+
+        point = imageBox.PointToImage(location);
+
+        cursorToolStripStatusLabel.Text = this.FormatPoint(point);
+      }
+      else
+      {
+        cursorToolStripStatusLabel.Text = string.Empty;
+      }
+    }
+
+    private void UpdatePreviewImage()
+    {
+      if (_previewImage != null)
+      {
+        _previewImage.Dispose();
+      }
+
+      _previewImage = imageBox.GetSelectedImage();
+
+      previewImageBox.Image = _previewImage;
+    }
+
+    private void UpdateStatusBar()
+    {
+      zoomLevelsToolStripComboBox.Text = string.Format("{0}%", imageBox.Zoom);
+      autoScrollPositionToolStripStatusLabel.Text = this.FormatPoint(imageBox.AutoScrollPosition);
+      imageSizeToolStripStatusLabel.Text = this.FormatRectangle(imageBox.GetImageViewPort());
+      zoomToolStripStatusLabel.Text = string.Format("{0}%", imageBox.Zoom);
     }
 
     private void zoomInToolStripButton_Click(object sender, EventArgs e)

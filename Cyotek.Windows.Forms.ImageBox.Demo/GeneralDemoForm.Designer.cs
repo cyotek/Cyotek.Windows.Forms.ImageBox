@@ -46,7 +46,7 @@
       this.zoomToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.selectionToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolStrip = new System.Windows.Forms.ToolStrip();
-      this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
+      this.openFromFileToolStripButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
       this.showImageRegionToolStripButton = new System.Windows.Forms.ToolStripButton();
       this.showSourceImageRegionToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -61,7 +61,6 @@
       this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
       this.menuStrip = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
       this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,10 +68,13 @@
       this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
       this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.selectNoneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fitCursorLocationToBoundsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.openFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.fromURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.viewSplitContainer.Panel1.SuspendLayout();
       this.viewSplitContainer.Panel2.SuspendLayout();
       this.viewSplitContainer.SuspendLayout();
@@ -99,7 +101,7 @@
       // 
       this.viewSplitContainer.Panel2.Controls.Add(this.propertyGrid);
       this.viewSplitContainer.Size = new System.Drawing.Size(1060, 536);
-      this.viewSplitContainer.SplitterDistance = 751;
+      this.viewSplitContainer.SplitterDistance = 748;
       this.viewSplitContainer.SplitterWidth = 5;
       this.viewSplitContainer.TabIndex = 0;
       // 
@@ -118,8 +120,8 @@
       // selectionSplitContainer.Panel2
       // 
       this.selectionSplitContainer.Panel2.Controls.Add(this.previewImageBox);
-      this.selectionSplitContainer.Size = new System.Drawing.Size(751, 536);
-      this.selectionSplitContainer.SplitterDistance = 377;
+      this.selectionSplitContainer.Size = new System.Drawing.Size(748, 536);
+      this.selectionSplitContainer.SplitterDistance = 374;
       this.selectionSplitContainer.SplitterWidth = 5;
       this.selectionSplitContainer.TabIndex = 1;
       // 
@@ -128,7 +130,7 @@
       this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
       this.imageBox.Location = new System.Drawing.Point(0, 0);
       this.imageBox.Name = "imageBox";
-      this.imageBox.Size = new System.Drawing.Size(751, 377);
+      this.imageBox.Size = new System.Drawing.Size(748, 374);
       this.imageBox.TabIndex = 0;
       this.imageBox.Selected += new System.EventHandler<System.EventArgs>(this.imageBox_Selected);
       this.imageBox.SelectionRegionChanged += new System.EventHandler(this.imageBox_SelectionRegionChanged);
@@ -150,7 +152,7 @@
       this.previewImageBox.ImageBorderStyle = Cyotek.Windows.Forms.ImageBoxBorderStyle.FixedSingle;
       this.previewImageBox.Location = new System.Drawing.Point(0, 0);
       this.previewImageBox.Name = "previewImageBox";
-      this.previewImageBox.Size = new System.Drawing.Size(751, 154);
+      this.previewImageBox.Size = new System.Drawing.Size(748, 157);
       this.previewImageBox.TabIndex = 0;
       // 
       // propertyGrid
@@ -161,7 +163,7 @@
       this.propertyGrid.Location = new System.Drawing.Point(0, 0);
       this.propertyGrid.Name = "propertyGrid";
       this.propertyGrid.SelectedObject = this.imageBox;
-      this.propertyGrid.Size = new System.Drawing.Size(304, 536);
+      this.propertyGrid.Size = new System.Drawing.Size(307, 536);
       this.propertyGrid.TabIndex = 0;
       // 
       // statusStrip
@@ -223,7 +225,7 @@
       // toolStrip
       // 
       this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripButton,
+            this.openFromFileToolStripButton,
             this.toolStripSeparator8,
             this.showImageRegionToolStripButton,
             this.showSourceImageRegionToolStripButton,
@@ -241,15 +243,15 @@
       this.toolStrip.Size = new System.Drawing.Size(1060, 25);
       this.toolStrip.TabIndex = 2;
       // 
-      // openToolStripButton
+      // openFromFileToolStripButton
       // 
-      this.openToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.openToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripButton.Image")));
-      this.openToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.openToolStripButton.Name = "openToolStripButton";
-      this.openToolStripButton.Size = new System.Drawing.Size(23, 22);
-      this.openToolStripButton.Text = "&Open";
-      this.openToolStripButton.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+      this.openFromFileToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.openFromFileToolStripButton.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.Open;
+      this.openFromFileToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.openFromFileToolStripButton.Name = "openFromFileToolStripButton";
+      this.openFromFileToolStripButton.Size = new System.Drawing.Size(23, 22);
+      this.openFromFileToolStripButton.Text = "&Open";
+      this.openFromFileToolStripButton.Click += new System.EventHandler(this.openFromFileToolStripMenuItem_Click);
       // 
       // toolStripSeparator8
       // 
@@ -373,26 +375,16 @@
       this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
       this.fileToolStripMenuItem.Text = "&File";
       // 
-      // openToolStripMenuItem
-      // 
-      this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
-      this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-      this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-      this.openToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-      this.openToolStripMenuItem.Text = "&Open";
-      this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
-      // 
       // toolStripSeparator3
       // 
       this.toolStripSeparator3.Name = "toolStripSeparator3";
-      this.toolStripSeparator3.Size = new System.Drawing.Size(145, 6);
+      this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
       // 
       // exitToolStripMenuItem
       // 
       this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
       this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-      this.exitToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+      this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.exitToolStripMenuItem.Text = "&Close";
       this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
       // 
@@ -440,21 +432,6 @@
       this.selectNoneToolStripMenuItem.Text = "Select &None";
       this.selectNoneToolStripMenuItem.Click += new System.EventHandler(this.selectNoneToolStripMenuItem_Click);
       // 
-      // helpToolStripMenuItem
-      // 
-      this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
-      this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-      this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-      this.helpToolStripMenuItem.Text = "&Help";
-      // 
-      // aboutToolStripMenuItem
-      // 
-      this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.aboutToolStripMenuItem.Text = "&About...";
-      this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-      // 
       // viewToolStripMenuItem
       // 
       this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -469,8 +446,49 @@
       this.fitCursorLocationToBoundsToolStripMenuItem.CheckOnClick = true;
       this.fitCursorLocationToBoundsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
       this.fitCursorLocationToBoundsToolStripMenuItem.Name = "fitCursorLocationToBoundsToolStripMenuItem";
-      this.fitCursorLocationToBoundsToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+      this.fitCursorLocationToBoundsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
       this.fitCursorLocationToBoundsToolStripMenuItem.Text = "Fit Cursor Location To &Bounds";
+      // 
+      // helpToolStripMenuItem
+      // 
+      this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+      this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+      this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+      this.helpToolStripMenuItem.Text = "&Help";
+      // 
+      // aboutToolStripMenuItem
+      // 
+      this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+      this.aboutToolStripMenuItem.Text = "&About...";
+      this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+      // 
+      // openToolStripMenuItem
+      // 
+      this.openToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openFromFileToolStripMenuItem,
+            this.fromURLToolStripMenuItem});
+      this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+      this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.openToolStripMenuItem.Text = "&Open";
+      // 
+      // openFromFileToolStripMenuItem
+      // 
+      this.openFromFileToolStripMenuItem.Image = global::Cyotek.Windows.Forms.Demo.Properties.Resources.Open;
+      this.openFromFileToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.openFromFileToolStripMenuItem.Name = "openFromFileToolStripMenuItem";
+      this.openFromFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+      this.openFromFileToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+      this.openFromFileToolStripMenuItem.Text = "From &File...";
+      this.openFromFileToolStripMenuItem.Click += new System.EventHandler(this.openFromFileToolStripMenuItem_Click);
+      // 
+      // fromURLToolStripMenuItem
+      // 
+      this.fromURLToolStripMenuItem.Name = "fromURLToolStripMenuItem";
+      this.fromURLToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+      this.fromURLToolStripMenuItem.Text = "From &URL...";
+      this.fromURLToolStripMenuItem.Click += new System.EventHandler(this.fromURLToolStripMenuItem_Click);
       // 
       // GeneralDemoForm
       // 
@@ -527,11 +545,10 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.ToolStripButton selectAllToolStripButton;
     private System.Windows.Forms.ToolStripButton selectNoneToolStripButton;
-    private System.Windows.Forms.ToolStripButton openToolStripButton;
+    private System.Windows.Forms.ToolStripButton openFromFileToolStripButton;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
     private System.Windows.Forms.MenuStrip menuStrip;
     private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
@@ -545,6 +562,9 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem fitCursorLocationToBoundsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem openFromFileToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem fromURLToolStripMenuItem;
   }
 }
 
