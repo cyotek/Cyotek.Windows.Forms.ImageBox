@@ -5,7 +5,7 @@ SETLOCAL
 CALL ..\..\..\build\set35vars.bat
 
 %msbuildexe% Cyotek.Windows.Forms.ImageBox.sln /p:Configuration=Release /verbosity:minimal /nologo /t:Clean,Build
-CALL signcmd Cyotek.Windows.Forms.ImageBox\bin\Release\Cyotek.Windows.Forms.ImageBox.dll
+CALL dualsigncmd Cyotek.Windows.Forms.ImageBox\bin\Release\Cyotek.Windows.Forms.ImageBox.dll
 
 PUSHD
 IF NOT EXIST nuget MKDIR nuget
