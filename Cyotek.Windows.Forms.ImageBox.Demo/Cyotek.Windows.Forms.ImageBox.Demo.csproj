@@ -45,6 +45,9 @@
   <PropertyGroup>
     <ApplicationIcon>..\icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -181,6 +184,7 @@
     <Content Include="..\icon.ico">
       <Link>icon.ico</Link>
     </Content>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Resources\map.png" />
     <Content Include="Resources\MapMarker.png" />
