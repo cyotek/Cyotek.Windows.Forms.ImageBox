@@ -60,7 +60,7 @@
       // 
       this.pixelGridDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.pixelGridDemoButton.Location = new System.Drawing.Point(5, 49);
+      this.pixelGridDemoButton.Location = new System.Drawing.Point(5, 48);
       this.pixelGridDemoButton.Name = "pixelGridDemoButton";
       this.pixelGridDemoButton.Size = new System.Drawing.Size(406, 23);
       this.pixelGridDemoButton.TabIndex = 1;
@@ -107,7 +107,7 @@
       // 
       this.minimapDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.minimapDemoButton.Location = new System.Drawing.Point(6, 306);
+      this.minimapDemoButton.Location = new System.Drawing.Point(5, 309);
       this.minimapDemoButton.Name = "minimapDemoButton";
       this.minimapDemoButton.Size = new System.Drawing.Size(406, 23);
       this.minimapDemoButton.TabIndex = 11;
@@ -119,7 +119,7 @@
       // 
       this.resizableSelectionDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.resizableSelectionDemoButton.Location = new System.Drawing.Point(5, 277);
+      this.resizableSelectionDemoButton.Location = new System.Drawing.Point(5, 280);
       this.resizableSelectionDemoButton.Name = "resizableSelectionDemoButton";
       this.resizableSelectionDemoButton.Size = new System.Drawing.Size(406, 23);
       this.resizableSelectionDemoButton.TabIndex = 10;
@@ -131,7 +131,7 @@
       // 
       this.textDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.textDemoButton.Location = new System.Drawing.Point(5, 249);
+      this.textDemoButton.Location = new System.Drawing.Point(5, 251);
       this.textDemoButton.Name = "textDemoButton";
       this.textDemoButton.Size = new System.Drawing.Size(406, 23);
       this.textDemoButton.TabIndex = 9;
@@ -143,7 +143,7 @@
       // 
       this.animatedGifDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.animatedGifDemoButton.Location = new System.Drawing.Point(5, 220);
+      this.animatedGifDemoButton.Location = new System.Drawing.Point(5, 222);
       this.animatedGifDemoButton.Name = "animatedGifDemoButton";
       this.animatedGifDemoButton.Size = new System.Drawing.Size(406, 23);
       this.animatedGifDemoButton.TabIndex = 8;
@@ -155,7 +155,7 @@
       // 
       this.switchImageDuringZoomDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.switchImageDuringZoomDemoButton.Location = new System.Drawing.Point(5, 192);
+      this.switchImageDuringZoomDemoButton.Location = new System.Drawing.Point(5, 193);
       this.switchImageDuringZoomDemoButton.Name = "switchImageDuringZoomDemoButton";
       this.switchImageDuringZoomDemoButton.Size = new System.Drawing.Size(406, 23);
       this.switchImageDuringZoomDemoButton.TabIndex = 7;
@@ -167,7 +167,7 @@
       // 
       this.sizeModeDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.sizeModeDemoButton.Location = new System.Drawing.Point(5, 163);
+      this.sizeModeDemoButton.Location = new System.Drawing.Point(5, 164);
       this.sizeModeDemoButton.Name = "sizeModeDemoButton";
       this.sizeModeDemoButton.Size = new System.Drawing.Size(406, 23);
       this.sizeModeDemoButton.TabIndex = 6;
@@ -179,7 +179,7 @@
       // 
       this.scaledAdornmentsDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.scaledAdornmentsDemoButton.Location = new System.Drawing.Point(5, 134);
+      this.scaledAdornmentsDemoButton.Location = new System.Drawing.Point(5, 135);
       this.scaledAdornmentsDemoButton.Name = "scaledAdornmentsDemoButton";
       this.scaledAdornmentsDemoButton.Size = new System.Drawing.Size(406, 23);
       this.scaledAdornmentsDemoButton.TabIndex = 4;
