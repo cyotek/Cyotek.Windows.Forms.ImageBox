@@ -159,11 +159,11 @@ namespace Cyotek.Windows.Forms
 
     private bool _invertMouse;
 
-    private bool _isPanning;
-
     private bool _limitSelectionToImage;
 
     private ImageBoxPanMode _panMode;
+
+    private ImageBoxPanStyle _panStyle;
 
     private Color _pixelGridColor;
 
@@ -1264,40 +1264,8 @@ namespace Cyotek.Windows.Forms
     [Browsable(false)]
     public virtual bool IsPanning
     {
-      get { return _isPanning; }
-      protected set
-      {
-        if (_isPanning != value)
-        {
-          CancelEventArgs args;
-
-          args = new CancelEventArgs();
-
-          if (value)
-          {
-            this.OnPanStart(args);
-          }
-          else
-          {
-            this.OnPanEnd(EventArgs.Empty);
-          }
-
-          if (!args.Cancel)
-          {
-            _isPanning = value;
-
-            if (value)
-            {
-              _startScrollPosition = this.AutoScrollPosition;
-              this.Cursor = Cursors.SizeAll;
-            }
-            else
-            {
-              this.Cursor = Cursors.Default;
-            }
-          }
-        }
-      }
+      get { return _panStyle != ImageBoxPanStyle.None; }
+      protected set { this.ProcessPanEvents(value ? ImageBoxPanStyle.Standard : ImageBoxPanStyle.None); }
     }
 
     /// <summary>
@@ -3889,9 +3857,9 @@ namespace Cyotek.Windows.Forms
 
       base.OnMouseUp(e);
 
-      doNotProcessClick = this.IsPanning || this.IsSelecting;
+      doNotProcessClick = _panStyle != ImageBoxPanStyle.None || this.IsSelecting;
 
-      if (this.IsPanning)
+      if (_panStyle == ImageBoxPanStyle.Standard)
       {
         this.IsPanning = false;
       }
@@ -3902,7 +3870,7 @@ namespace Cyotek.Windows.Forms
       }
       this.WasDragCancelled = false;
 
-      if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && !this.IsPanning && this.SizeMode == ImageBoxSizeMode.Normal)
+      if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && _panStyle == ImageBoxPanStyle.None && this.SizeMode == ImageBoxSizeMode.Normal)
       {
         if (e.Button == MouseButtons.Left && ModifierKeys == Keys.None)
         {
@@ -4514,33 +4482,33 @@ namespace Cyotek.Windows.Forms
     {
       if (this.CanPan(e.Button))
       {
-        if (!this.IsPanning && this.HScroll | this.VScroll)
+        if (_panStyle == ImageBoxPanStyle.None && this.HScroll | this.VScroll)
         {
           _startMousePosition = e.Location;
           this.IsPanning = true;
         }
+      }
 
-        if (this.IsPanning)
+      if (_panStyle != ImageBoxPanStyle.None)
+      {
+        int x;
+        int y;
+        Point position;
+
+        if (!this.InvertMouse)
         {
-          int x;
-          int y;
-          Point position;
-
-          if (!this.InvertMouse)
-          {
-            x = -_startScrollPosition.X + (_startMousePosition.X - e.Location.X);
-            y = -_startScrollPosition.Y + (_startMousePosition.Y - e.Location.Y);
-          }
-          else
-          {
-            x = -(_startScrollPosition.X + (_startMousePosition.X - e.Location.X));
-            y = -(_startScrollPosition.Y + (_startMousePosition.Y - e.Location.Y));
-          }
-
-          position = new Point(x, y);
-
-          this.UpdateScrollPosition(position);
+          x = -_startScrollPosition.X + (_startMousePosition.X - e.Location.X);
+          y = -_startScrollPosition.Y + (_startMousePosition.Y - e.Location.Y);
         }
+        else
+        {
+          x = -(_startScrollPosition.X + (_startMousePosition.X - e.Location.X));
+          y = -(_startScrollPosition.Y + (_startMousePosition.Y - e.Location.Y));
+        }
+
+        position = new Point(x, y);
+
+        this.UpdateScrollPosition(position);
       }
     }
 
@@ -4852,6 +4820,40 @@ namespace Cyotek.Windows.Forms
     private void PerformZoomOut(ImageBoxActionSources source, bool preservePosition)
     {
       this.PerformZoom(ImageBoxZoomActions.ZoomOut, source, preservePosition);
+    }
+
+    private void ProcessPanEvents(ImageBoxPanStyle panStyle)
+    {
+      if (_panStyle != panStyle)
+      {
+        CancelEventArgs args;
+
+        args = new CancelEventArgs();
+
+        if (panStyle != ImageBoxPanStyle.None)
+        {
+          this.OnPanStart(args);
+        }
+        else
+        {
+          this.OnPanEnd(EventArgs.Empty);
+        }
+
+        if (!args.Cancel)
+        {
+          _panStyle = panStyle;
+
+          if (panStyle != ImageBoxPanStyle.None)
+          {
+            _startScrollPosition = this.AutoScrollPosition;
+            this.Cursor = Cursors.SizeAll;
+          }
+          else
+          {
+            this.Cursor = Cursors.Default;
+          }
+        }
+      }
     }
 
     /// <summary>
