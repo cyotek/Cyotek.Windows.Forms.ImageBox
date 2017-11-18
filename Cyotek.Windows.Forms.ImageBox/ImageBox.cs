@@ -135,6 +135,8 @@ namespace Cyotek.Windows.Forms
 
     private bool _autoCenter;
 
+    private Cursor _currentCursor;
+
     private int _dropShadowSize;
 
     private int _gridCellSize;
@@ -159,7 +161,11 @@ namespace Cyotek.Windows.Forms
 
     private bool _invertMouse;
 
+    private bool _lastPanWasFree;
+
     private bool _limitSelectionToImage;
+
+    private Cursor _panAllCursor;
 
     private ImageBoxPanMode _panMode;
 
@@ -222,6 +228,7 @@ namespace Cyotek.Windows.Forms
       // ReSharper disable DoNotCallOverridableMethodsInConstructor
       this.BeginUpdate();
       _panMode = ImageBoxPanMode.Both;
+      _allowFreePan = true;
       this.WheelScrollsControl = false;
       this.AllowZoom = true;
       this.LimitSelectionToImage = true;
@@ -790,8 +797,8 @@ namespace Cyotek.Windows.Forms
       }
     }
 
-    [Category("")]
-    [DefaultValue("")]
+    [Category("Behavior")]
+    [DefaultValue(true)]
     public virtual bool AllowFreePan
     {
       get { return _allowFreePan; }
@@ -1016,6 +1023,14 @@ namespace Cyotek.Windows.Forms
 
         return new Point(viewport.Width / 2, viewport.Height / 2);
       }
+    }
+
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public override Cursor Cursor
+    {
+      get { return base.Cursor; }
+      set { base.Cursor = value; }
     }
 
     /// <summary>
@@ -2834,6 +2849,12 @@ namespace Cyotek.Windows.Forms
           ImageAnimator.StopAnimate(this.Image, this.OnFrameChangedHandler);
         }
 
+        if (_panAllCursor != null)
+        {
+          _panAllCursor.Dispose();
+          _panAllCursor = null;
+        }
+
         if (_texture != null)
         {
           _texture.Dispose();
@@ -3318,6 +3339,36 @@ namespace Cyotek.Windows.Forms
     {
       this.IsSelecting = false;
       this.OnSelected(EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Gets a cursor suitable for the current state of the control
+    /// </summary>
+    /// <param name="location">The mouse cursor position in client co-ordinates.</param>
+    /// <returns>
+    /// A <see cref="Cursor"/> object suitable for the current state of the control
+    /// </returns>
+    protected virtual Cursor GetCursor(Point location)
+    {
+      Cursor cursor;
+
+      switch (_panStyle)
+      {
+        case ImageBoxPanStyle.None:
+          cursor = Cursors.Default;
+          break;
+        case ImageBoxPanStyle.Standard:
+          cursor = Cursors.SizeAll;
+          break;
+        case ImageBoxPanStyle.Free:
+          cursor = _panAllCursor ?? (_panAllCursor = this.GetPanAllCursor());
+          break;
+        default:
+          cursor = Cursors.Default;
+          break;
+      }
+
+      return cursor;
     }
 
     /// <summary>
@@ -3817,15 +3868,17 @@ namespace Cyotek.Windows.Forms
     {
       base.OnMouseDown(e);
 
+      if (!this.Focused)
+      {
+        this.Focus();
+      }
+
       if (e.Button != MouseButtons.None)
       {
         this.ProcessPanning(e);
       }
 
-      if (!this.Focused)
-      {
-        this.Focus();
-      }
+      this.SetCursor(e.Location);
     }
 
     /// <summary>
@@ -3843,6 +3896,8 @@ namespace Cyotek.Windows.Forms
         this.ProcessPanning(e);
         this.ProcessSelection(e);
       }
+
+      this.SetCursor(e.Location);
     }
 
     /// <summary>
@@ -3857,11 +3912,12 @@ namespace Cyotek.Windows.Forms
 
       base.OnMouseUp(e);
 
-      doNotProcessClick = _panStyle != ImageBoxPanStyle.None || this.IsSelecting;
+      doNotProcessClick = _panStyle != ImageBoxPanStyle.None || this.IsSelecting || _lastPanWasFree;
+      _lastPanWasFree = false;
 
       if (_panStyle == ImageBoxPanStyle.Standard)
       {
-        this.IsPanning = false;
+        this.ProcessPanEvents(ImageBoxPanStyle.None);
       }
 
       if (this.IsSelecting)
@@ -4480,12 +4536,19 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected virtual void ProcessPanning(MouseEventArgs e)
     {
-      if (this.CanPan(e.Button))
+      if (_panStyle == ImageBoxPanStyle.Free && e.Button != MouseButtons.None)
+      {
+        // cancel free panning when any other button is pressed
+        _lastPanWasFree = true;
+        this.ProcessPanEvents(ImageBoxPanStyle.None);
+      }
+      else if (this.CanPan(e.Button))
       {
         if (_panStyle == ImageBoxPanStyle.None && this.HScroll | this.VScroll)
         {
           _startMousePosition = e.Location;
-          this.IsPanning = true;
+
+          this.ProcessPanEvents(e.Button == MouseButtons.Middle && _allowFreePan ? ImageBoxPanStyle.Free : ImageBoxPanStyle.Standard);
         }
       }
 
@@ -4691,6 +4754,15 @@ namespace Cyotek.Windows.Forms
       return result;
     }
 
+    private Cursor GetPanAllCursor()
+    {
+      Type type;
+
+      type = this.GetType();
+
+      return new Cursor(type.Assembly.GetManifestResourceStream(type.Namespace + ".PanAll.cur"));
+    }
+
     /// <summary>
     /// Returns an appropriate zoom level based on the specified action, relative to the current zoom level.
     /// </summary>
@@ -4822,6 +4894,10 @@ namespace Cyotek.Windows.Forms
       this.PerformZoom(ImageBoxZoomActions.ZoomOut, source, preservePosition);
     }
 
+    /// <summary>
+    /// Raises either the PanStart or PanEnd events
+    /// </summary>
+    /// <param name="panStyle">The new pan style.</param>
     private void ProcessPanEvents(ImageBoxPanStyle panStyle)
     {
       if (_panStyle != panStyle)
@@ -4846,13 +4922,31 @@ namespace Cyotek.Windows.Forms
           if (panStyle != ImageBoxPanStyle.None)
           {
             _startScrollPosition = this.AutoScrollPosition;
-            this.Cursor = Cursors.SizeAll;
-          }
-          else
-          {
-            this.Cursor = Cursors.Default;
           }
         }
+      }
+    }
+
+    /// <summary>
+    /// Sets the mouse cursor based on the current control state
+    /// </summary>
+    /// <param name="location">The location of the mouse in client co-ordinates.</param>
+    private void SetCursor(Point location)
+    {
+      Cursor cursor;
+
+      cursor = this.GetCursor(location);
+
+      if (_currentCursor != cursor)
+      {
+        _currentCursor = cursor;
+
+        // have to use this.Cursor and not Cursor.Current
+        // otherwise the cursor gets reset back to Default
+        // after clicking to initiate Free Pan
+        // As a result, the Cursor property has been hidden
+        // to discourage users setting it manually
+        this.Cursor = cursor;
       }
     }
 

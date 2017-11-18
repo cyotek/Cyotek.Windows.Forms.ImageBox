@@ -80,7 +80,11 @@
   <ItemGroup>
     <EmbeddedResource Include="ImageBox.bmp" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="..\res\PanAll.cur">
+      <Link>PanAll.cur</Link>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
