@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+// TODO: Next major version reset AssemblyVersion to ensure no strong name versioning nonsense
+
 [assembly: AssemblyTitle("Cyotek ImageBox Control")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
@@ -14,5 +16,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("d812a438-008c-47f9-926f-8415490cdda1")]
 [assembly: CLSCompliant(true)]
 [assembly: AssemblyVersion("1.2.0.0")]
-[assembly: AssemblyFileVersion("1.2.0.0")]
-[assembly: AssemblyInformationalVersion("1.2.1")]
+[assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyInformationalVersion("1.3.0-Alpha1")]

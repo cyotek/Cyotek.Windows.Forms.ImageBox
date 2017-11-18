@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing;
+ using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms
@@ -113,6 +114,8 @@ namespace Cyotek.Windows.Forms
 
     private static readonly object _eventZoomLevelsChanged = new object();
 
+    private const int _panAllDeadSize = 32;
+
     private const int MaxZoom = 3500;
 
     private const int MinZoom = 1;
@@ -166,6 +169,8 @@ namespace Cyotek.Windows.Forms
     private bool _limitSelectionToImage;
 
     private Cursor _panAllCursor;
+
+    private Bitmap _panAllSymbol;
 
     private ImageBoxPanMode _panMode;
 
@@ -2855,6 +2860,12 @@ namespace Cyotek.Windows.Forms
           _panAllCursor = null;
         }
 
+        if (_panAllSymbol != null)
+        {
+          _panAllSymbol.Dispose();
+          _panAllSymbol = null;
+        }
+
         if (_texture != null)
         {
           _texture.Dispose();
@@ -3361,7 +3372,39 @@ namespace Cyotek.Windows.Forms
           cursor = Cursors.SizeAll;
           break;
         case ImageBoxPanStyle.Free:
-          cursor = _panAllCursor ?? (_panAllCursor = this.GetPanAllCursor());
+          int x;
+          int y;
+          int distanceX;
+          int distanceY;
+          int distance;
+
+          x = location.X - _startMousePosition.X;
+          y = location.Y - _startMousePosition.Y;
+
+          distanceX = location.X - _startMousePosition.X;
+          distanceY = location.Y - _startMousePosition.Y;
+          distance = this.GetDistance(_startMousePosition.X, _startMousePosition.Y, location.X, location.Y);
+
+          if (x >= -_panAllDeadSize && x <= _panAllDeadSize && y >= -_panAllDeadSize && y <= _panAllDeadSize)
+          {
+            cursor = _panAllCursor ?? (_panAllCursor = this.GetPanAllCursor());
+          }
+          else
+          {
+            if (-y > Math.Abs(distanceX))
+            {
+              cursor = Cursors.PanNorth;
+            }
+            else if (y > Math.Abs(distanceX))
+            {
+              cursor = Cursors.PanSouth;
+            }
+            else
+            {
+              cursor = distanceX < 0 ? Cursors.PanWest : Cursors.PanEast;
+            }
+          }
+
           break;
         default:
           cursor = Cursors.Default;
@@ -4019,6 +4062,11 @@ namespace Cyotek.Windows.Forms
         if (!string.IsNullOrEmpty(this.Text) && this.TextDisplayMode != ImageBoxGridDisplayMode.None)
         {
           this.DrawText(e);
+        }
+
+        if (_panStyle == ImageBoxPanStyle.Free)
+        {
+          this.DrawPanAllSymbol(e);
         }
 
         base.OnPaint(e);
@@ -4724,6 +4772,95 @@ namespace Cyotek.Windows.Forms
       return (_panMode & (ImageBoxPanMode)button) != 0 && !this.ViewSize.IsEmpty && (_selectionMode == ImageBoxSelectionMode.None | button != MouseButtons.Left);
     }
 
+    private void DrawPanAllSymbol(PaintEventArgs e)
+    {
+      Graphics g;
+      int x;
+      int y;
+
+      g = e.Graphics;
+
+      if (_panAllSymbol == null)
+      {
+        _panAllSymbol = this.GetPanAllSymbol();
+      }
+
+      x = _startMousePosition.X - (_panAllSymbol.Width >> 1);
+      y = _startMousePosition.Y - (_panAllSymbol.Height >> 1);
+
+      g.DrawImage(_panAllSymbol, x, y);
+
+      //g.SmoothingMode = SmoothingMode.Default;
+      //g.CompositingQuality = CompositingQuality.Default;
+      //g.PixelOffsetMode = PixelOffsetMode.None;
+
+      //int x;
+      //int y;
+
+      //x = 9;
+      //y = 9;
+
+      //Pen pen;
+
+      //pen = Pens.Red;
+
+      //g.DrawLine(pen, x + 1, y, x + 2, y);
+
+      //g.DrawPolygon(Pens.Red, new[]
+      //                        {
+      //                          new Point(x+1,y),
+      //                          new Point(x+2,y),
+      //                          new Point(x+3,y+1),
+      //                          new Point(x+3,y+2),
+      //                          new Point(x+2,y+3),
+      //                          new Point(x+1,y+3),
+      //                          new Point(x,y+2),
+      //                          new Point(x,y+1)
+      //                        });
+    }
+
+    /// <summary>
+    /// Gets the distance between two points.
+    /// </summary>
+    /// <param name="x1">The first x value.</param>
+    /// <param name="y1">The first y value.</param>
+    /// <param name="x2">The second x value.</param>
+    /// <param name="y2">The second y value.</param>
+    /// <returns>
+    /// The distance.
+    /// </returns>
+    private int GetDistance(int x1, int y1, int x2, int y2)
+    {
+      int dx;
+      int dy;
+      double distance;
+
+      dx = x2 - x1;
+      dy = y2 - y1;
+      distance = Math.Sqrt(dx * dx + dy * dy);
+
+      return Convert.ToInt32(distance);
+    }
+
+    /// <summary>
+    /// Gets the distance between two values.
+    /// </summary>
+    /// <param name="x1">The first value.</param>
+    /// <param name="x2">The second value.</param>
+    /// <returns>
+    /// The distance.
+    /// </returns>
+    private int GetDistance(int x1, int x2)
+    {
+      int dx;
+      double distance;
+
+      dx = x2 - x1;
+      distance = Math.Sqrt(dx * dx);
+
+      return Convert.ToInt32(distance);
+    }
+
     /// <summary>
     /// Gets the size of the image.
     /// </summary>
@@ -4761,6 +4898,18 @@ namespace Cyotek.Windows.Forms
       type = this.GetType();
 
       return new Cursor(type.Assembly.GetManifestResourceStream(type.Namespace + ".PanAll.cur"));
+    }
+
+    private Bitmap GetPanAllSymbol()
+    {
+      Type type;
+
+      type = this.GetType();
+
+      using (Stream stream = type.Assembly.GetManifestResourceStream(type.Namespace + ".PanAllSymbol.png"))
+      {
+        return new Bitmap(stream);
+      }
     }
 
     /// <summary>
@@ -4923,6 +5072,8 @@ namespace Cyotek.Windows.Forms
           {
             _startScrollPosition = this.AutoScrollPosition;
           }
+
+          this.Invalidate();
         }
       }
     }
