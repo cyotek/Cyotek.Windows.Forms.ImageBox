@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
- using System.Drawing;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Windows.Forms;
@@ -167,10 +167,6 @@ namespace Cyotek.Windows.Forms
     private bool _lastPanWasFree;
 
     private bool _limitSelectionToImage;
-
-    private Cursor _panAllCursor;
-
-    private Bitmap _panAllSymbol;
 
     private ImageBoxPanMode _panMode;
 
@@ -755,6 +751,40 @@ namespace Cyotek.Windows.Forms
     public static Bitmap CreateCheckerBoxTile()
     {
       return CreateCheckerBoxTile(8, Color.Gainsboro, Color.WhiteSmoke);
+    }
+
+    private static Cursor GetPanAllCursor()
+    {
+      Type type;
+
+      type = typeof(ImageBox);
+
+      return new Cursor(type.Assembly.GetManifestResourceStream(type.Namespace + ".PanAll.cur"));
+    }
+
+    private static Bitmap GetPanAllSymbol()
+    {
+      Type type;
+
+      type = typeof(ImageBox);
+
+      using (Stream stream = type.Assembly.GetManifestResourceStream(type.Namespace + ".PanAllSymbol.png"))
+      {
+        return new Bitmap(stream);
+      }
+    }
+
+    private static void LoadPanResources()
+    {
+      if (_panAllCursor == null)
+      {
+        _panAllCursor = GetPanAllCursor();
+      }
+
+      if (_panAllSymbol == null)
+      {
+        _panAllSymbol = GetPanAllSymbol();
+      }
     }
 
     #endregion
@@ -2854,18 +2884,6 @@ namespace Cyotek.Windows.Forms
           ImageAnimator.StopAnimate(this.Image, this.OnFrameChangedHandler);
         }
 
-        if (_panAllCursor != null)
-        {
-          _panAllCursor.Dispose();
-          _panAllCursor = null;
-        }
-
-        if (_panAllSymbol != null)
-        {
-          _panAllSymbol.Dispose();
-          _panAllSymbol = null;
-        }
-
         if (_texture != null)
         {
           _texture.Dispose();
@@ -3387,7 +3405,7 @@ namespace Cyotek.Windows.Forms
 
           if (x >= -_panAllDeadSize && x <= _panAllDeadSize && y >= -_panAllDeadSize && y <= _panAllDeadSize)
           {
-            cursor = _panAllCursor ?? (_panAllCursor = this.GetPanAllCursor());
+            cursor = _panAllCursor;
           }
           else
           {
@@ -4780,43 +4798,10 @@ namespace Cyotek.Windows.Forms
 
       g = e.Graphics;
 
-      if (_panAllSymbol == null)
-      {
-        _panAllSymbol = this.GetPanAllSymbol();
-      }
-
       x = _startMousePosition.X - (_panAllSymbol.Width >> 1);
       y = _startMousePosition.Y - (_panAllSymbol.Height >> 1);
 
       g.DrawImage(_panAllSymbol, x, y);
-
-      //g.SmoothingMode = SmoothingMode.Default;
-      //g.CompositingQuality = CompositingQuality.Default;
-      //g.PixelOffsetMode = PixelOffsetMode.None;
-
-      //int x;
-      //int y;
-
-      //x = 9;
-      //y = 9;
-
-      //Pen pen;
-
-      //pen = Pens.Red;
-
-      //g.DrawLine(pen, x + 1, y, x + 2, y);
-
-      //g.DrawPolygon(Pens.Red, new[]
-      //                        {
-      //                          new Point(x+1,y),
-      //                          new Point(x+2,y),
-      //                          new Point(x+3,y+1),
-      //                          new Point(x+3,y+2),
-      //                          new Point(x+2,y+3),
-      //                          new Point(x+1,y+3),
-      //                          new Point(x,y+2),
-      //                          new Point(x,y+1)
-      //                        });
     }
 
     /// <summary>
@@ -4889,27 +4874,6 @@ namespace Cyotek.Windows.Forms
       }
 
       return result;
-    }
-
-    private Cursor GetPanAllCursor()
-    {
-      Type type;
-
-      type = this.GetType();
-
-      return new Cursor(type.Assembly.GetManifestResourceStream(type.Namespace + ".PanAll.cur"));
-    }
-
-    private Bitmap GetPanAllSymbol()
-    {
-      Type type;
-
-      type = this.GetType();
-
-      using (Stream stream = type.Assembly.GetManifestResourceStream(type.Namespace + ".PanAllSymbol.png"))
-      {
-        return new Bitmap(stream);
-      }
     }
 
     /// <summary>
@@ -5070,6 +5034,8 @@ namespace Cyotek.Windows.Forms
 
           if (panStyle != ImageBoxPanStyle.None)
           {
+            LoadPanResources();
+
             _startScrollPosition = this.AutoScrollPosition;
           }
 
@@ -5131,6 +5097,14 @@ namespace Cyotek.Windows.Forms
         this.OnZoomed(new ImageBoxZoomEventArgs(actions, source, previousZoom, this.Zoom));
       }
     }
+
+    #endregion
+
+    #region Other
+
+    private static Cursor _panAllCursor;
+
+    private static Bitmap _panAllSymbol;
 
     #endregion
   }
