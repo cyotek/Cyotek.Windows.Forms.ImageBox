@@ -43,7 +43,7 @@
     <AssemblyOriginatorKeyFile>cyopublic.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>..\icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\res\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -187,12 +187,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\icon.ico">
-      <Link>icon.ico</Link>
-    </Content>
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Resources\map.png" />
+    <Content Include="..\res\icon.ico">
+      <Link>icon.ico</Link>
+    </Content>
     <Content Include="Resources\MapMarker.png" />
     <Content Include="Resources\cursor.png" />
     <None Include="Resources\icon-32.png" />
