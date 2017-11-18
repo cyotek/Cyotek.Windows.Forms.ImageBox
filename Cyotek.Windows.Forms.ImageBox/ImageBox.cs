@@ -29,6 +29,8 @@ namespace Cyotek.Windows.Forms
 
     private static readonly object _eventAllowDoubleClickChanged = new object();
 
+    private static readonly object _eventAllowFreePanChanged = new object();
+
     private static readonly object _eventAllowUnfocusedMouseWheelChanged = new object();
 
     private static readonly object _eventAllowZoomChanged = new object();
@@ -62,6 +64,8 @@ namespace Cyotek.Windows.Forms
     private static readonly object _eventLimitSelectionToImageChanged = new object();
 
     private static readonly object _eventPanEnd = new object();
+
+    private static readonly object _eventPanModeChanged = new object();
 
     private static readonly object _eventPanStart = new object();
 
@@ -123,13 +127,13 @@ namespace Cyotek.Windows.Forms
 
     private bool _allowDoubleClick;
 
+    private bool _allowFreePan;
+
     private bool _allowUnfocusedMouseWheel;
 
     private bool _allowZoom;
 
     private bool _autoCenter;
-
-    private bool _autoPan;
 
     private int _dropShadowSize;
 
@@ -158,6 +162,8 @@ namespace Cyotek.Windows.Forms
     private bool _isPanning;
 
     private bool _limitSelectionToImage;
+
+    private ImageBoxPanMode _panMode;
 
     private Color _pixelGridColor;
 
@@ -215,6 +221,7 @@ namespace Cyotek.Windows.Forms
 
       // ReSharper disable DoNotCallOverridableMethodsInConstructor
       this.BeginUpdate();
+      _panMode = ImageBoxPanMode.Both;
       this.WheelScrollsControl = false;
       this.AllowZoom = true;
       this.LimitSelectionToImage = true;
@@ -228,7 +235,6 @@ namespace Cyotek.Windows.Forms
       this.GridColor = Color.Gainsboro;
       this.GridColorAlternate = Color.White;
       this.GridCellSize = 8;
-      this.AutoPan = true;
       this.InterpolationMode = InterpolationMode.NearestNeighbor;
       this.AutoCenter = true;
       this.SelectionColor = SystemColors.Highlight;
@@ -267,6 +273,16 @@ namespace Cyotek.Windows.Forms
     {
       add { this.Events.AddHandler(_eventAllowDoubleClickChanged, value); }
       remove { this.Events.RemoveHandler(_eventAllowDoubleClickChanged, value); }
+    }
+
+    /// <summary>
+    /// Occurs when the AllowFreePan property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler AllowFreePanChanged
+    {
+      add { this.Events.AddHandler(_eventAllowFreePanChanged, value); }
+      remove { this.Events.RemoveHandler(_eventAllowFreePanChanged, value); }
     }
 
     /// <summary>
@@ -437,6 +453,16 @@ namespace Cyotek.Windows.Forms
     {
       add { this.Events.AddHandler(_eventPanEnd, value); }
       remove { this.Events.RemoveHandler(_eventPanEnd, value); }
+    }
+
+    /// <summary>
+    /// Occurs when the PanMode property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler PanModeChanged
+    {
+      add { this.Events.AddHandler(_eventPanModeChanged, value); }
+      remove { this.Events.RemoveHandler(_eventPanModeChanged, value); }
     }
 
     /// <summary>
@@ -764,6 +790,22 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    [Category("")]
+    [DefaultValue("")]
+    public virtual bool AllowFreePan
+    {
+      get { return _allowFreePan; }
+      set
+      {
+        if (_allowFreePan != value)
+        {
+          _allowFreePan = value;
+
+          this.OnAllowFreePanChanged(EventArgs.Empty);
+        }
+      }
+    }
+
     [Category("Behavior")]
     [DefaultValue(false)]
     public virtual bool AllowUnfocusedMouseWheel
@@ -832,14 +874,17 @@ namespace Cyotek.Windows.Forms
     /// <remarks>If this property is set, the SizeToFit property cannot be used.</remarks>
     [DefaultValue(true)]
     [Category("Behavior")]
+    [Obsolete("Use the PanMode property instead", false)]
+    //[Browsable(false)]
     public virtual bool AutoPan
     {
-      get { return _autoPan; }
+      get { return (_panMode & ImageBoxPanMode.Left) != 0; }
       set
       {
-        if (_autoPan != value)
+        if (this.AutoPan != value)
         {
-          _autoPan = value;
+          this.PanMode = value ? _panMode & ImageBoxPanMode.Left : _panMode & ~ImageBoxPanMode.Left;
+
           this.OnAutoPanChanged(EventArgs.Empty);
         }
       }
@@ -1283,6 +1328,22 @@ namespace Cyotek.Windows.Forms
           _limitSelectionToImage = value;
 
           this.OnLimitSelectionToImageChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    [Category("Behavior")]
+    [DefaultValue(typeof(ImageBoxPanMode), "Both")]
+    public virtual ImageBoxPanMode PanMode
+    {
+      get { return _panMode; }
+      set
+      {
+        if (_panMode != value)
+        {
+          _panMode = value;
+
+          this.OnPanModeChanged(EventArgs.Empty);
         }
       }
     }
@@ -2371,7 +2432,8 @@ namespace Cyotek.Windows.Forms
     /// </returns>
     public virtual bool IsPointInImage(Point point)
     {
-      return this.GetImageViewPort().Contains(point);
+      return this.GetImageViewPort().
+                  Contains(point);
     }
 
     /// <summary>
@@ -3396,6 +3458,19 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Raises the <see cref="AllowFreePanChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnAllowFreePanChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      handler = (EventHandler)this.Events[_eventAllowFreePanChanged];
+
+      handler?.Invoke(this, e);
+    }
+
+    /// <summary>
     /// Raises the <see cref="AllowUnfocusedMouseWheelChanged" /> event.
     /// </summary>
     /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
@@ -3774,6 +3849,11 @@ namespace Cyotek.Windows.Forms
     {
       base.OnMouseDown(e);
 
+      if (e.Button != MouseButtons.None)
+      {
+        this.ProcessPanning(e);
+      }
+
       if (!this.Focused)
       {
         this.Focus();
@@ -3790,7 +3870,7 @@ namespace Cyotek.Windows.Forms
     {
       base.OnMouseMove(e);
 
-      if (e.Button == MouseButtons.Left)
+      if (e.Button != MouseButtons.None)
       {
         this.ProcessPanning(e);
         this.ProcessSelection(e);
@@ -3932,6 +4012,19 @@ namespace Cyotek.Windows.Forms
       EventHandler handler;
 
       handler = (EventHandler)this.Events[_eventPanEnd];
+
+      handler?.Invoke(this, e);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="PanModeChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnPanModeChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      handler = (EventHandler)this.Events[_eventPanModeChanged];
 
       handler?.Invoke(this, e);
     }
@@ -4419,7 +4512,7 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected virtual void ProcessPanning(MouseEventArgs e)
     {
-      if (this.AutoPan && !this.ViewSize.IsEmpty && this.SelectionMode == ImageBoxSelectionMode.None)
+      if (this.CanPan(e.Button))
       {
         if (!this.IsPanning && this.HScroll | this.VScroll)
         {
@@ -4503,7 +4596,8 @@ namespace Cyotek.Windows.Forms
           Point imageOffset;
           RectangleF selection;
 
-          imageOffset = this.GetImageViewPort().Location;
+          imageOffset = this.GetImageViewPort().
+                             Location;
 
           if (e.X < _startMousePosition.X)
           {
@@ -4592,6 +4686,11 @@ namespace Cyotek.Windows.Forms
       this.AutoScrollPosition = position;
       this.Invalidate();
       this.OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+    }
+
+    private bool CanPan(MouseButtons button)
+    {
+      return (_panMode & (ImageBoxPanMode)button) != 0 && !this.ViewSize.IsEmpty && (_selectionMode == ImageBoxSelectionMode.None | button != MouseButtons.Left);
     }
 
     /// <summary>
