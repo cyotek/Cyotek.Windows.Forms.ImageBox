@@ -94,6 +94,12 @@
     <Compile Include="ImageBoxEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MiniMapDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MiniMapDemoForm.designer.cs">
+      <DependentUpon>MiniMapDemoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OpenUrlDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -219,6 +225,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DisposedImageDemoForm.resx">
       <DependentUpon>DisposedImageDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MiniMapDemoForm.resx">
+      <DependentUpon>MiniMapDemoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenUrlDialog.resx">
       <DependentUpon>OpenUrlDialog.cs</DependentUpon>

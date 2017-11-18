@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
@@ -15,16 +14,16 @@ namespace Cyotek.Windows.Forms.Demo
 
   internal partial class MainMenuForm : AboutDialog
   {
-    #region Public Constructors
+    #region Constructors
 
     public MainMenuForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     #endregion
 
-    #region Overridden Methods
+    #region Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -59,24 +58,6 @@ namespace Cyotek.Windows.Forms.Demo
       imageBoxDemoButton.Focus();
     }
 
-    #endregion
-
-    #region Private Members
-
-    private void ShowDemo<T>() where T : Form, new()
-    {
-      Cursor.Current = Cursors.WaitCursor;
-
-      using (Form form = new T())
-      {
-        form.ShowDialog(this);
-      }
-    }
-
-    #endregion
-
-    #region Event Handlers
-
     private void animatedGifDemoButton_Click(object sender, EventArgs e)
     {
       this.ShowDemo<AnimatedGifDemoForm>();
@@ -92,6 +73,11 @@ namespace Cyotek.Windows.Forms.Demo
       this.ShowDemo<GeneralDemoForm>();
     }
 
+    private void minimapDemoButton_Click(object sender, EventArgs e)
+    {
+      this.ShowDemo<MiniMapDemoForm>();
+    }
+
     private void pixelGridDemoButton_Click(object sender, EventArgs e)
     {
       this.ShowDemo<PixelGridForm>();
@@ -105,6 +91,17 @@ namespace Cyotek.Windows.Forms.Demo
     private void scaledAdornmentsDemoButton_Click(object sender, EventArgs e)
     {
       this.ShowDemo<ScaledAdornmentsDemoForm>();
+    }
+
+    private void ShowDemo<T>()
+      where T : Form, new()
+    {
+      Cursor.Current = Cursors.WaitCursor;
+
+      using (Form form = new T())
+      {
+        form.ShowDialog(this);
+      }
     }
 
     private void sizeModeDemoButton_Click(object sender, EventArgs e)
