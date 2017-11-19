@@ -60,6 +60,7 @@
     <Compile Include="ImageBoxSelectionMode.cs" />
     <Compile Include="ImageBoxNativeMethods.cs" />
     <Compile Include="ImageBoxSizeMode.cs" />
+    <Compile Include="ImageBoxPanDirection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrollControl.cs">
       <SubType>Component</SubType>

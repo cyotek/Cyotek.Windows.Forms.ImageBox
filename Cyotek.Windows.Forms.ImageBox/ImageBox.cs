@@ -3390,39 +3390,27 @@ namespace Cyotek.Windows.Forms
           cursor = Cursors.SizeAll;
           break;
         case ImageBoxPanStyle.Free:
-          int x;
-          int y;
-          int distanceX;
-          int distanceY;
-          int distance;
-
-          x = location.X - _startMousePosition.X;
-          y = location.Y - _startMousePosition.Y;
-
-          distanceX = location.X - _startMousePosition.X;
-          distanceY = location.Y - _startMousePosition.Y;
-          distance = this.GetDistance(_startMousePosition.X, _startMousePosition.Y, location.X, location.Y);
-
-          if (x >= -_panAllDeadSize && x <= _panAllDeadSize && y >= -_panAllDeadSize && y <= _panAllDeadSize)
+          switch (this.GetPanDirection(location))
           {
-            cursor = _panAllCursor;
-          }
-          else
-          {
-            if (-y > Math.Abs(distanceX))
-            {
+            case ImageBoxPanDirection.None:
+              cursor = _panAllCursor;
+              break;
+            case ImageBoxPanDirection.Up:
               cursor = Cursors.PanNorth;
-            }
-            else if (y > Math.Abs(distanceX))
-            {
+              break;
+            case ImageBoxPanDirection.Down:
               cursor = Cursors.PanSouth;
-            }
-            else
-            {
-              cursor = distanceX < 0 ? Cursors.PanWest : Cursors.PanEast;
-            }
+              break;
+            case ImageBoxPanDirection.Left:
+              cursor = Cursors.PanWest;
+              break;
+            case ImageBoxPanDirection.Right:
+              cursor = Cursors.PanEast;
+              break;
+            default:
+              cursor = _panAllCursor;
+              break;
           }
-
           break;
         default:
           cursor = Cursors.Default;
@@ -4871,6 +4859,42 @@ namespace Cyotek.Windows.Forms
       else
       {
         result = Size.Empty;
+      }
+
+      return result;
+    }
+
+    private ImageBoxPanDirection GetPanDirection(Point location)
+    {
+      ImageBoxPanDirection result;
+      int x;
+      int y;
+
+      x = location.X - _startMousePosition.X;
+      y = location.Y - _startMousePosition.Y;
+
+      if (x >= -_panAllDeadSize && x <= _panAllDeadSize && y >= -_panAllDeadSize && y <= _panAllDeadSize)
+      {
+        result = ImageBoxPanDirection.None;
+      }
+      else
+      {
+        int distanceX;
+
+        distanceX = location.X - _startMousePosition.X;
+
+        if (-y > Math.Abs(distanceX))
+        {
+          result = ImageBoxPanDirection.Up;
+        }
+        else if (y > Math.Abs(distanceX))
+        {
+          result = ImageBoxPanDirection.Down;
+        }
+        else
+        {
+          result = distanceX < 0 ? ImageBoxPanDirection.Left : ImageBoxPanDirection.Right;
+        }
       }
 
       return result;
