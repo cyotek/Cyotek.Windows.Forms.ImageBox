@@ -836,6 +836,12 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether free panning can be used
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if free panning can be used, otherwise <c>false</c>.
+    /// </value>
     [Category("Behavior")]
     [DefaultValue(true)]
     public virtual bool AllowFreePan
@@ -852,6 +858,13 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the mouse wheel is processed event if the <see cref="ImageBox"/> doesn't have focus.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the mouse wheel is processed regardless of focus, otherwise <c>false</c> to only process the mouse wheel when the control has focus.
+    /// </value>
+    /// <remarks>Setting this problem to <c>true</c> could cause conflicting behavior with other controls that also make use of the mouse wheel.</remarks>
     [Category("Behavior")]
     [DefaultValue(false)]
     public virtual bool AllowUnfocusedMouseWheel
@@ -1064,6 +1077,14 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Gets or sets the cursor that is displayed when the mouse pointer is over the control.
+    /// </summary>
+    /// <value>
+    /// A <see cref="T:System.Windows.Forms.Cursor" /> that represents the cursor to display when the
+    /// mouse pointer is over the control.
+    /// </value>
+    /// <seealso cref="P:System.Windows.Forms.Control.Cursor"/>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public override Cursor Cursor
@@ -1354,6 +1375,12 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Gets or sets the how panning is initiated using the mouse
+    /// </summary>
+    /// <value>
+    /// The pan mode.
+    /// </value>
     [Category("Behavior")]
     [DefaultValue(typeof(ImageBoxPanMode), "Both")]
     public virtual ImageBoxPanMode PanMode
@@ -1652,6 +1679,12 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Gets or sets the text padding.
+    /// </summary>
+    /// <value>
+    /// The text padding.
+    /// </value>
     [Category("Appearance")]
     [DefaultValue(typeof(Padding), "0, 0, 0, 0")]
     public virtual Padding TextPadding
@@ -3451,6 +3484,13 @@ namespace Cyotek.Windows.Forms
       return offset;
     }
 
+    /// <summary>
+    /// Gets the interpolation mode used to render the image.
+    /// </summary>
+    /// <returns>
+    /// The interpolation mode.
+    /// </returns>
+    /// <remarks>Returns the value of the <see cref="InterpolationMode"/> property, unless this is set to <code>InterpolationMode.Default</code>, in which case it will use <code>InterpolationMode.HighQualityBicubic</code> for zoomed images otherwise <code>InterpolationMode.NearestNeighbor</code>.</remarks>
     protected virtual InterpolationMode GetInterpolationMode()
     {
       InterpolationMode mode;
