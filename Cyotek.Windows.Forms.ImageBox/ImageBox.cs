@@ -114,6 +114,8 @@ namespace Cyotek.Windows.Forms
 
     private static readonly object _eventZoomLevelsChanged = new object();
 
+    private const int _freePanTimerInterval = 250;
+
     private const int _panAllDeadSize = 32;
 
     private const int MaxZoom = 3500;
@@ -141,6 +143,8 @@ namespace Cyotek.Windows.Forms
     private Cursor _currentCursor;
 
     private int _dropShadowSize;
+
+    private Timer _freePanTimer;
 
     private int _gridCellSize;
 
@@ -2895,6 +2899,8 @@ namespace Cyotek.Windows.Forms
           _gridTile.Dispose();
           _gridTile = null;
         }
+
+        this.KillTimer();
       }
 
       base.Dispose(disposing);
@@ -4778,6 +4784,19 @@ namespace Cyotek.Windows.Forms
       return (_panMode & (ImageBoxPanMode)button) != 0 && !this.ViewSize.IsEmpty && (_selectionMode == ImageBoxSelectionMode.None | button != MouseButtons.Left);
     }
 
+    private void CreateTimer()
+    {
+      _freePanTimer = new Timer
+                      {
+                        Enabled = true,
+                        Interval = _freePanTimerInterval
+                      };
+
+      _freePanTimer.Tick += this.FreePanTimerTickHandler;
+
+      _freePanTimer.Start();
+    }
+
     private void DrawPanAllSymbol(PaintEventArgs e)
     {
       Graphics g;
@@ -4790,6 +4809,43 @@ namespace Cyotek.Windows.Forms
       y = _startMousePosition.Y - (_panAllSymbol.Height >> 1);
 
       g.DrawImage(_panAllSymbol, x, y);
+    }
+
+    private void FreePanTimerTickHandler(object sender, EventArgs e)
+    {
+      Point location;
+      ImageBoxPanDirection direction;
+      int distance;
+      int ox;
+      int oy;
+
+      location = this.PointToClient(MousePosition);
+      direction = this.GetPanDirection(location);
+      distance = this.GetDistance(_startMousePosition.X, _startMousePosition.Y, location.X, location.Y);
+
+      ox = 0;
+      oy = 0;
+
+      switch (direction)
+      {
+        case ImageBoxPanDirection.Up:
+          oy = -distance;
+          break;
+        case ImageBoxPanDirection.Down:
+          oy = +distance;
+          break;
+        case ImageBoxPanDirection.Left:
+          ox = -distance;
+          break;
+        case ImageBoxPanDirection.Right:
+          ox = +distance;
+          break;
+      }
+
+      if (ox != 0 || oy != 0)
+      {
+        this.AdjustScroll(ox, oy);
+      }
     }
 
     /// <summary>
@@ -4954,6 +5010,17 @@ namespace Cyotek.Windows.Forms
       this.Invalidate();
     }
 
+    private void KillTimer()
+    {
+      if (_freePanTimer != null)
+      {
+        _freePanTimer.Stop();
+        _freePanTimer.Tick -= this.FreePanTimerTickHandler;
+        _freePanTimer.Dispose();
+        _freePanTimer = null;
+      }
+    }
+
     /// <summary>
     /// Called when the animation frame changes.
     /// </summary>
@@ -5043,6 +5110,8 @@ namespace Cyotek.Windows.Forms
 
         args = new CancelEventArgs();
 
+        this.KillTimer();
+
         if (panStyle != ImageBoxPanStyle.None)
         {
           this.OnPanStart(args);
@@ -5058,7 +5127,12 @@ namespace Cyotek.Windows.Forms
 
           if (panStyle != ImageBoxPanStyle.None)
           {
-            LoadPanResources();
+            if (panStyle == ImageBoxPanStyle.Free)
+            {
+              LoadPanResources();
+
+              this.CreateTimer();
+            }
 
             _startScrollPosition = this.AutoScrollPosition;
           }
