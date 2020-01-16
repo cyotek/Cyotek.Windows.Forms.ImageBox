@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -21,7 +21,8 @@ namespace Cyotek.Windows.Forms
   [DefaultProperty("Image")]
   [ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp")]
   [ToolboxItem(true)]
-  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */ public class ImageBox : VirtualScrollableControl
+  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */
+  public class ImageBox : VirtualScrollableControl
   {
     #region Constants
 
@@ -200,6 +201,7 @@ namespace Cyotek.Windows.Forms
     private int _zoom;
 
     private ZoomLevelCollection _zoomLevels;
+    private bool _isSelecting;
 
     #endregion
 
@@ -1263,7 +1265,17 @@ namespace Cyotek.Windows.Forms
     /// </value>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public virtual bool IsSelecting { get; protected set; }
+    public virtual bool IsSelecting
+    {
+      get
+      {
+        return _isSelecting;
+      }
+      protected set
+      {
+        _isSelecting = value;
+      }
+    }
 
     /// <summary>
     ///   Gets or sets a value indicating whether selection regions should be limited to the image boundaries.
@@ -2903,9 +2915,9 @@ namespace Cyotek.Windows.Forms
           alpha = feather - feather / glowSize * i;
 
           using (Pen pen = new Pen(Color.FromArgb(alpha, this.ImageBorderColor), i)
-                           {
-                             LineJoin = LineJoin.Round
-                           })
+          {
+            LineJoin = LineJoin.Round
+          })
           {
             g.DrawPath(pen, path);
           }
@@ -3222,9 +3234,9 @@ namespace Cyotek.Windows.Forms
         offsetY = Math.Abs(this.AutoScrollPosition.Y) % pixelSize;
 
         using (Pen pen = new Pen(this.PixelGridColor)
-                         {
-                           DashStyle = DashStyle.Dot
-                         })
+        {
+          DashStyle = DashStyle.Dot
+        })
         {
           for (float x = viewport.Left + pixelSize - offsetX; x < viewport.Right; x += pixelSize)
           {
@@ -4535,13 +4547,16 @@ namespace Cyotek.Windows.Forms
           w = w / (float)this.ZoomFactor;
           h = h / (float)this.ZoomFactor;
 
-          selection = new RectangleF(x, y, w, h);
-          if (this.LimitSelectionToImage)
+          if (w != 0 && h != 0)
           {
-            selection = this.FitRectangle(selection);
-          }
+            selection = new RectangleF(x, y, w, h);
+            if (this.LimitSelectionToImage)
+            {
+              selection = this.FitRectangle(selection);
+            }
 
-          this.SelectionRegion = selection;
+            this.SelectionRegion = selection;
+          }
         }
       }
     }
