@@ -1,5 +1,13 @@
 # Cyotek ImageBox Change Log
 
+## 1.2.2
+
+### Fixed
+
+* Any exception during image painting will now be caught, and the error text printed
+  in lieu of the image
+* Fixed a crash that could occur when dragging a selection if the selection was empty
+
 ## 1.2
 
 ### Changed

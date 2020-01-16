@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Cyotek.Windows.Forms
 {
   // Cyotek ImageBox
-  // Copyright (c) 2010-2017 Cyotek Ltd.
+  // Copyright (c) 2010-2020 Cyotek Ltd.
   // http://cyotek.com
   // http://cyotek.com/blog/tag/imagebox
 
@@ -2953,13 +2953,9 @@ namespace Cyotek.Windows.Forms
 
         g.DrawImage(this.Image, this.GetImageViewPort(), this.GetSourceImageRegion(), GraphicsUnit.Pixel);
       }
-      catch (ArgumentException)
+      catch (Exception ex)
       {
-        // ignore errors that occur due to the image being disposed
-      }
-      catch (OutOfMemoryException)
-      {
-        // also ignore errors that occur due to running out of memory
+        TextRenderer.DrawText(g, ex.Message, this.Font, this.ClientRectangle, this.ForeColor, this.BackColor, TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.WordBreak | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
       }
 
       g.PixelOffsetMode = currentPixelOffsetMode;
