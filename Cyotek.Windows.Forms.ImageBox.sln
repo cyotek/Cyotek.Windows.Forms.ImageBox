@@ -1,12 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyotek.Windows.Forms.ImageBox.Demo", "Cyotek.Windows.Forms.ImageBox.Demo\Cyotek.Windows.Forms.ImageBox.Demo.csproj", "{86D47D73-B3E7-4ED3-86EA-7BFC0C978A7B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9F169B78-70FD-456A-BB48-2AA470938D38} = {9F169B78-70FD-456A-BB48-2AA470938D38}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyotek.Windows.Forms.ImageBox", "Cyotek.Windows.Forms.ImageBox\Cyotek.Windows.Forms.ImageBox.csproj", "{4159C8D3-C18D-4BED-8BE6-9BAD1B0CA4F6}"
 EndProject
@@ -17,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{
 		license.txt = license.txt
 		readme.md = readme.md
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyotek.Windows.Forms.ImageBox.Design", "Cyotek.Windows.Forms.ImageBox.Design\Cyotek.Windows.Forms.ImageBox.Design.csproj", "{9F169B78-70FD-456A-BB48-2AA470938D38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,12 +29,11 @@ Global
 		{4159C8D3-C18D-4BED-8BE6-9BAD1B0CA4F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4159C8D3-C18D-4BED-8BE6-9BAD1B0CA4F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4159C8D3-C18D-4BED-8BE6-9BAD1B0CA4F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F169B78-70FD-456A-BB48-2AA470938D38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F169B78-70FD-456A-BB48-2AA470938D38}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F169B78-70FD-456A-BB48-2AA470938D38}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F169B78-70FD-456A-BB48-2AA470938D38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B787B36C-2267-415E-916C-4EC4BE12C010}
 	EndGlobalSection
 EndGlobal
