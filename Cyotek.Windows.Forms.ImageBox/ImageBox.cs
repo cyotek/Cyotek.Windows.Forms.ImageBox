@@ -766,6 +766,10 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the mouse wheel can be used to scroll a <see cref="ImageBox"/> control when it does not have focus
+    /// </summary>
+    /// <value> <c>true</c> if the mouse wheel can be used when the control does not have focus, otherwise <c>false</c>. </value>
     [Category("Behavior")]
     [DefaultValue(false)]
     public virtual bool AllowUnfocusedMouseWheel
@@ -1581,6 +1585,8 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    /// <summary>   Gets or sets the padding that surrounds text. </summary>
+    /// <value> A <see cref="Padding"/> representing the spacing characteristics around the control's text. </value>
     [Category("Appearance")]
     [DefaultValue(typeof(Padding), "0, 0, 0, 0")]
     public virtual Padding TextPadding
@@ -3323,6 +3329,8 @@ namespace Cyotek.Windows.Forms
       return offset;
     }
 
+    /// <summary>   Gets the interpolation mode to use for rendering the image. </summary>
+    /// <returns>   The value of the <see cref="InterpolationMode"/> property, or a suitable value based on the current zoom level when set to Default. </returns>
     protected virtual InterpolationMode GetInterpolationMode()
     {
       InterpolationMode mode;

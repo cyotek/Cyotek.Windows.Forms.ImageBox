@@ -17,7 +17,7 @@
     <Copyright>Copyright © 2010-2021 Cyotek Ltd. All Rights Reserved.</Copyright>
     <AssemblyTitle>$(Product)</AssemblyTitle>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\res\Cyotek.Windows.Forms.ImageBox.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\res\$(AssemblyName).snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,13 +33,8 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <!--<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>-->
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
-
-  <!-- <PropertyGroup> -->
-    <!-- Temporary -->
-    <!-- <NoWarn>1701;1702;612;618</NoWarn> -->
-  <!-- </PropertyGroup> -->
 
   <!-- Package Support -->
 
@@ -47,10 +42,10 @@
      <Authors>Cyotek</Authors> 
      <Owners>Cyotek</Owners> 
      <VersionPrefix>2.0.0</VersionPrefix> 
-     <VersionSuffix>alpha.1</VersionSuffix> 
+     <VersionSuffix>alpha.2</VersionSuffix> 
      <PackageLicenseExpression>MIT</PackageLicenseExpression> 
-     <PackageProjectUrl>https://github.com/cyotek/Cyotek.Windows.Forms.ImageBox</PackageProjectUrl> 
-     <RepositoryUrl>https://github.com/cyotek/Cyotek.Windows.Forms.ImageBox.git</RepositoryUrl> 
+     <PackageProjectUrl>https://github.com/cyotek/$(AssemblyName)</PackageProjectUrl> 
+     <RepositoryUrl>https://github.com/cyotek/$(AssemblyName).git</RepositoryUrl> 
      <Description>The ImageBox is a custom control for displaying images with built in support for zooming, scrolling, panning, region selection, virtual modes, and much more.</Description> 
      <PublishRepositoryUrl>true</PublishRepositoryUrl> 
      <IncludeSymbols>true</IncludeSymbols> 
