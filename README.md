@@ -155,7 +155,7 @@ Derived from this [answer][wheelscroll1] and [this
 answer][wheelscroll2] on StackOverflow as suggested by
 [mtagliaf][mtagliaf].
 
-[blogtag]: http://www.cyotek.com/blog/tag/colorpicker
+[blogtag]: https://devblog.cyotek.com/tag/imagebox
 
 [icon]: res/icon-32.png
 [imageboxscreen]: res/ib-general.png
