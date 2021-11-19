@@ -7,7 +7,7 @@ displaying images. It supports zooming, scrolling, panning,
 region selection and much more! In addition to the traditional
 mode of binding to an `Image`, you can also use a *virtual
 mode*, and provide your own custom drawing whilst retaining all
-the `ImageBox` functionality. 
+the `ImageBox` functionality.
 
 The `ImageBox` control also provides convenient helper methods
 for translating points, rectangles and sizes according to the
@@ -107,53 +107,29 @@ The `ImageBox` control is licensed under the MIT License. See
 
 ## Acknowledgements
 
-## Graphics
+### Graphics
 
-### Toolbar Icons
+* Toolbar icons in demonstration program from [Fugue
+  Icons][fugue]
+* [Treasure map][bogbrush] graphic created by
+  [~Bogbrush][bogbrush]
+* [Marker icon][iconlandmarker] used in Scaled Adornments
+  demonstrated created by [Icons Land][iconland]
+* [Large Wall Map][shadedreliefmap] image by [Tom
+  Patterson][shadedrelief].
+* [Newtons cradle animation book 2.gif][animation].
 
-Toolbar icons in demonstration program from [Fugue Icons][fugue].
+### Code
 
-### The Dread Pirate Hale's Legendary Treasure Map
-
-[Treasure map][bogbrush] graphic created by
-[~Bogbrush][bogbrush]
-
-### Marker Icon
-
-[Marker icon][iconlandmarker] used in Scaled Adornments
-demonstrated created by [Icons Land][iconland].
-
-### World Maps
-
-[Large Wall Map][shadedreliefmap] image by [Tom Patterson][shadedrelief].
-
-### Animated GIF's
-
-[Newtons cradle animation book 2.gif][animation].
-
-## Code
-
-### ScrollControl
-
-Original `ScrollControl` code by [Scott Crawford][sukiware].
-
-### Pixel Clipping
-
-Original information on pixel clipping [Rotem][pixelclippingbug].
-
-### Animated GIF Support
-
-Contribution by [Eggy][eggy]
-
-### Removal of .NET 3.5 requirement
-
-Contribution by [dahmage][dagmage].
-
-### Focusless Mouse Wheel Scroll
-
-Derived from this [answer][wheelscroll1] and [this
-answer][wheelscroll2] on StackOverflow as suggested by
-[mtagliaf][mtagliaf].
+* Original `ScrollControl` code by [Scott Crawford][sukiware]
+* Original information on pixel clipping by
+  [Rotem][pixelclippingbug]
+* Animated GIF support based on a contribution by [Eggy][eggy]
+* Removal of .NET 3.5 requirement contributed by
+  [dahmage][dagmage]
+* Focusless mouse wheel scroll derived from this
+  [answer][wheelscroll1] and [this answer][wheelscroll2] on
+  StackOverflow as suggested by [mtagliaf][mtagliaf]
 
 [blogtag]: https://devblog.cyotek.com/tag/imagebox
 
