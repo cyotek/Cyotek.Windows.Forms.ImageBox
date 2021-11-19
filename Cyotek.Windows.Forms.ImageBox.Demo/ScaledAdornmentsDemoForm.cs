@@ -1,42 +1,44 @@
-﻿using System;
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using Cyotek.Windows.Forms.Demo.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using Cyotek.Windows.Forms.Demo.Properties;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
-  internal partial class ScaledAdornmentsDemoForm : BaseForm
+  internal partial class ScaledAdornmentsDemoForm : DemonstrationBaseForm
   {
-    #region Fields
+    #region Private Fields
 
     private List<Point> _landmarks;
 
     private Bitmap _markerImage;
 
-    #endregion
+    #endregion Private Fields
 
-    #region Constructors
+    #region Public Constructors
 
     public ScaledAdornmentsDemoForm()
     {
       this.InitializeComponent();
     }
 
-    #endregion
+    #endregion Public Constructors
 
-    #region Methods
+    #region Protected Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -52,10 +54,9 @@ namespace Cyotek.Windows.Forms.Demo
       this.AddLandmark(new Point(779, 239));
     }
 
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      AboutDialog.ShowAboutDialog();
-    }
+    #endregion Protected Methods
+
+    #region Private Methods
 
     private void AddLandmark(Point point)
     {
@@ -64,12 +65,7 @@ namespace Cyotek.Windows.Forms.Demo
       _landmarks.Add(new Point(point.X, point.Y));
     }
 
-    private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      this.Close();
-    }
-
-    private void imageBox_MouseClick(object sender, MouseEventArgs e)
+    private void ImageBox_MouseClick(object sender, MouseEventArgs e)
     {
       if (imageBox.IsPointInImage(e.Location))
       {
@@ -81,17 +77,17 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void imageBox_MouseLeave(object sender, EventArgs e)
+    private void ImageBox_MouseLeave(object sender, EventArgs e)
     {
       positionToolStripStatusLabel.Text = string.Empty;
     }
 
-    private void imageBox_MouseMove(object sender, MouseEventArgs e)
+    private void ImageBox_MouseMove(object sender, MouseEventArgs e)
     {
       this.UpdateCursorPosition(e.Location);
     }
 
-    private void imageBox_Paint(object sender, PaintEventArgs e)
+    private void ImageBox_Paint(object sender, PaintEventArgs e)
     {
       Graphics g;
       GraphicsState originalState;
@@ -130,7 +126,7 @@ namespace Cyotek.Windows.Forms.Demo
       g.Restore(originalState);
     }
 
-    private void scaleAdornmentsCheckBox_CheckedChanged(object sender, EventArgs e)
+    private void ScaleAdornmentsCheckBox_CheckedChanged(object sender, EventArgs e)
     {
       imageBox.Invalidate();
     }
@@ -144,6 +140,6 @@ namespace Cyotek.Windows.Forms.Demo
       positionToolStripStatusLabel.Text = this.FormatPoint(point);
     }
 
-    #endregion
+    #endregion Private Methods
   }
 }

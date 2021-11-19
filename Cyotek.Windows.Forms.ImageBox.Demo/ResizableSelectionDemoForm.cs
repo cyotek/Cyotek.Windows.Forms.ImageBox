@@ -1,4 +1,15 @@
-﻿using System;
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -6,16 +17,7 @@ using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
-  internal partial class ResizableSelectionDemoForm : BaseForm
+  internal partial class ResizableSelectionDemoForm : DemonstrationBaseForm
   {
     #region Public Constructors
 
@@ -24,9 +26,9 @@ namespace Cyotek.Windows.Forms.Demo
       InitializeComponent();
     }
 
-    #endregion
+    #endregion Public Constructors
 
-    #region Overridden Methods
+    #region Protected Methods
 
     /// <summary>
     /// Raises the <see cref="E:System.Windows.Forms.Form.Load"/> event.
@@ -52,9 +54,141 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    #endregion
+    #endregion Protected Methods
 
-    #region Private Members
+    #region Private Methods
+
+    private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      AboutDialog.ShowAboutDialog();
+    }
+
+    private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      this.Close();
+    }
+
+    private void EnabledCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+    {
+      DragHandleAnchor anchor;
+
+      anchor = (DragHandleAnchor)enabledCheckedListBox.Items[e.Index];
+
+      imageBox.DragHandles[anchor].Enabled = e.NewValue == CheckState.Checked;
+
+      imageBox.Invalidate(); // No change events on the DragHandleCollection class so need to manually refresh
+    }
+
+    private void ImageBox_MouseLeave(object sender, EventArgs e)
+    {
+      cursorToolStripStatusLabel.Text = string.Empty;
+    }
+
+    private void ImageBox_MouseMove(object sender, MouseEventArgs e)
+    {
+      this.UpdateCursorPosition(e.Location);
+    }
+
+    private void ImageBox_Resize(object sender, EventArgs e)
+    {
+      this.UpdateStatusBar();
+    }
+
+    private void ImageBox_Scroll(object sender, ScrollEventArgs e)
+    {
+      this.UpdateStatusBar();
+    }
+
+    private void ImageBox_Selected(object sender, EventArgs e)
+    {
+      this.UpdateStatusBar();
+      eventsListBox.AddEvent((Control)sender, "Selected");
+    }
+
+    private void ImageBox_Selecting(object sender, ImageBoxCancelEventArgs e)
+    {
+      eventsListBox.AddEvent((Control)sender, "Selecting", new Dictionary<string, object>
+                                                           {
+                                                             {
+                                                               "Location", e.Location
+                                                             },
+                                                             {
+                                                               "Cancel", e.Cancel
+                                                             }
+                                                           });
+    }
+
+    private void ImageBox_SelectionMoved(object sender, EventArgs e)
+    {
+      this.SetStatus(string.Empty);
+
+      eventsListBox.AddEvent((Control)sender, "SelectionMoved");
+    }
+
+    private void ImageBox_SelectionMoving(object sender, CancelEventArgs e)
+    {
+      this.SetStatus("Press escape to cancel move.");
+
+      eventsListBox.AddEvent((Control)sender, "SelectionMoving", new Dictionary<string, object>
+                                                                 {
+                                                                   {
+                                                                     "Cancel", e.Cancel
+                                                                   }
+                                                                 });
+    }
+
+    private void ImageBox_SelectionRegionChanged(object sender, EventArgs e)
+    {
+      selectionToolStripStatusLabel.Text = this.FormatRectangle(imageBox.SelectionRegion);
+    }
+
+    private void ImageBox_SelectionResized(object sender, EventArgs e)
+    {
+      this.SetStatus(string.Empty);
+
+      eventsListBox.AddEvent((Control)sender, "SelectionResized");
+    }
+
+    private void ImageBox_SelectionResizing(object sender, CancelEventArgs e)
+    {
+      this.SetStatus("Press escape to cancel resize.");
+
+      eventsListBox.AddEvent((Control)sender, "SelectionResizing", new Dictionary<string, object>
+                                                                   {
+                                                                     {
+                                                                       "Cancel", e.Cancel
+                                                                     }
+                                                                   });
+    }
+
+    private void ImageBox_VirtualDraw(object sender, PaintEventArgs e)
+    {
+      RectangleF bounds;
+
+      // draw the virtual area
+      bounds = imageBox.GetOffsetRectangle(new RectangleF(PointF.Empty, imageBox.VirtualSize));
+
+      using (Brush brush = new SolidBrush(Color.FromArgb(128, Color.Goldenrod)))
+      {
+        e.Graphics.FillRectangle(brush, bounds);
+      }
+      e.Graphics.DrawRectangle(Pens.DarkGoldenrod, bounds.X, bounds.Y, bounds.Width, bounds.Height);
+    }
+
+    private void ImageBox_Zoomed(object sender, ImageBoxZoomEventArgs e)
+    {
+      this.UpdateStatusBar();
+    }
+
+    private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      imageBox.SelectAll();
+    }
+
+    private void SelectNoneToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      imageBox.SelectNone();
+    }
 
     private void SetStatus(string message)
     {
@@ -82,143 +216,7 @@ namespace Cyotek.Windows.Forms.Demo
       zoomToolStripStatusLabel.Text = string.Format("{0}%", imageBox.Zoom);
     }
 
-    #endregion
-
-    #region Event Handlers
-
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      AboutDialog.ShowAboutDialog();
-    }
-
-    private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      this.Close();
-    }
-
-    private void enabledCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
-    {
-      DragHandleAnchor anchor;
-
-      anchor = (DragHandleAnchor)enabledCheckedListBox.Items[e.Index];
-
-      imageBox.DragHandles[anchor].Enabled = e.NewValue == CheckState.Checked;
-
-      imageBox.Invalidate(); // No change events on the DragHandleCollection class so need to manually refresh
-    }
-
-    private void imageBox_MouseLeave(object sender, EventArgs e)
-    {
-      cursorToolStripStatusLabel.Text = string.Empty;
-    }
-
-    private void imageBox_MouseMove(object sender, MouseEventArgs e)
-    {
-      this.UpdateCursorPosition(e.Location);
-    }
-
-    private void imageBox_Resize(object sender, EventArgs e)
-    {
-      this.UpdateStatusBar();
-    }
-
-    private void imageBox_Scroll(object sender, ScrollEventArgs e)
-    {
-      this.UpdateStatusBar();
-    }
-
-    private void imageBox_Selected(object sender, EventArgs e)
-    {
-      this.UpdateStatusBar();
-      eventsListBox.AddEvent((Control)sender, "Selected");
-    }
-
-    private void imageBox_Selecting(object sender, ImageBoxCancelEventArgs e)
-    {
-      eventsListBox.AddEvent((Control)sender, "Selecting", new Dictionary<string, object>
-                                                           {
-                                                             {
-                                                               "Location", e.Location
-                                                             },
-                                                             {
-                                                               "Cancel", e.Cancel
-                                                             }
-                                                           });
-    }
-
-    private void imageBox_SelectionMoved(object sender, EventArgs e)
-    {
-      this.SetStatus(string.Empty);
-
-      eventsListBox.AddEvent((Control)sender, "SelectionMoved");
-    }
-
-    private void imageBox_SelectionMoving(object sender, CancelEventArgs e)
-    {
-      this.SetStatus("Press escape to cancel move.");
-
-      eventsListBox.AddEvent((Control)sender, "SelectionMoving", new Dictionary<string, object>
-                                                                 {
-                                                                   {
-                                                                     "Cancel", e.Cancel
-                                                                   }
-                                                                 });
-    }
-
-    private void imageBox_SelectionRegionChanged(object sender, EventArgs e)
-    {
-      selectionToolStripStatusLabel.Text = this.FormatRectangle(imageBox.SelectionRegion);
-    }
-
-    private void imageBox_SelectionResized(object sender, EventArgs e)
-    {
-      this.SetStatus(string.Empty);
-
-      eventsListBox.AddEvent((Control)sender, "SelectionResized");
-    }
-
-    private void imageBox_SelectionResizing(object sender, CancelEventArgs e)
-    {
-      this.SetStatus("Press escape to cancel resize.");
-
-      eventsListBox.AddEvent((Control)sender, "SelectionResizing", new Dictionary<string, object>
-                                                                   {
-                                                                     {
-                                                                       "Cancel", e.Cancel
-                                                                     }
-                                                                   });
-    }
-
-    private void imageBox_VirtualDraw(object sender, PaintEventArgs e)
-    {
-      RectangleF bounds;
-
-      // draw the virtual area
-      bounds = imageBox.GetOffsetRectangle(new RectangleF(PointF.Empty, imageBox.VirtualSize));
-
-      using (Brush brush = new SolidBrush(Color.FromArgb(128, Color.Goldenrod)))
-      {
-        e.Graphics.FillRectangle(brush, bounds);
-      }
-      e.Graphics.DrawRectangle(Pens.DarkGoldenrod, bounds.X, bounds.Y, bounds.Width, bounds.Height);
-    }
-
-    private void imageBox_Zoomed(object sender, ImageBoxZoomEventArgs e)
-    {
-      this.UpdateStatusBar();
-    }
-
-    private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      imageBox.SelectAll();
-    }
-
-    private void selectNoneToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      imageBox.SelectNone();
-    }
-
-    private void visibleCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+    private void VisibleCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
     {
       DragHandleAnchor anchor;
 
@@ -229,6 +227,6 @@ namespace Cyotek.Windows.Forms.Demo
       imageBox.Invalidate(); // No change events on the DragHandleCollection class so need to manually refresh
     }
 
-    #endregion
+    #endregion Private Methods
   }
 }

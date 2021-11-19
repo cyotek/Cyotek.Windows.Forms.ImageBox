@@ -1,4 +1,15 @@
-﻿using System;
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -6,22 +17,13 @@ using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
-  internal partial class SwitchImageDuringZoomDemoForm : BaseForm
+  internal partial class SwitchImageDuringZoomDemoForm : DemonstrationBaseForm
   {
-    #region Instance Fields
+    #region Private Fields
 
     private int _virtualZoom;
 
-    #endregion
+    #endregion Private Fields
 
     #region Public Constructors
 
@@ -30,9 +32,34 @@ namespace Cyotek.Windows.Forms.Demo
       InitializeComponent();
     }
 
-    #endregion
+    #endregion Public Constructors
 
-    #region Overridden Methods
+    #region Private Properties
+
+    private IDictionary<string, Image> ImageCache { get; set; }
+
+    private bool IsUpdatingMap { get; set; }
+
+    private int Layer { get; set; }
+
+    private List<MapLayerData> LayerData { get; set; }
+
+    private bool ResetZoomOnUpdate { get; set; }
+
+    private int VirtualZoom
+    {
+      get { return _virtualZoom; }
+      set
+      {
+        _virtualZoom = value;
+
+        this.UpdateZoomLabel();
+      }
+    }
+
+    #endregion Private Properties
+
+    #region Protected Methods
 
     /// <summary>
     /// Clean up any resources being used.
@@ -87,34 +114,9 @@ namespace Cyotek.Windows.Forms.Demo
       imageBox.CenterAt(3350, 800);
     }
 
-    #endregion
+    #endregion Protected Methods
 
-    #region Private Properties
-
-    private IDictionary<string, Image> ImageCache { get; set; }
-
-    private bool IsUpdatingMap { get; set; }
-
-    private int Layer { get; set; }
-
-    private List<MapLayerData> LayerData { get; set; }
-
-    private bool ResetZoomOnUpdate { get; set; }
-
-    private int VirtualZoom
-    {
-      get { return _virtualZoom; }
-      set
-      {
-        _virtualZoom = value;
-
-        this.UpdateZoomLabel();
-      }
-    }
-
-    #endregion
-
-    #region Private Members
+    #region Private Methods
 
     private void AddLayer(string name, int lowerZoom, int upperZoom)
     {
@@ -158,7 +160,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     private string GetMapFileName(string name)
     {
-      return Path.GetFullPath(Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\maps"), Path.ChangeExtension(name, ".jpg")));
+      return Path.GetFullPath(Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\maps"), Path.ChangeExtension(name, ".jpg")));
     }
 
     private Image GetMapImage(string name)
@@ -184,6 +186,63 @@ namespace Cyotek.Windows.Forms.Demo
       this.SetMessage(string.Format("Switching to image {0}.jpg", name));
 
       return result;
+    }
+
+    private void ImageBox_MouseLeave(object sender, EventArgs e)
+    {
+      cursorToolStripStatusLabel.Text = string.Empty;
+    }
+
+    private void ImageBox_MouseMove(object sender, MouseEventArgs e)
+    {
+      this.UpdateCursorPosition(e.Location);
+    }
+
+    private void ImageBox_ZoomChanged(object sender, EventArgs e)
+    {
+      this.UpdateZoomLabel();
+    }
+
+    private void ImageBox_Zoomed(object sender, ImageBoxZoomEventArgs e)
+    {
+      if ((e.Source & ImageBoxActionSources.User) == ImageBoxActionSources.User)
+      {
+        if ((e.Actions & ImageBoxZoomActions.ActualSize) == ImageBoxZoomActions.ActualSize)
+        {
+          this.VirtualZoom = 0;
+          this.ResetZoomOnUpdate = true;
+        }
+        else if ((e.Actions & ImageBoxZoomActions.ZoomIn) == ImageBoxZoomActions.ZoomIn)
+        {
+          this.VirtualZoom++;
+        }
+        else if ((e.Actions & ImageBoxZoomActions.ZoomOut) == ImageBoxZoomActions.ZoomOut)
+        {
+          this.VirtualZoom--;
+        }
+
+        // TODO: Currently the ZoomChanged and Zoomed events are raised after the zoom level has changed, but before any
+        // actions such as modifying scrollbars occur. This means methods such as GetSourceImageRegion will return the
+        // wrong X and Y values. Until this is fixed, using a timer to trigger the change.
+        // However, if you had lots of map changes to make then using a timer would be a good idea regardless; for example
+        // if the user rapdily zooms through the available levels, they'll have a smoother experience if you only load
+        // the data once they've stopped zooming
+        refreshMapTimer.Stop();
+        refreshMapTimer.Start();
+      }
+    }
+
+    private void RefreshMapTimer_Tick(object sender, EventArgs e)
+    {
+      refreshMapTimer.Stop();
+
+      this.UpdateMap();
+    }
+
+    private void ResetMessageTimer_Tick(object sender, EventArgs e)
+    {
+      resetMessageTimer.Stop();
+      messageLabel.Text = string.Empty;
     }
 
     private void SetMessage(string message)
@@ -270,80 +329,9 @@ namespace Cyotek.Windows.Forms.Demo
       zoomToolStripStatusLabel.Text = string.Format("{0}% [{1}]", imageBox.Zoom, this.VirtualZoom);
     }
 
-    #endregion
+    #endregion Private Methods
 
-    #region Event Handlers
-
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      AboutDialog.ShowAboutDialog();
-    }
-
-    private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      this.Close();
-    }
-
-    private void imageBox_MouseLeave(object sender, EventArgs e)
-    {
-      cursorToolStripStatusLabel.Text = string.Empty;
-    }
-
-    private void imageBox_MouseMove(object sender, MouseEventArgs e)
-    {
-      this.UpdateCursorPosition(e.Location);
-    }
-
-    private void imageBox_ZoomChanged(object sender, EventArgs e)
-    {
-      this.UpdateZoomLabel();
-    }
-
-    private void imageBox_Zoomed(object sender, ImageBoxZoomEventArgs e)
-    {
-      if ((e.Source & ImageBoxActionSources.User) == ImageBoxActionSources.User)
-      {
-        if ((e.Actions & ImageBoxZoomActions.ActualSize) == ImageBoxZoomActions.ActualSize)
-        {
-          this.VirtualZoom = 0;
-          this.ResetZoomOnUpdate = true;
-        }
-        else if ((e.Actions & ImageBoxZoomActions.ZoomIn) == ImageBoxZoomActions.ZoomIn)
-        {
-          this.VirtualZoom++;
-        }
-        else if ((e.Actions & ImageBoxZoomActions.ZoomOut) == ImageBoxZoomActions.ZoomOut)
-        {
-          this.VirtualZoom--;
-        }
-
-        // TODO: Currently the ZoomChanged and Zoomed events are raised after the zoom level has changed, but before any
-        // actions such as modifying scrollbars occur. This means methods such as GetSourceImageRegion will return the
-        // wrong X and Y values. Until this is fixed, using a timer to trigger the change.
-        // However, if you had lots of map changes to make then using a timer would be a good idea regardless; for example
-        // if the user rapdily zooms through the available levels, they'll have a smoother experience if you only load
-        // the data once they've stopped zooming
-        refreshMapTimer.Stop();
-        refreshMapTimer.Start();
-      }
-    }
-
-    private void refreshMapTimer_Tick(object sender, EventArgs e)
-    {
-      refreshMapTimer.Stop();
-
-      this.UpdateMap();
-    }
-
-    private void resetMessageTimer_Tick(object sender, EventArgs e)
-    {
-      resetMessageTimer.Stop();
-      messageLabel.Text = string.Empty;
-    }
-
-    #endregion
-
-    #region Nested Types
+    #region Private Structs
 
     private struct MapLayerData
     {
@@ -355,9 +343,9 @@ namespace Cyotek.Windows.Forms.Demo
 
       public int UpperZoom { get; set; }
 
-      #endregion
+      #endregion Public Properties
     }
 
-    #endregion
+    #endregion Private Structs
   }
 }

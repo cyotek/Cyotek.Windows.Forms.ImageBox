@@ -1,30 +1,91 @@
-﻿using System;
+// Reading DOOM WAD files
+// https://www.cyotek.com/blog/reading-doom-wad-files
+
+// Writing DOOM WAD files
+// https://www.cyotek.com/blog/writing-doom-wad-files
+
+// Copyright (c) 2020-2021 Cyotek Ltd. All Rights Reserved.
+
+// This work is licensed under the MIT License.
+// See LICENSE.txt for the full text
+
+// Found this example useful?
+// https://www.cyotek.com/contribute
+
+using Cyotek.Windows.Forms.Demo.Properties;
+using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
-  internal partial class BaseForm : Form
+  internal class BaseForm : System.Windows.Forms.Form
   {
-    #region Public Constructors
+    #region Protected Constructors
 
-    public BaseForm()
+    protected BaseForm()
     {
-      this.InitializeComponent();
+      base.MaximizeBox = false;
+      base.MinimizeBox = false;
+      base.ShowIcon = false;
+      base.ShowInTaskbar = false;
+      base.StartPosition = FormStartPosition.CenterParent;
+      this.AutoScaleDimensions = new SizeF(6F, 13F);
+      this.AutoScaleMode = AutoScaleMode.Font;
+      base.Icon = Resources.ApplicationIcon;
     }
 
-    #endregion
+    #endregion Protected Constructors
 
-    #region Overridden Methods
+    #region Public Properties
+
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public override Font Font
+    {
+      get => base.Font;
+      set => base.Font = value;
+    }
+
+    [DefaultValue(false)]
+    public new bool MaximizeBox
+    {
+      get => base.MaximizeBox;
+      set => base.MaximizeBox = value;
+    }
+
+    [DefaultValue(false)]
+    public new bool MinimizeBox
+    {
+      get => base.MinimizeBox;
+      set => base.MinimizeBox = value;
+    }
+
+    [DefaultValue(false)]
+    public new bool ShowIcon
+    {
+      get => base.ShowIcon;
+      set => base.ShowIcon = value;
+    }
+
+    [DefaultValue(false)]
+    public new bool ShowInTaskbar
+    {
+      get => base.ShowInTaskbar;
+      set => base.ShowInTaskbar = value;
+    }
+
+    [DefaultValue(typeof(FormStartPosition), "CenterParent")]
+    public new FormStartPosition StartPosition
+    {
+      get => base.StartPosition;
+      set => base.StartPosition = value;
+    }
+
+    #endregion Public Properties
+
+    #region Protected Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -43,20 +104,6 @@ namespace Cyotek.Windows.Forms.Demo
       Cursor.Current = Cursors.Default;
     }
 
-    #endregion
-
-    #region Protected Members
-
-    protected string FormatPoint(Point point)
-    {
-      return string.Format("X:{0}, Y:{1}", point.X, point.Y);
-    }
-
-    protected string FormatRectangle(RectangleF rect)
-    {
-      return string.Format("X:{0}, Y:{1}, W:{2}, H:{3}", (int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
-    }
-
-    #endregion
+    #endregion Protected Methods
   }
 }

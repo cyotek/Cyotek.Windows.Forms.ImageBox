@@ -1,21 +1,23 @@
-﻿using System;
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
-  internal partial class DragTestForm : BaseForm
+  internal partial class DragTestForm : DemonstrationBaseForm
   {
-    #region Instance Fields
+    #region Private Fields
 
     private RectangleF _dragItem;
 
@@ -23,7 +25,7 @@ namespace Cyotek.Windows.Forms.Demo
 
     private bool _isDragging;
 
-    #endregion
+    #endregion Private Fields
 
     #region Public Constructors
 
@@ -34,21 +36,11 @@ namespace Cyotek.Windows.Forms.Demo
       _dragItem = new RectangleF(32, 32, 64, 32);
     }
 
-    #endregion
+    #endregion Public Constructors
 
-    #region Event Handlers
+    #region Private Methods
 
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      AboutDialog.ShowAboutDialog();
-    }
-
-    private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      this.Close();
-    }
-
-    private void imageBox_MouseDown(object sender, MouseEventArgs e)
+    private void ImageBox_MouseDown(object sender, MouseEventArgs e)
     {
       Point imagePoint;
 
@@ -60,7 +52,7 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void imageBox_MouseMove(object sender, MouseEventArgs e)
+    private void ImageBox_MouseMove(object sender, MouseEventArgs e)
     {
       Point imagePoint;
 
@@ -92,12 +84,12 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void imageBox_MouseUp(object sender, MouseEventArgs e)
+    private void ImageBox_MouseUp(object sender, MouseEventArgs e)
     {
       _isDragging = false;
     }
 
-    private void imageBox_Selecting(object sender, ImageBoxCancelEventArgs e)
+    private void ImageBox_Selecting(object sender, ImageBoxCancelEventArgs e)
     {
       if (_dragItem.Contains(imageBox.PointToImage(e.Location)))
       {
@@ -105,7 +97,7 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void imageBox_SelectionRegionChanged(object sender, EventArgs e)
+    private void ImageBox_SelectionRegionChanged(object sender, EventArgs e)
     {
       if (!imageBox.SelectionRegion.IsEmpty)
       {
@@ -114,7 +106,7 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void imageBox_VirtualDraw(object sender, PaintEventArgs e)
+    private void ImageBox_VirtualDraw(object sender, PaintEventArgs e)
     {
       RectangleF bounds;
 
@@ -139,6 +131,6 @@ namespace Cyotek.Windows.Forms.Demo
       e.Graphics.DrawRectangle(Pens.Blue, bounds.X, bounds.Y, bounds.Width, bounds.Height);
     }
 
-    #endregion
+    #endregion Private Methods
   }
 }

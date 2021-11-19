@@ -1,40 +1,42 @@
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using Cyotek.Windows.Forms.Demo.Properties;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
-using Cyotek.Windows.Forms.Demo.Properties;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2017 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
-  internal partial class GeneralDemoForm : BaseForm
+  internal partial class GeneralDemoForm : DemonstrationBaseForm
   {
-    #region Fields
+    #region Private Fields
 
     private Image _previewImage;
 
-    #endregion
+    #endregion Private Fields
 
-    #region Constructors
+    #region Public Constructors
 
     public GeneralDemoForm()
     {
       this.InitializeComponent();
     }
 
-    #endregion
+    #endregion Public Constructors
 
-    #region Methods
+    #region Protected Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -47,17 +49,21 @@ namespace Cyotek.Windows.Forms.Demo
       imageBox.AllowClickZoom = true;
     }
 
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+    #endregion Protected Methods
+
+    #region Private Methods
+
+    private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
     {
       AboutDialog.ShowAboutDialog();
     }
 
-    private void actualSizeToolStripButton_Click(object sender, EventArgs e)
+    private void ActualSizeToolStripButton_Click(object sender, EventArgs e)
     {
       imageBox.ActualSize();
     }
 
-    private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+    private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
     {
       try
       {
@@ -82,16 +88,16 @@ namespace Cyotek.Windows.Forms.Demo
       }
 
       using (Pen pen = new Pen(color, penWidth)
-                       {
-                         DashStyle = DashStyle.Dot,
-                         DashCap = DashCap.Round
-                       })
+      {
+        DashStyle = DashStyle.Dot,
+        DashCap = DashCap.Round
+      })
       {
         graphics.DrawRectangle(pen, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
       }
     }
 
-    private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+    private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
     {
       this.Close();
     }
@@ -106,7 +112,7 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void fromURLToolStripMenuItem_Click(object sender, EventArgs e)
+    private void FromURLToolStripMenuItem_Click(object sender, EventArgs e)
     {
       using (OpenUrlDialog dialog = new OpenUrlDialog())
       {
@@ -117,17 +123,17 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void imageBox_MouseLeave(object sender, EventArgs e)
+    private void ImageBox_MouseLeave(object sender, EventArgs e)
     {
       cursorToolStripStatusLabel.Text = string.Empty;
     }
 
-    private void imageBox_MouseMove(object sender, MouseEventArgs e)
+    private void ImageBox_MouseMove(object sender, MouseEventArgs e)
     {
       this.UpdateCursorPosition(e.Location);
     }
 
-    private void imageBox_Paint(object sender, PaintEventArgs e)
+    private void ImageBox_Paint(object sender, PaintEventArgs e)
     {
       // highlight the image
       if (showImageRegionToolStripButton.Checked)
@@ -142,37 +148,37 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void imageBox_Resize(object sender, EventArgs e)
+    private void ImageBox_Resize(object sender, EventArgs e)
     {
       this.UpdateStatusBar();
     }
 
-    private void imageBox_Scroll(object sender, ScrollEventArgs e)
+    private void ImageBox_Scroll(object sender, ScrollEventArgs e)
     {
       this.UpdateStatusBar();
     }
 
-    private void imageBox_Selected(object sender, EventArgs e)
+    private void ImageBox_Selected(object sender, EventArgs e)
     {
       this.UpdatePreviewImage();
     }
 
-    private void imageBox_SelectionRegionChanged(object sender, EventArgs e)
+    private void ImageBox_SelectionRegionChanged(object sender, EventArgs e)
     {
       selectionToolStripStatusLabel.Text = this.FormatRectangle(imageBox.SelectionRegion);
     }
 
-    private void imageBox_ZoomChanged(object sender, EventArgs e)
+    private void ImageBox_ZoomChanged(object sender, EventArgs e)
     {
       this.UpdateStatusBar();
     }
 
-    private void imageBox_ZoomLevelsChanged(object sender, EventArgs e)
+    private void ImageBox_ZoomLevelsChanged(object sender, EventArgs e)
     {
       this.FillZoomLevels();
     }
 
-    private void openFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+    private void OpenFromFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
       using (FileDialog dialog = new OpenFileDialog())
       {
@@ -224,17 +230,17 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+    private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
     {
       imageBox.SelectAll();
     }
 
-    private void selectNoneToolStripMenuItem_Click(object sender, EventArgs e)
+    private void SelectNoneToolStripMenuItem_Click(object sender, EventArgs e)
     {
       imageBox.SelectNone();
     }
 
-    private void showImageRegionToolStripButton_Click(object sender, EventArgs e)
+    private void ShowImageRegionToolStripButton_Click(object sender, EventArgs e)
     {
       imageBox.Invalidate();
     }
@@ -275,12 +281,12 @@ namespace Cyotek.Windows.Forms.Demo
       zoomToolStripStatusLabel.Text = string.Format("{0}%", imageBox.Zoom);
     }
 
-    private void zoomInToolStripButton_Click(object sender, EventArgs e)
+    private void ZoomInToolStripButton_Click(object sender, EventArgs e)
     {
       imageBox.ZoomIn();
     }
 
-    private void zoomLevelsToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
+    private void ZoomLevelsToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
     {
       int zoom;
 
@@ -289,11 +295,11 @@ namespace Cyotek.Windows.Forms.Demo
       imageBox.Zoom = zoom;
     }
 
-    private void zoomOutToolStripButton_Click(object sender, EventArgs e)
+    private void ZoomOutToolStripButton_Click(object sender, EventArgs e)
     {
       imageBox.ZoomOut();
     }
 
-    #endregion
+    #endregion Private Methods
   }
 }

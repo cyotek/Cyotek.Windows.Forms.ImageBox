@@ -130,15 +130,15 @@
       this.imageBox.Name = "imageBox";
       this.imageBox.Size = new System.Drawing.Size(597, 293);
       this.imageBox.TabIndex = 0;
-      this.imageBox.Selected += new System.EventHandler<System.EventArgs>(this.imageBox_Selected);
-      this.imageBox.SelectionRegionChanged += new System.EventHandler(this.imageBox_SelectionRegionChanged);
-      this.imageBox.ZoomChanged += new System.EventHandler(this.imageBox_ZoomChanged);
-      this.imageBox.ZoomLevelsChanged += new System.EventHandler(this.imageBox_ZoomLevelsChanged);
-      this.imageBox.Scroll += new System.Windows.Forms.ScrollEventHandler(this.imageBox_Scroll);
-      this.imageBox.Paint += new System.Windows.Forms.PaintEventHandler(this.imageBox_Paint);
-      this.imageBox.MouseLeave += new System.EventHandler(this.imageBox_MouseLeave);
-      this.imageBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imageBox_MouseMove);
-      this.imageBox.Resize += new System.EventHandler(this.imageBox_Resize);
+      this.imageBox.Selected += new System.EventHandler<System.EventArgs>(this.ImageBox_Selected);
+      this.imageBox.SelectionRegionChanged += new System.EventHandler(this.ImageBox_SelectionRegionChanged);
+      this.imageBox.ZoomChanged += new System.EventHandler(this.ImageBox_ZoomChanged);
+      this.imageBox.ZoomLevelsChanged += new System.EventHandler(this.ImageBox_ZoomLevelsChanged);
+      this.imageBox.Scroll += new System.Windows.Forms.ScrollEventHandler(this.ImageBox_Scroll);
+      this.imageBox.Paint += new System.Windows.Forms.PaintEventHandler(this.ImageBox_Paint);
+      this.imageBox.MouseLeave += new System.EventHandler(this.ImageBox_MouseLeave);
+      this.imageBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageBox_MouseMove);
+      this.imageBox.Resize += new System.EventHandler(this.ImageBox_Resize);
       // 
       // previewImageBox
       // 
@@ -248,7 +248,7 @@
       this.openFromFileToolStripButton.Name = "openFromFileToolStripButton";
       this.openFromFileToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.openFromFileToolStripButton.Text = "&Open";
-      this.openFromFileToolStripButton.Click += new System.EventHandler(this.openFromFileToolStripMenuItem_Click);
+      this.openFromFileToolStripButton.Click += new System.EventHandler(this.OpenFromFileToolStripMenuItem_Click);
       // 
       // toolStripSeparator8
       // 
@@ -264,7 +264,7 @@
       this.showImageRegionToolStripButton.Name = "showImageRegionToolStripButton";
       this.showImageRegionToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.showImageRegionToolStripButton.Text = "Show Image Region";
-      this.showImageRegionToolStripButton.Click += new System.EventHandler(this.showImageRegionToolStripButton_Click);
+      this.showImageRegionToolStripButton.Click += new System.EventHandler(this.ShowImageRegionToolStripButton_Click);
       // 
       // showSourceImageRegionToolStripButton
       // 
@@ -275,7 +275,7 @@
       this.showSourceImageRegionToolStripButton.Name = "showSourceImageRegionToolStripButton";
       this.showSourceImageRegionToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.showSourceImageRegionToolStripButton.Text = "Show Source Image Region";
-      this.showSourceImageRegionToolStripButton.Click += new System.EventHandler(this.showImageRegionToolStripButton_Click);
+      this.showSourceImageRegionToolStripButton.Click += new System.EventHandler(this.ShowImageRegionToolStripButton_Click);
       // 
       // toolStripSeparator1
       // 
@@ -290,7 +290,7 @@
       this.actualSizeToolStripButton.Name = "actualSizeToolStripButton";
       this.actualSizeToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.actualSizeToolStripButton.Text = "Actual Size";
-      this.actualSizeToolStripButton.Click += new System.EventHandler(this.actualSizeToolStripButton_Click);
+      this.actualSizeToolStripButton.Click += new System.EventHandler(this.ActualSizeToolStripButton_Click);
       // 
       // zoomInToolStripButton
       // 
@@ -300,7 +300,7 @@
       this.zoomInToolStripButton.Name = "zoomInToolStripButton";
       this.zoomInToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.zoomInToolStripButton.Text = "Zoom In";
-      this.zoomInToolStripButton.Click += new System.EventHandler(this.zoomInToolStripButton_Click);
+      this.zoomInToolStripButton.Click += new System.EventHandler(this.ZoomInToolStripButton_Click);
       // 
       // zoomOutToolStripButton
       // 
@@ -310,7 +310,7 @@
       this.zoomOutToolStripButton.Name = "zoomOutToolStripButton";
       this.zoomOutToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.zoomOutToolStripButton.Text = "Zoom Out";
-      this.zoomOutToolStripButton.Click += new System.EventHandler(this.zoomOutToolStripButton_Click);
+      this.zoomOutToolStripButton.Click += new System.EventHandler(this.ZoomOutToolStripButton_Click);
       // 
       // toolStripSeparator2
       // 
@@ -325,7 +325,7 @@
       this.selectAllToolStripButton.Name = "selectAllToolStripButton";
       this.selectAllToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.selectAllToolStripButton.Text = "Select All";
-      this.selectAllToolStripButton.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+      this.selectAllToolStripButton.Click += new System.EventHandler(this.SelectAllToolStripMenuItem_Click);
       // 
       // selectNoneToolStripButton
       // 
@@ -335,14 +335,14 @@
       this.selectNoneToolStripButton.Name = "selectNoneToolStripButton";
       this.selectNoneToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.selectNoneToolStripButton.Text = "Select None";
-      this.selectNoneToolStripButton.Click += new System.EventHandler(this.selectNoneToolStripMenuItem_Click);
+      this.selectNoneToolStripButton.Click += new System.EventHandler(this.SelectNoneToolStripMenuItem_Click);
       // 
       // zoomLevelsToolStripComboBox
       // 
       this.zoomLevelsToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.zoomLevelsToolStripComboBox.Name = "zoomLevelsToolStripComboBox";
       this.zoomLevelsToolStripComboBox.Size = new System.Drawing.Size(121, 25);
-      this.zoomLevelsToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.zoomLevelsToolStripComboBox_SelectedIndexChanged);
+      this.zoomLevelsToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.ZoomLevelsToolStripComboBox_SelectedIndexChanged);
       // 
       // toolStripSeparator4
       // 
@@ -388,14 +388,14 @@
       this.openFromFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
       this.openFromFileToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
       this.openFromFileToolStripMenuItem.Text = "From &File...";
-      this.openFromFileToolStripMenuItem.Click += new System.EventHandler(this.openFromFileToolStripMenuItem_Click);
+      this.openFromFileToolStripMenuItem.Click += new System.EventHandler(this.OpenFromFileToolStripMenuItem_Click);
       // 
       // fromURLToolStripMenuItem
       // 
       this.fromURLToolStripMenuItem.Name = "fromURLToolStripMenuItem";
       this.fromURLToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
       this.fromURLToolStripMenuItem.Text = "From &URL...";
-      this.fromURLToolStripMenuItem.Click += new System.EventHandler(this.fromURLToolStripMenuItem_Click);
+      this.fromURLToolStripMenuItem.Click += new System.EventHandler(this.FromURLToolStripMenuItem_Click);
       // 
       // toolStripSeparator3
       // 
@@ -408,7 +408,7 @@
       this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
       this.exitToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
       this.exitToolStripMenuItem.Text = "&Close";
-      this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+      this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
       // 
       // editToolStripMenuItem
       // 
@@ -429,7 +429,7 @@
       this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
       this.copyToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
       this.copyToolStripMenuItem.Text = "&Copy";
-      this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+      this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItem_Click);
       // 
       // toolStripSeparator6
       // 
@@ -443,7 +443,7 @@
       this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
       this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
       this.selectAllToolStripMenuItem.Text = "Select &All";
-      this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+      this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.SelectAllToolStripMenuItem_Click);
       // 
       // selectNoneToolStripMenuItem
       // 
@@ -452,7 +452,7 @@
       this.selectNoneToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
       this.selectNoneToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
       this.selectNoneToolStripMenuItem.Text = "Select &None";
-      this.selectNoneToolStripMenuItem.Click += new System.EventHandler(this.selectNoneToolStripMenuItem_Click);
+      this.selectNoneToolStripMenuItem.Click += new System.EventHandler(this.SelectNoneToolStripMenuItem_Click);
       // 
       // viewToolStripMenuItem
       // 
@@ -484,7 +484,7 @@
       this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
       this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
       this.aboutToolStripMenuItem.Text = "&About...";
-      this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+      this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
       // 
       // GeneralDemoForm
       // 

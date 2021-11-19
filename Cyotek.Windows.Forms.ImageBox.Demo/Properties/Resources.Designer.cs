@@ -19,7 +19,7 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -81,6 +81,16 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon ApplicationIcon {
+            get {
+                object obj = ResourceManager.GetObject("ApplicationIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
         ////* Author: Nicolas Hery - http://nicolashery.com */
         ////* Version: 29d1c5bc36da364ad5aa86946d420b7bbc54a253 */
@@ -120,9 +130,9 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Icon {
+        internal static System.Drawing.Bitmap IconA {
             get {
-                object obj = ResourceManager.GetObject("Icon", resourceCulture);
+                object obj = ResourceManager.GetObject("IconA", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -130,9 +140,19 @@ namespace Cyotek.Windows.Forms.Demo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap IconA {
+        internal static System.Drawing.Bitmap IconLarge {
             get {
-                object obj = ResourceManager.GetObject("IconA", resourceCulture);
+                object obj = ResourceManager.GetObject("IconLarge", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconSmall {
+            get {
+                object obj = ResourceManager.GetObject("IconSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

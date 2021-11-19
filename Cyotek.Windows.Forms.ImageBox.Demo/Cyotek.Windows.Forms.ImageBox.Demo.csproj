@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -55,6 +55,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\res\icon.ico" Link="Resources\icon.ico" />
+    <None Include="..\res\icon-32.png" Link="Resources\icon-32.png" />
+    <None Include="..\res\icon-64.png" Link="Resources\icon-64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\CHANGELOG.md" Link="docs\CHANGELOG.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -62,6 +68,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\LICENSE.txt" Link="docs\LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\res\icon-32.png" Link="docs\icon-32.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\res\ib-general.png" Link="docs\ib-general.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\res\ib-pixelgrid.png" Link="docs\ib-pixelgrid.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\res\ib-virtual.png" Link="docs\ib-virtual.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
@@ -24,7 +24,7 @@ namespace Cyotek.Windows.Forms.Demo
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new MainMenuForm());
+      Application.Run(new MainForm());
     }
 
     #endregion

@@ -1,42 +1,44 @@
-﻿// Cyotek ImageBox
-// Copyright (c) 2010-2017 Cyotek Ltd.
-// http://cyotek.com
+// Cyotek ImageBox
 // http://cyotek.com/blog/tag/imagebox
 
-// Licensed under the MIT License. See license.txt for the full text.
+// Copyright (c) 2010-2021 Cyotek Ltd.
 
-// If you use this control in your applications, attribution, donations or contributions are welcome.
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
 
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using Cyotek.Windows.Forms.Demo.Properties;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Cyotek.Windows.Forms.Demo.Properties;
 
 // demonstration was derived based on the following forum post
 // https://forums.cyotek.com/imagebox/problem-when-trying-to-create-a-minimap-using-imagebox/
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  internal partial class MiniMapDemoForm : BaseForm
+  internal partial class MiniMapDemoForm : DemonstrationBaseForm
   {
-    #region Fields
+    #region Private Fields
 
     private Rectangle _minimap;
 
     private Bitmap _thumbnailBitmap;
 
-    #endregion
+    #endregion Private Fields
 
-    #region Constructors
+    #region Public Constructors
 
     public MiniMapDemoForm()
     {
       this.InitializeComponent();
     }
 
-    #endregion
+    #endregion Public Constructors
 
-    #region Methods
+    #region Protected Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -47,17 +49,11 @@ namespace Cyotek.Windows.Forms.Demo
       this.UpdateMiniMap();
     }
 
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      AboutDialog.ShowAboutDialog();
-    }
+    #endregion Protected Methods
 
-    private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      this.Close();
-    }
+    #region Private Methods
 
-    private void miniMapImageBox_Paint(object sender, PaintEventArgs e)
+    private void MiniMapImageBox_Paint(object sender, PaintEventArgs e)
     {
       if (_thumbnailBitmap != null)
       {
@@ -116,7 +112,7 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void splitContainer_SplitterMoved(object sender, SplitterEventArgs e)
+    private void SplitContainer_SplitterMoved(object sender, SplitterEventArgs e)
     {
       this.RefreshMiniMap();
     }
@@ -187,26 +183,26 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    private void zoomImageBox_ImageChanged(object sender, EventArgs e)
+    private void ZoomImageBox_ImageChanged(object sender, EventArgs e)
     {
       this.RefreshMiniMap();
     }
 
-    private void zoomImageBox_Resize(object sender, EventArgs e)
+    private void ZoomImageBox_Resize(object sender, EventArgs e)
     {
       this.RefreshMiniMap();
     }
 
-    private void zoomImageBox_Scroll(object sender, ScrollEventArgs e)
+    private void ZoomImageBox_Scroll(object sender, ScrollEventArgs e)
     {
       this.UpdateMiniMap();
     }
 
-    private void zoomImageBox_Zoomed(object sender, ImageBoxZoomEventArgs e)
+    private void ZoomImageBox_Zoomed(object sender, ImageBoxZoomEventArgs e)
     {
       this.UpdateMiniMap();
     }
 
-    #endregion
+    #endregion Private Methods
   }
 }

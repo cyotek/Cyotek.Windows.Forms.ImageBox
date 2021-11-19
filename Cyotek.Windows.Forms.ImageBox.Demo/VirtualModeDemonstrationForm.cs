@@ -1,19 +1,21 @@
-﻿using System;
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
-  internal partial class VirtualModeDemonstrationForm : BaseForm
+  internal partial class VirtualModeDemonstrationForm : DemonstrationBaseForm
   {
     #region Public Constructors
 
@@ -22,9 +24,9 @@ namespace Cyotek.Windows.Forms.Demo
       this.InitializeComponent();
     }
 
-    #endregion
+    #endregion Public Constructors
 
-    #region Overridden Methods
+    #region Protected Methods
 
     protected override void OnLoad(EventArgs e)
     {
@@ -33,21 +35,11 @@ namespace Cyotek.Windows.Forms.Demo
       propertyGrid.SelectItem("VirtualSize");
     }
 
-    #endregion
+    #endregion Protected Methods
 
-    #region Event Handlers
+    #region Private Methods
 
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      AboutDialog.ShowAboutDialog();
-    }
-
-    private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      this.Close();
-    }
-
-    private void imageBox_VirtualDraw(object sender, PaintEventArgs e)
+    private void ImageBox_VirtualDraw(object sender, PaintEventArgs e)
     {
       RectangleF bounds;
 
@@ -66,6 +58,6 @@ namespace Cyotek.Windows.Forms.Demo
       }
     }
 
-    #endregion
+    #endregion Private Methods
   }
 }

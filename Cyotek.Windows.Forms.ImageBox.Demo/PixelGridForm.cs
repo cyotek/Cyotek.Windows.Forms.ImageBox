@@ -1,17 +1,19 @@
-﻿using System;
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using System;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
-  internal partial class PixelGridForm : BaseForm
+  internal partial class PixelGridForm : DemonstrationBaseForm
   {
     #region Public Constructors
 
@@ -29,20 +31,6 @@ namespace Cyotek.Windows.Forms.Demo
       base.OnLoad(e);
 
       propertyGrid.SelectItem("ShowPixelGrid");
-    }
-
-    #endregion
-
-    #region Event Handlers
-
-    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      AboutDialog.ShowAboutDialog();
-    }
-
-    private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      this.Close();
     }
 
     #endregion
