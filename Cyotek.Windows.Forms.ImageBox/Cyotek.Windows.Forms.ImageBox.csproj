@@ -56,7 +56,7 @@
      <IncludeSymbols>true</IncludeSymbols> 
      <SymbolPackageFormat>snupkg</SymbolPackageFormat> 
      <PackageIcon>icon-128.png</PackageIcon> 
-     <PackageReadmeFile>nuget-readme.md</PackageReadmeFile>
+     <!--<PackageReadmeFile>nuget-readme.md</PackageReadmeFile>-->
      <PackageTags>image picturebox form control imagebox cyotek</PackageTags>
    </PropertyGroup> 
 
@@ -64,10 +64,10 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
   
-  <!-- <ItemGroup> -->
-    <!-- <None Include="..\res\icon-128.png" Pack="true" PackagePath="\" /> -->
-    <!-- <None Include="..\docs\nuget-readme.md" Pack="true" PackagePath="\" /> -->
-  <!-- </ItemGroup> -->
+   <ItemGroup> 
+     <None Include="..\res\icon-128.png" Pack="true" PackagePath="\" /> 
+     <!--<None Include="..\docs\nuget-readme.md" Pack="true" PackagePath="\" />--> 
+   </ItemGroup> 
 
   <!-- Compatibility options for .NET 3.5 -->
 
