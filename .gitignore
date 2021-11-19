@@ -5,6 +5,7 @@ _NCrunch_*
 nuget/
 packages/
 maps/
+dist/
 
 *.ncrunch*
 *.user

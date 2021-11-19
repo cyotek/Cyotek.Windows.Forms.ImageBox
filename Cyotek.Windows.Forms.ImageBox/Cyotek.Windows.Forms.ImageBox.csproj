@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;net35;net40;net452;net462;net472</TargetFrameworks>
+    <TargetFrameworks>net48;net35;net40;net452;net462;net472;net5.0-windows;net6.0-windows;netcoreapp3.1</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>Cyotek.Windows.Forms</RootNamespace>
   </PropertyGroup>
@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <!--<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>-->
   </PropertyGroup>
 
   <!-- <PropertyGroup> -->
