@@ -21,6 +21,16 @@ namespace Cyotek.Windows.Forms.Demo
   {
     #region Private Fields
 
+    private IDictionary<string, Image> _imageCache;
+
+    private bool _isUpdatingMap;
+
+    private int _layer;
+
+    private List<MapLayerData> _layerData;
+
+    private bool _resetZoomOnUpdate;
+
     private int _virtualZoom;
 
     #endregion Private Fields
@@ -29,22 +39,14 @@ namespace Cyotek.Windows.Forms.Demo
 
     public SwitchImageDuringZoomDemoForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     #endregion Public Constructors
 
     #region Private Properties
 
-    private IDictionary<string, Image> ImageCache { get; set; }
-
-    private bool IsUpdatingMap { get; set; }
-
-    private int Layer { get; set; }
-
-    private List<MapLayerData> LayerData { get; set; }
-
-    private bool ResetZoomOnUpdate { get; set; }
+    private string MapPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maps");
 
     private int VirtualZoom
     {
@@ -74,13 +76,14 @@ namespace Cyotek.Windows.Forms.Demo
           components.Dispose();
         }
 
-        if (this.ImageCache != null)
+        if (_imageCache != null)
         {
-          foreach (Image image in this.ImageCache.Values)
+          foreach (Image image in _imageCache.Values)
           {
-            image.Dispose();
+            image?.Dispose();
           }
-          this.ImageCache = null;
+
+          _imageCache = null;
         }
       }
       base.Dispose(disposing);
@@ -90,7 +93,7 @@ namespace Cyotek.Windows.Forms.Demo
     {
       base.OnLoad(e);
 
-      LayerData = new List<MapLayerData>();
+      _layerData = new List<MapLayerData>();
 
       // add some map layers for the different zoom levels
       this.AddLayer("map10", int.MinValue, 0);
@@ -127,12 +130,14 @@ namespace Cyotek.Windows.Forms.Demo
       {
         MapLayerData data;
 
-        data = new MapLayerData();
-        data.Name = name;
-        data.UpperZoom = upperZoom;
-        data.LowerZoom = lowerZoom;
+        data = new MapLayerData
+        {
+          Name = name,
+          UpperZoom = upperZoom,
+          LowerZoom = lowerZoom
+        };
 
-        this.LayerData.Add(data);
+        _layerData.Add(data);
       }
     }
 
@@ -142,11 +147,11 @@ namespace Cyotek.Windows.Forms.Demo
 
       result = -1;
 
-      for (int i = 0; i < this.LayerData.Count; i++)
+      for (int i = 0; i < _layerData.Count; i++)
       {
         MapLayerData data;
 
-        data = this.LayerData[i];
+        data = _layerData[i];
 
         if (zoom >= data.LowerZoom && zoom < data.UpperZoom)
         {
@@ -158,27 +163,28 @@ namespace Cyotek.Windows.Forms.Demo
       return result;
     }
 
-    private string GetMapFileName(string name)
-    {
-      return Path.GetFullPath(Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\maps"), Path.ChangeExtension(name, ".jpg")));
-    }
+    private string GetMapFileName(string name) => Path.Combine(this.MapPath, Path.ChangeExtension(name, ".jpg"));
 
     private Image GetMapImage(string name)
     {
-      Image result;
-
-      if (this.ImageCache == null)
+      if (_imageCache == null)
       {
-        this.ImageCache = new Dictionary<string, Image>();
+        _imageCache = new Dictionary<string, Image>();
       }
 
-      if (!this.ImageCache.TryGetValue(name, out result))
+      if (!_imageCache.TryGetValue(name, out Image result))
       {
+        string fileName;
+
         this.SetStatus("Loading image...");
 
-        result = Image.FromFile(this.GetMapFileName(name));
+        fileName = this.GetMapFileName(name);
 
-        this.ImageCache.Add(name, result);
+        result = File.Exists(fileName)
+          ? Image.FromFile(fileName)
+          : null;
+
+        _imageCache.Add(name, result);
 
         this.SetStatus(string.Empty);
       }
@@ -210,7 +216,7 @@ namespace Cyotek.Windows.Forms.Demo
         if ((e.Actions & ImageBoxZoomActions.ActualSize) == ImageBoxZoomActions.ActualSize)
         {
           this.VirtualZoom = 0;
-          this.ResetZoomOnUpdate = true;
+          _resetZoomOnUpdate = true;
         }
         else if ((e.Actions & ImageBoxZoomActions.ZoomIn) == ImageBoxZoomActions.ZoomIn)
         {
@@ -276,15 +282,15 @@ namespace Cyotek.Windows.Forms.Demo
 
     private void UpdateMap()
     {
-      if (!this.IsUpdatingMap)
+      if (!_isUpdatingMap)
       {
         int mapLayer;
 
-        this.IsUpdatingMap = true;
+        _isUpdatingMap = true;
 
         mapLayer = this.FindNearestLayer(this.VirtualZoom);
 
-        if (mapLayer != -1 && mapLayer != this.Layer)
+        if (mapLayer != -1 && mapLayer != _layer)
         {
           MapLayerData data;
           Image newImage;
@@ -294,8 +300,8 @@ namespace Cyotek.Windows.Forms.Demo
           float vAspectRatio;
           float hAspectRatio;
 
-          this.Layer = mapLayer;
-          data = this.LayerData[mapLayer];
+          _layer = mapLayer;
+          data = _layerData[mapLayer];
           mapNameToolStripStatusLabel.Text = data.Name;
 
           newImage = this.GetMapImage(data.Name);
@@ -310,9 +316,9 @@ namespace Cyotek.Windows.Forms.Demo
           newViewport = new RectangleF(currentViewport.X * hAspectRatio, currentViewport.Y * vAspectRatio, currentViewport.Width * hAspectRatio, currentViewport.Height * vAspectRatio);
           imageBox.ZoomToRegion(newViewport);
 
-          if (this.ResetZoomOnUpdate)
+          if (_resetZoomOnUpdate)
           {
-            this.ResetZoomOnUpdate = false;
+            _resetZoomOnUpdate = false;
             imageBox.Zoom = 100;
             imageBox.CenterToImage();
           }
@@ -320,7 +326,7 @@ namespace Cyotek.Windows.Forms.Demo
           imageBox.EndUpdate();
         }
 
-        this.IsUpdatingMap = false;
+        _isUpdatingMap = false;
       }
     }
 

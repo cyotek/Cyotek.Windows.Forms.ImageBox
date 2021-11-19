@@ -84,6 +84,12 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\maps\*.jpg" Link="maps\%(RecursiveDir)%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <!-- Don't clutter the Solution Explorer with NCrunch setting files -->
   <ItemGroup>
     <None Remove="*.ncrunchproject" />

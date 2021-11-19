@@ -60,10 +60,9 @@ namespace Cyotek.Windows.Forms.Demo
 
     private bool ValidateUrl(string url)
     {
-      Uri uri;
       bool result;
 
-      result = !string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+      result = !string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
 
       return result;
     }

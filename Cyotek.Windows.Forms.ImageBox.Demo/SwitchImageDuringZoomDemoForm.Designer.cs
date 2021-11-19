@@ -72,6 +72,7 @@
             // imageBox
             // 
             this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageBox.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
             this.imageBox.Location = new System.Drawing.Point(12, 12);
             this.imageBox.Name = "imageBox";
             this.imageBox.Size = new System.Drawing.Size(723, 413);

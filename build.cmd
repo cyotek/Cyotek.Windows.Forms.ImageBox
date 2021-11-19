@@ -47,6 +47,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO :failed
 MKDIR %DEPDIR%
 MKDIR %DEPDIR%\bin
 MKDIR %DEPDIR%\docs
+MKDIR %DEPDIR%\maps
 
 COPY %DEMORELDIR%demo.exe                   %DEPDIR%
 COPY %DEMORELDIR%demo.pdb                   %DEPDIR%
@@ -57,13 +58,15 @@ COPY %DEMORELDIR%%BASENAME%.pdb             %DEPDIR%bin
 COPY %DEMORELDIR%HtmlRenderer.dll           %DEPDIR%bin
 COPY %DEMORELDIR%HtmlRenderer.WinForms.dll  %DEPDIR%bin
 COPY %DEMORELDIR%docs\*.*                   %DEPDIR%docs
+COPY %DEMORELDIR%maps\*.*                   %DEPDIR%maps
 
 PUSHD %DEPDIR%
 
 CALL signcmd demo.exe
 CALL signcmd bin\%BASENAME%.dll
 
-%zipexe% a %BASENAME%.Demo.2.x.x.zip -r
+%zipexe% a %BASENAME%.Demo.2.x.x.zip -r -x!maps\map50.* -x!maps\map60.* -x!maps\map70.* -x!maps\map80.* -x!maps\map90.* -x!maps\map100.*
+%zipexe% a %BASENAME%.Demo.2.x.x-all-maps.zip -r -x!*.zip 
 
 POPD
 
