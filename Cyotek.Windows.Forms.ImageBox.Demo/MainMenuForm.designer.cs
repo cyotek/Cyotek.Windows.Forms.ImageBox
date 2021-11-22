@@ -33,6 +33,7 @@
       this.pixelGridDemoButton = new System.Windows.Forms.Button();
       this.virtualModeDemoButton = new System.Windows.Forms.Button();
       this.demoGroupBox = new Cyotek.Windows.Forms.GroupBox();
+      this.panDemoButton = new System.Windows.Forms.Button();
       this.minimapDemoButton = new System.Windows.Forms.Button();
       this.resizableSelectionDemoButton = new System.Windows.Forms.Button();
       this.textDemoButton = new System.Windows.Forms.Button();
@@ -64,7 +65,7 @@
       this.pixelGridDemoButton.Name = "pixelGridDemoButton";
       this.pixelGridDemoButton.Size = new System.Drawing.Size(406, 23);
       this.pixelGridDemoButton.TabIndex = 1;
-      this.pixelGridDemoButton.Text = "&Pixel Grid Demonstration";
+      this.pixelGridDemoButton.Text = "Pi&xel Grid Demonstration";
       this.pixelGridDemoButton.UseVisualStyleBackColor = true;
       this.pixelGridDemoButton.Click += new System.EventHandler(this.pixelGridDemoButton_Click);
       // 
@@ -85,6 +86,7 @@
       this.demoGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.demoGroupBox.Controls.Add(this.panDemoButton);
       this.demoGroupBox.Controls.Add(this.minimapDemoButton);
       this.demoGroupBox.Controls.Add(this.resizableSelectionDemoButton);
       this.demoGroupBox.Controls.Add(this.textDemoButton);
@@ -98,10 +100,22 @@
       this.demoGroupBox.Controls.Add(this.pixelGridDemoButton);
       this.demoGroupBox.Location = new System.Drawing.Point(27, 56);
       this.demoGroupBox.Name = "demoGroupBox";
-      this.demoGroupBox.Size = new System.Drawing.Size(417, 386);
+      this.demoGroupBox.Size = new System.Drawing.Size(417, 418);
       this.demoGroupBox.TabIndex = 0;
       this.demoGroupBox.TabStop = false;
       this.demoGroupBox.Text = "Available Demonstrations";
+      // 
+      // panDemoButton
+      // 
+      this.panDemoButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.panDemoButton.Location = new System.Drawing.Point(5, 338);
+      this.panDemoButton.Name = "panDemoButton";
+      this.panDemoButton.Size = new System.Drawing.Size(406, 23);
+      this.panDemoButton.TabIndex = 12;
+      this.panDemoButton.Text = "&Pan Demonstration";
+      this.panDemoButton.UseVisualStyleBackColor = true;
+      this.panDemoButton.Click += new System.EventHandler(this.panDemoButton_Click);
       // 
       // minimapDemoButton
       // 
@@ -111,7 +125,7 @@
       this.minimapDemoButton.Name = "minimapDemoButton";
       this.minimapDemoButton.Size = new System.Drawing.Size(406, 23);
       this.minimapDemoButton.TabIndex = 11;
-      this.minimapDemoButton.Text = "Minima&p Demonstration";
+      this.minimapDemoButton.Text = "M&inimap Demonstration";
       this.minimapDemoButton.UseVisualStyleBackColor = true;
       this.minimapDemoButton.Click += new System.EventHandler(this.minimapDemoButton_Click);
       // 
@@ -203,7 +217,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(527, 503);
+      this.ClientSize = new System.Drawing.Size(527, 535);
       this.Controls.Add(this.demoGroupBox);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "MainMenuForm";
@@ -231,6 +245,7 @@
     private System.Windows.Forms.Button textDemoButton;
     private System.Windows.Forms.Button resizableSelectionDemoButton;
     private System.Windows.Forms.Button minimapDemoButton;
+    private System.Windows.Forms.Button panDemoButton;
   }
 }
 
