@@ -460,7 +460,7 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Occurs when panning the control completes.
     /// </summary>
-    [Category("Property Changed")]
+    [Category("Action")]
     public event EventHandler PanEnd
     {
       add { this.Events.AddHandler(_eventPanEnd, value); }
@@ -480,7 +480,7 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Occurs when panning the control starts.
     /// </summary>
-    [Category("Property Changed")]
+    [Category("Action")]
     public event EventHandler PanStart
     {
       add { this.Events.AddHandler(_eventPanStart, value); }
