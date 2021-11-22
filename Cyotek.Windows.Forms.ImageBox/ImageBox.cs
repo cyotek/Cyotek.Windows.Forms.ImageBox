@@ -1,4 +1,15 @@
-﻿using System;
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -7,22 +18,14 @@ using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2017 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
   /// <summary>
   ///   Component for displaying images with support for scrolling and zooming.
   /// </summary>
   [DefaultProperty("Image")]
   [ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp")]
   [ToolboxItem(true)]
-  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */ public class ImageBox : VirtualScrollableControl
+  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */
+  public class ImageBox : VirtualScrollableControl
   {
     #region Constants
 
@@ -168,9 +171,9 @@ namespace Cyotek.Windows.Forms
 
     private bool _invertMouse;
 
-    private bool _lastPanWasFree;
-
     private bool _limitSelectionToImage;
+
+    private double _mouseDownStart;
 
     private ImageBoxPanMode _panMode;
 
@@ -3022,9 +3025,9 @@ namespace Cyotek.Windows.Forms
           alpha = feather - feather / glowSize * i;
 
           using (Pen pen = new Pen(Color.FromArgb(alpha, this.ImageBorderColor), i)
-                           {
-                             LineJoin = LineJoin.Round
-                           })
+          {
+            LineJoin = LineJoin.Round
+          })
           {
             g.DrawPath(pen, path);
           }
@@ -3341,9 +3344,9 @@ namespace Cyotek.Windows.Forms
         offsetY = Math.Abs(this.AutoScrollPosition.Y) % pixelSize;
 
         using (Pen pen = new Pen(this.PixelGridColor)
-                         {
-                           DashStyle = DashStyle.Dot
-                         })
+        {
+          DashStyle = DashStyle.Dot
+        })
         {
           for (float x = viewport.Left + pixelSize - offsetX; x < viewport.Right; x += pixelSize)
           {
@@ -3970,7 +3973,16 @@ namespace Cyotek.Windows.Forms
 
       if (e.Button != MouseButtons.None)
       {
-        this.ProcessPanning(e);
+        if (_panStyle == ImageBoxPanStyle.Free)
+        {
+          // already panning, abort
+          this.ProcessPanEvents(ImageBoxPanStyle.None);
+        }
+        else
+        {
+          _mouseDownStart = NativeMethods.GetTickCount();
+          this.ProcessPanning(e);
+        }
       }
 
       this.SetCursor(e.Location);
@@ -4007,10 +4019,9 @@ namespace Cyotek.Windows.Forms
 
       base.OnMouseUp(e);
 
-      doNotProcessClick = _panStyle != ImageBoxPanStyle.None || this.IsSelecting || _lastPanWasFree;
-      _lastPanWasFree = false;
+      doNotProcessClick = _panStyle != ImageBoxPanStyle.None || this.IsSelecting;
 
-      if (_panStyle == ImageBoxPanStyle.Standard)
+      if (_panStyle == ImageBoxPanStyle.Standard || _panStyle == ImageBoxPanStyle.Free && NativeMethods.GetTickCount() > (_mouseDownStart + SystemInformation.DoubleClickTime))
       {
         this.ProcessPanEvents(ImageBoxPanStyle.None);
       }
@@ -4636,15 +4647,9 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected virtual void ProcessPanning(MouseEventArgs e)
     {
-      if (_panStyle == ImageBoxPanStyle.Free && e.Button != MouseButtons.None)
+      if (this.CanPan(e.Button))
       {
-        // cancel free panning when any other button is pressed
-        _lastPanWasFree = true;
-        this.ProcessPanEvents(ImageBoxPanStyle.None);
-      }
-      else if (this.CanPan(e.Button))
-      {
-        if (_panStyle == ImageBoxPanStyle.None && this.HScroll | this.VScroll)
+        if (_panStyle == ImageBoxPanStyle.None && (this.HScroll || this.VScroll))
         {
           _startMousePosition = e.Location;
 
@@ -4652,7 +4657,7 @@ namespace Cyotek.Windows.Forms
         }
       }
 
-      if (_panStyle != ImageBoxPanStyle.None)
+      if (_panStyle == ImageBoxPanStyle.Standard)
       {
         int x;
         int y;
@@ -4821,16 +4826,16 @@ namespace Cyotek.Windows.Forms
 
     private bool CanPan(MouseButtons button)
     {
-      return (_panMode & (ImageBoxPanMode)button) != 0 && !this.ViewSize.IsEmpty && (_selectionMode == ImageBoxSelectionMode.None | button != MouseButtons.Left);
+      return (this.HScroll || this.HScroll) && (_panMode & (ImageBoxPanMode)button) != 0 && !this.ViewSize.IsEmpty && (_selectionMode == ImageBoxSelectionMode.None || button != MouseButtons.Left);
     }
 
     private void CreateTimer()
     {
       _freePanTimer = new Timer
-                      {
-                        Enabled = true,
-                        Interval = _freePanTimerInterval
-                      };
+      {
+        Enabled = true,
+        Interval = _freePanTimerInterval
+      };
 
       _freePanTimer.Tick += this.FreePanTimerTickHandler;
 
@@ -5146,30 +5151,29 @@ namespace Cyotek.Windows.Forms
     {
       if (_panStyle != panStyle)
       {
-        CancelEventArgs args;
-
-        args = new CancelEventArgs();
-
         this.KillTimer();
 
-        if (panStyle != ImageBoxPanStyle.None)
+        if (panStyle == ImageBoxPanStyle.None)
         {
-          this.OnPanStart(args);
+          _panStyle = ImageBoxPanStyle.None;
+          this.Invalidate();
+          this.OnPanEnd(EventArgs.Empty);
         }
         else
         {
-          this.OnPanEnd(EventArgs.Empty);
-        }
+          CancelEventArgs args;
 
-        if (!args.Cancel)
-        {
-          _panStyle = panStyle;
+          args = new CancelEventArgs();
 
-          if (panStyle != ImageBoxPanStyle.None)
+          this.OnPanStart(args);
+
+          if (!args.Cancel)
           {
+            _panStyle = panStyle;
+
             if (panStyle == ImageBoxPanStyle.Free)
             {
-              LoadPanResources();
+              ImageBox.LoadPanResources();
 
               this.CreateTimer();
             }
