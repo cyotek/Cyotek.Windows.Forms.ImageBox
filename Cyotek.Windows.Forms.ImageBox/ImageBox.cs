@@ -220,6 +220,7 @@ namespace Cyotek.Windows.Forms
     private int _zoom;
 
     private ZoomLevelCollection _zoomLevels;
+    private bool _isSelecting;
 
     #endregion
 
@@ -1354,7 +1355,17 @@ namespace Cyotek.Windows.Forms
     /// </value>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public virtual bool IsSelecting { get; protected set; }
+    public virtual bool IsSelecting
+    {
+      get
+      {
+        return _isSelecting;
+      }
+      protected set
+      {
+        _isSelecting = value;
+      }
+    }
 
     /// <summary>
     ///   Gets or sets a value indicating whether selection regions should be limited to the image boundaries.
@@ -3063,13 +3074,9 @@ namespace Cyotek.Windows.Forms
 
         g.DrawImage(this.Image, this.GetImageViewPort(), this.GetSourceImageRegion(), GraphicsUnit.Pixel);
       }
-      catch (ArgumentException)
+      catch (Exception ex)
       {
-        // ignore errors that occur due to the image being disposed
-      }
-      catch (OutOfMemoryException)
-      {
-        // also ignore errors that occur due to running out of memory
+        TextRenderer.DrawText(g, ex.Message, this.Font, this.ClientRectangle, this.ForeColor, this.BackColor, TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.WordBreak | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
       }
 
       g.PixelOffsetMode = currentPixelOffsetMode;
@@ -4765,13 +4772,16 @@ namespace Cyotek.Windows.Forms
           w = w / (float)this.ZoomFactor;
           h = h / (float)this.ZoomFactor;
 
-          selection = new RectangleF(x, y, w, h);
-          if (this.LimitSelectionToImage)
+          if (w != 0 && h != 0)
           {
-            selection = this.FitRectangle(selection);
-          }
+            selection = new RectangleF(x, y, w, h);
+            if (this.LimitSelectionToImage)
+            {
+              selection = this.FitRectangle(selection);
+            }
 
-          this.SelectionRegion = selection;
+            this.SelectionRegion = selection;
+          }
         }
       }
     }

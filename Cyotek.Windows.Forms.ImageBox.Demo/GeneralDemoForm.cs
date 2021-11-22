@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -176,7 +176,7 @@ namespace Cyotek.Windows.Forms.Demo
     {
       using (FileDialog dialog = new OpenFileDialog())
       {
-        dialog.Filter = "All Supported Images (*.bmp;*.dib;*.rle;*.gif;*.jpg;*.png)|*.bmp;*.dib;*.rle;*.gif;*.jpg;*.png|Bitmaps (*.bmp;*.dib;*.rle)|*.bmp;*.dib;*.rle|Graphics Interchange Format (*.gif)|*.gif|Joint Photographic Experts (*.jpg)|*.jpg|Portable Network Graphics (*.png)|*.png|All Files (*.*)|*.*";
+        dialog.Filter = "All Supported Images (*.bmp;*.dib;*.rle;*.gif;*.jpg;*.png;*.tif;*.tiff)|*.bmp;*.dib;*.rle;*.gif;*.jpg;*.png;*.tif;*.tiff|Bitmaps (*.bmp;*.dib;*.rle)|*.bmp;*.dib;*.rle|Graphics Interchange Format (*.gif)|*.gif|Joint Photographic Experts (*.jpg)|*.jpg|Portable Network Graphics (*.png)|*.png|Tagged Image File Format (*.tif;*.tiff)|*.tif;*.tiff|All Files (*.*)|*.*";
         dialog.DefaultExt = "png";
 
         if (dialog.ShowDialog(this) == DialogResult.OK)
