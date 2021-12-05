@@ -19,13 +19,11 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\res\$(AssemblyName).snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="ImageBox.bmp" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <EmbeddedResource Include="ImageBox.bmp" />
+    <EmbeddedResource Include="..\res\PanAllSymbol.png" Link="PanAllSymbol.png" />
+    <EmbeddedResource Include="..\res\PanAll.cur" Link="PanAll.cur" />
   </ItemGroup>
 
   <ItemGroup>

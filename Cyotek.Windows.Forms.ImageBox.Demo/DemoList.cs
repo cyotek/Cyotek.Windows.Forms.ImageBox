@@ -47,6 +47,11 @@ namespace Cyotek.Windows.Forms.Demo
       this.ShowDemo<MiniMapDemoForm>();
     }
 
+    private void PanStylesDemoButton_Click(object sender, EventArgs e)
+    {
+      this.ShowDemo<PanStylesDemoForm>();
+    }
+
     private void PixelGridDemoButton_Click(object sender, EventArgs e)
     {
       this.ShowDemo<PixelGridForm>();

@@ -1,20 +1,23 @@
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2020 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
   /// <summary>
   ///   Component for displaying images with support for scrolling and zooming.
   /// </summary>
@@ -29,6 +32,8 @@ namespace Cyotek.Windows.Forms
     private static readonly object _eventAllowClickZoomChanged = new object();
 
     private static readonly object _eventAllowDoubleClickChanged = new object();
+
+    private static readonly object _eventAllowFreePanChanged = new object();
 
     private static readonly object _eventAllowUnfocusedMouseWheelChanged = new object();
 
@@ -63,6 +68,8 @@ namespace Cyotek.Windows.Forms
     private static readonly object _eventLimitSelectionToImageChanged = new object();
 
     private static readonly object _eventPanEnd = new object();
+
+    private static readonly object _eventPanModeChanged = new object();
 
     private static readonly object _eventPanStart = new object();
 
@@ -110,6 +117,10 @@ namespace Cyotek.Windows.Forms
 
     private static readonly object _eventZoomLevelsChanged = new object();
 
+    private const int _freePanTimerInterval = 250;
+
+    private const int _panAllDeadSize = 32;
+
     private const int MaxZoom = 3500;
 
     private const int MinZoom = 1;
@@ -124,15 +135,19 @@ namespace Cyotek.Windows.Forms
 
     private bool _allowDoubleClick;
 
+    private bool _allowFreePan;
+
     private bool _allowUnfocusedMouseWheel;
 
     private bool _allowZoom;
 
     private bool _autoCenter;
 
-    private bool _autoPan;
+    private Cursor _currentCursor;
 
     private int _dropShadowSize;
+
+    private Timer _freePanTimer;
 
     private int _gridCellSize;
 
@@ -156,9 +171,13 @@ namespace Cyotek.Windows.Forms
 
     private bool _invertMouse;
 
-    private bool _isPanning;
-
     private bool _limitSelectionToImage;
+
+    private double _mouseDownStart;
+
+    private ImageBoxPanMode _panMode;
+
+    private ImageBoxPanStyle _panStyle;
 
     private Color _pixelGridColor;
 
@@ -217,6 +236,8 @@ namespace Cyotek.Windows.Forms
 
       // ReSharper disable DoNotCallOverridableMethodsInConstructor
       this.BeginUpdate();
+      _panMode = ImageBoxPanMode.Both;
+      _allowFreePan = true;
       this.WheelScrollsControl = false;
       this.AllowZoom = true;
       this.LimitSelectionToImage = true;
@@ -230,7 +251,6 @@ namespace Cyotek.Windows.Forms
       this.GridColor = Color.Gainsboro;
       this.GridColorAlternate = Color.White;
       this.GridCellSize = 8;
-      this.AutoPan = true;
       this.InterpolationMode = InterpolationMode.NearestNeighbor;
       this.AutoCenter = true;
       this.SelectionColor = SystemColors.Highlight;
@@ -269,6 +289,16 @@ namespace Cyotek.Windows.Forms
     {
       add { this.Events.AddHandler(_eventAllowDoubleClickChanged, value); }
       remove { this.Events.RemoveHandler(_eventAllowDoubleClickChanged, value); }
+    }
+
+    /// <summary>
+    /// Occurs when the AllowFreePan property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler AllowFreePanChanged
+    {
+      add { this.Events.AddHandler(_eventAllowFreePanChanged, value); }
+      remove { this.Events.RemoveHandler(_eventAllowFreePanChanged, value); }
     }
 
     /// <summary>
@@ -434,7 +464,7 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     ///   Occurs when panning the control completes.
     /// </summary>
-    [Category("Property Changed")]
+    [Category("Action")]
     public event EventHandler PanEnd
     {
       add { this.Events.AddHandler(_eventPanEnd, value); }
@@ -442,9 +472,19 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    ///   Occurs when panning the control starts.
+    /// Occurs when the PanMode property value changes
     /// </summary>
     [Category("Property Changed")]
+    public event EventHandler PanModeChanged
+    {
+      add { this.Events.AddHandler(_eventPanModeChanged, value); }
+      remove { this.Events.RemoveHandler(_eventPanModeChanged, value); }
+    }
+
+    /// <summary>
+    ///   Occurs when panning the control starts.
+    /// </summary>
+    [Category("Action")]
     public event EventHandler PanStart
     {
       add { this.Events.AddHandler(_eventPanStart, value); }
@@ -721,6 +761,40 @@ namespace Cyotek.Windows.Forms
       return CreateCheckerBoxTile(8, Color.Gainsboro, Color.WhiteSmoke);
     }
 
+    private static Cursor GetPanAllCursor()
+    {
+      Type type;
+
+      type = typeof(ImageBox);
+
+      return new Cursor(type.Assembly.GetManifestResourceStream(type.Namespace + ".PanAll.cur"));
+    }
+
+    private static Bitmap GetPanAllSymbol()
+    {
+      Type type;
+
+      type = typeof(ImageBox);
+
+      using (Stream stream = type.Assembly.GetManifestResourceStream(type.Namespace + ".PanAllSymbol.png"))
+      {
+        return new Bitmap(stream);
+      }
+    }
+
+    private static void LoadPanResources()
+    {
+      if (_panAllCursor == null)
+      {
+        _panAllCursor = GetPanAllCursor();
+      }
+
+      if (_panAllSymbol == null)
+      {
+        _panAllSymbol = GetPanAllSymbol();
+      }
+    }
+
     #endregion
 
     #region Properties
@@ -767,9 +841,34 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the mouse wheel can be used to scroll a <see cref="ImageBox"/> control when it does not have focus
+    /// Gets or sets a value indicating whether free panning can be used
     /// </summary>
-    /// <value> <c>true</c> if the mouse wheel can be used when the control does not have focus, otherwise <c>false</c>. </value>
+    /// <value>
+    /// <c>true</c> if free panning can be used, otherwise <c>false</c>.
+    /// </value>
+    [Category("Behavior")]
+    [DefaultValue(true)]
+    public virtual bool AllowFreePan
+    {
+      get { return _allowFreePan; }
+      set
+      {
+        if (_allowFreePan != value)
+        {
+          _allowFreePan = value;
+
+          this.OnAllowFreePanChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the mouse wheel is processed event if the <see cref="ImageBox"/> doesn't have focus.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the mouse wheel is processed regardless of focus, otherwise <c>false</c> to only process the mouse wheel when the control has focus.
+    /// </value>
+    /// <remarks>Setting this problem to <c>true</c> could cause conflicting behavior with other controls that also make use of the mouse wheel.</remarks>
     [Category("Behavior")]
     [DefaultValue(false)]
     public virtual bool AllowUnfocusedMouseWheel
@@ -838,14 +937,17 @@ namespace Cyotek.Windows.Forms
     /// <remarks>If this property is set, the SizeToFit property cannot be used.</remarks>
     [DefaultValue(true)]
     [Category("Behavior")]
+    [Obsolete("Use the PanMode property instead", false)]
+    //[Browsable(false)]
     public virtual bool AutoPan
     {
-      get { return _autoPan; }
+      get { return (_panMode & ImageBoxPanMode.Left) != 0; }
       set
       {
-        if (_autoPan != value)
+        if (this.AutoPan != value)
         {
-          _autoPan = value;
+          this.PanMode = value ? _panMode & ImageBoxPanMode.Left : _panMode & ~ImageBoxPanMode.Left;
+
           this.OnAutoPanChanged(EventArgs.Empty);
         }
       }
@@ -977,6 +1079,22 @@ namespace Cyotek.Windows.Forms
 
         return new Point(viewport.Width / 2, viewport.Height / 2);
       }
+    }
+
+    /// <summary>
+    /// Gets or sets the cursor that is displayed when the mouse pointer is over the control.
+    /// </summary>
+    /// <value>
+    /// A <see cref="T:System.Windows.Forms.Cursor" /> that represents the cursor to display when the
+    /// mouse pointer is over the control.
+    /// </value>
+    /// <seealso cref="P:System.Windows.Forms.Control.Cursor"/>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public override Cursor Cursor
+    {
+      get { return base.Cursor; }
+      set { base.Cursor = value; }
     }
 
     /// <summary>
@@ -1225,40 +1343,8 @@ namespace Cyotek.Windows.Forms
     [Browsable(false)]
     public virtual bool IsPanning
     {
-      get { return _isPanning; }
-      protected set
-      {
-        if (_isPanning != value)
-        {
-          CancelEventArgs args;
-
-          args = new CancelEventArgs();
-
-          if (value)
-          {
-            this.OnPanStart(args);
-          }
-          else
-          {
-            this.OnPanEnd(EventArgs.Empty);
-          }
-
-          if (!args.Cancel)
-          {
-            _isPanning = value;
-
-            if (value)
-            {
-              _startScrollPosition = this.AutoScrollPosition;
-              this.Cursor = Cursors.SizeAll;
-            }
-            else
-            {
-              this.Cursor = Cursors.Default;
-            }
-          }
-        }
-      }
+      get { return _panStyle != ImageBoxPanStyle.None; }
+      protected set { this.ProcessPanEvents(value ? ImageBoxPanStyle.Standard : ImageBoxPanStyle.None); }
     }
 
     /// <summary>
@@ -1299,6 +1385,28 @@ namespace Cyotek.Windows.Forms
           _limitSelectionToImage = value;
 
           this.OnLimitSelectionToImageChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets the how panning is initiated using the mouse
+    /// </summary>
+    /// <value>
+    /// The pan mode.
+    /// </value>
+    [Category("Behavior")]
+    [DefaultValue(typeof(ImageBoxPanMode), "Both")]
+    public virtual ImageBoxPanMode PanMode
+    {
+      get { return _panMode; }
+      set
+      {
+        if (_panMode != value)
+        {
+          _panMode = value;
+
+          this.OnPanModeChanged(EventArgs.Empty);
         }
       }
     }
@@ -2389,7 +2497,8 @@ namespace Cyotek.Windows.Forms
     /// </returns>
     public virtual bool IsPointInImage(Point point)
     {
-      return this.GetImageViewPort().Contains(point);
+      return this.GetImageViewPort().
+                  Contains(point);
     }
 
     /// <summary>
@@ -2833,6 +2942,8 @@ namespace Cyotek.Windows.Forms
           _gridTile.Dispose();
           _gridTile = null;
         }
+
+        this.KillTimer();
       }
 
       base.Dispose(disposing);
@@ -3305,6 +3416,56 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Gets a cursor suitable for the current state of the control
+    /// </summary>
+    /// <param name="location">The mouse cursor position in client co-ordinates.</param>
+    /// <returns>
+    /// A <see cref="Cursor"/> object suitable for the current state of the control
+    /// </returns>
+    protected virtual Cursor GetCursor(Point location)
+    {
+      Cursor cursor;
+
+      switch (_panStyle)
+      {
+        case ImageBoxPanStyle.None:
+          cursor = Cursors.Default;
+          break;
+        case ImageBoxPanStyle.Standard:
+          cursor = Cursors.SizeAll;
+          break;
+        case ImageBoxPanStyle.Free:
+          switch (this.GetPanDirection(location))
+          {
+            case ImageBoxPanDirection.None:
+              cursor = _panAllCursor;
+              break;
+            case ImageBoxPanDirection.Up:
+              cursor = Cursors.PanNorth;
+              break;
+            case ImageBoxPanDirection.Down:
+              cursor = Cursors.PanSouth;
+              break;
+            case ImageBoxPanDirection.Left:
+              cursor = Cursors.PanWest;
+              break;
+            case ImageBoxPanDirection.Right:
+              cursor = Cursors.PanEast;
+              break;
+            default:
+              cursor = _panAllCursor;
+              break;
+          }
+          break;
+        default:
+          cursor = Cursors.Default;
+          break;
+      }
+
+      return cursor;
+    }
+
+    /// <summary>
     ///   Gets an offset based on the current image border style.
     /// </summary>
     /// <returns></returns>
@@ -3329,8 +3490,13 @@ namespace Cyotek.Windows.Forms
       return offset;
     }
 
-    /// <summary>   Gets the interpolation mode to use for rendering the image. </summary>
-    /// <returns>   The value of the <see cref="InterpolationMode"/> property, or a suitable value based on the current zoom level when set to Default. </returns>
+    /// <summary>
+    /// Gets the interpolation mode used to render the image.
+    /// </summary>
+    /// <returns>
+    /// The interpolation mode.
+    /// </returns>
+    /// <remarks>Returns the value of the <see cref="InterpolationMode"/> property, unless this is set to <code>InterpolationMode.Default</code>, in which case it will use <code>InterpolationMode.HighQualityBicubic</code> for zoomed images otherwise <code>InterpolationMode.NearestNeighbor</code>.</remarks>
     protected virtual InterpolationMode GetInterpolationMode()
     {
       InterpolationMode mode;
@@ -3407,6 +3573,19 @@ namespace Cyotek.Windows.Forms
       this.SetStyle(ControlStyles.StandardDoubleClick, this.AllowDoubleClick);
 
       handler = (EventHandler)this.Events[_eventAllowDoubleClickChanged];
+
+      handler?.Invoke(this, e);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="AllowFreePanChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnAllowFreePanChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      handler = (EventHandler)this.Events[_eventAllowFreePanChanged];
 
       handler?.Invoke(this, e);
     }
@@ -3794,6 +3973,22 @@ namespace Cyotek.Windows.Forms
       {
         this.Focus();
       }
+
+      if (e.Button != MouseButtons.None)
+      {
+        if (_panStyle == ImageBoxPanStyle.Free)
+        {
+          // already panning, abort
+          this.ProcessPanEvents(ImageBoxPanStyle.None);
+        }
+        else
+        {
+          _mouseDownStart = NativeMethods.GetTickCount();
+          this.ProcessPanning(e);
+        }
+      }
+
+      this.SetCursor(e.Location);
     }
 
     /// <summary>
@@ -3806,11 +4001,13 @@ namespace Cyotek.Windows.Forms
     {
       base.OnMouseMove(e);
 
-      if (e.Button == MouseButtons.Left)
+      if (e.Button != MouseButtons.None)
       {
         this.ProcessPanning(e);
         this.ProcessSelection(e);
       }
+
+      this.SetCursor(e.Location);
     }
 
     /// <summary>
@@ -3825,11 +4022,11 @@ namespace Cyotek.Windows.Forms
 
       base.OnMouseUp(e);
 
-      doNotProcessClick = this.IsPanning || this.IsSelecting;
+      doNotProcessClick = _panStyle != ImageBoxPanStyle.None || this.IsSelecting;
 
-      if (this.IsPanning)
+      if (_panStyle == ImageBoxPanStyle.Standard || _panStyle == ImageBoxPanStyle.Free && NativeMethods.GetTickCount() > (_mouseDownStart + SystemInformation.DoubleClickTime))
       {
-        this.IsPanning = false;
+        this.ProcessPanEvents(ImageBoxPanStyle.None);
       }
 
       if (this.IsSelecting)
@@ -3838,7 +4035,7 @@ namespace Cyotek.Windows.Forms
       }
       this.WasDragCancelled = false;
 
-      if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && !this.IsPanning && this.SizeMode == ImageBoxSizeMode.Normal)
+      if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && _panStyle == ImageBoxPanStyle.None && this.SizeMode == ImageBoxSizeMode.Normal)
       {
         if (e.Button == MouseButtons.Left && ModifierKeys == Keys.None)
         {
@@ -3933,6 +4130,11 @@ namespace Cyotek.Windows.Forms
           this.DrawText(e);
         }
 
+        if (_panStyle == ImageBoxPanStyle.Free)
+        {
+          this.DrawPanAllSymbol(e);
+        }
+
         base.OnPaint(e);
       }
     }
@@ -3948,6 +4150,19 @@ namespace Cyotek.Windows.Forms
       EventHandler handler;
 
       handler = (EventHandler)this.Events[_eventPanEnd];
+
+      handler?.Invoke(this, e);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="PanModeChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnPanModeChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      handler = (EventHandler)this.Events[_eventPanModeChanged];
 
       handler?.Invoke(this, e);
     }
@@ -4435,35 +4650,36 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected virtual void ProcessPanning(MouseEventArgs e)
     {
-      if (this.AutoPan && !this.ViewSize.IsEmpty && this.SelectionMode == ImageBoxSelectionMode.None)
+      if (this.CanPan(e.Button))
       {
-        if (!this.IsPanning && this.HScroll | this.VScroll)
+        if (_panStyle == ImageBoxPanStyle.None && (this.HScroll || this.VScroll))
         {
           _startMousePosition = e.Location;
-          this.IsPanning = true;
-        }
 
-        if (this.IsPanning)
+          this.ProcessPanEvents(e.Button == MouseButtons.Middle && _allowFreePan ? ImageBoxPanStyle.Free : ImageBoxPanStyle.Standard);
+        }
+      }
+
+      if (_panStyle == ImageBoxPanStyle.Standard)
+      {
+        int x;
+        int y;
+        Point position;
+
+        if (!this.InvertMouse)
         {
-          int x;
-          int y;
-          Point position;
-
-          if (!this.InvertMouse)
-          {
-            x = -_startScrollPosition.X + (_startMousePosition.X - e.Location.X);
-            y = -_startScrollPosition.Y + (_startMousePosition.Y - e.Location.Y);
-          }
-          else
-          {
-            x = -(_startScrollPosition.X + (_startMousePosition.X - e.Location.X));
-            y = -(_startScrollPosition.Y + (_startMousePosition.Y - e.Location.Y));
-          }
-
-          position = new Point(x, y);
-
-          this.UpdateScrollPosition(position);
+          x = -_startScrollPosition.X + (_startMousePosition.X - e.Location.X);
+          y = -_startScrollPosition.Y + (_startMousePosition.Y - e.Location.Y);
         }
+        else
+        {
+          x = -(_startScrollPosition.X + (_startMousePosition.X - e.Location.X));
+          y = -(_startScrollPosition.Y + (_startMousePosition.Y - e.Location.Y));
+        }
+
+        position = new Point(x, y);
+
+        this.UpdateScrollPosition(position);
       }
     }
 
@@ -4519,7 +4735,8 @@ namespace Cyotek.Windows.Forms
           Point imageOffset;
           RectangleF selection;
 
-          imageOffset = this.GetImageViewPort().Location;
+          imageOffset = this.GetImageViewPort().
+                             Location;
 
           if (e.X < _startMousePosition.X)
           {
@@ -4613,6 +4830,117 @@ namespace Cyotek.Windows.Forms
       this.OnScroll(new ScrollEventArgs(ScrollEventType.EndScroll, 0));
     }
 
+    private bool CanPan(MouseButtons button)
+    {
+      return (this.HScroll || this.HScroll) && (_panMode & (ImageBoxPanMode)button) != 0 && !this.ViewSize.IsEmpty && (_selectionMode == ImageBoxSelectionMode.None || button != MouseButtons.Left);
+    }
+
+    private void CreateTimer()
+    {
+      _freePanTimer = new Timer
+      {
+        Enabled = true,
+        Interval = _freePanTimerInterval
+      };
+
+      _freePanTimer.Tick += this.FreePanTimerTickHandler;
+
+      _freePanTimer.Start();
+    }
+
+    private void DrawPanAllSymbol(PaintEventArgs e)
+    {
+      Graphics g;
+      int x;
+      int y;
+
+      g = e.Graphics;
+
+      x = _startMousePosition.X - (_panAllSymbol.Width >> 1);
+      y = _startMousePosition.Y - (_panAllSymbol.Height >> 1);
+
+      g.DrawImage(_panAllSymbol, x, y);
+    }
+
+    private void FreePanTimerTickHandler(object sender, EventArgs e)
+    {
+      Point location;
+      ImageBoxPanDirection direction;
+      int distance;
+      int ox;
+      int oy;
+
+      location = this.PointToClient(MousePosition);
+      direction = this.GetPanDirection(location);
+      distance = this.GetDistance(_startMousePosition.X, _startMousePosition.Y, location.X, location.Y);
+
+      ox = 0;
+      oy = 0;
+
+      switch (direction)
+      {
+        case ImageBoxPanDirection.Up:
+          oy = -distance;
+          break;
+        case ImageBoxPanDirection.Down:
+          oy = +distance;
+          break;
+        case ImageBoxPanDirection.Left:
+          ox = -distance;
+          break;
+        case ImageBoxPanDirection.Right:
+          ox = +distance;
+          break;
+      }
+
+      if (ox != 0 || oy != 0)
+      {
+        this.AdjustScroll(ox, oy);
+      }
+    }
+
+    /// <summary>
+    /// Gets the distance between two points.
+    /// </summary>
+    /// <param name="x1">The first x value.</param>
+    /// <param name="y1">The first y value.</param>
+    /// <param name="x2">The second x value.</param>
+    /// <param name="y2">The second y value.</param>
+    /// <returns>
+    /// The distance.
+    /// </returns>
+    private int GetDistance(int x1, int y1, int x2, int y2)
+    {
+      int dx;
+      int dy;
+      double distance;
+
+      dx = x2 - x1;
+      dy = y2 - y1;
+      distance = Math.Sqrt(dx * dx + dy * dy);
+
+      return Convert.ToInt32(distance);
+    }
+
+    /// <summary>
+    /// Gets the distance between two values.
+    /// </summary>
+    /// <param name="x1">The first value.</param>
+    /// <param name="x2">The second value.</param>
+    /// <returns>
+    /// The distance.
+    /// </returns>
+    private int GetDistance(int x1, int x2)
+    {
+      int dx;
+      double distance;
+
+      dx = x2 - x1;
+      distance = Math.Sqrt(dx * dx);
+
+      return Convert.ToInt32(distance);
+    }
+
     /// <summary>
     /// Gets the size of the image.
     /// </summary>
@@ -4638,6 +4966,42 @@ namespace Cyotek.Windows.Forms
       else
       {
         result = Size.Empty;
+      }
+
+      return result;
+    }
+
+    private ImageBoxPanDirection GetPanDirection(Point location)
+    {
+      ImageBoxPanDirection result;
+      int x;
+      int y;
+
+      x = location.X - _startMousePosition.X;
+      y = location.Y - _startMousePosition.Y;
+
+      if (x >= -_panAllDeadSize && x <= _panAllDeadSize && y >= -_panAllDeadSize && y <= _panAllDeadSize)
+      {
+        result = ImageBoxPanDirection.None;
+      }
+      else
+      {
+        int distanceX;
+
+        distanceX = location.X - _startMousePosition.X;
+
+        if (-y > Math.Abs(distanceX))
+        {
+          result = ImageBoxPanDirection.Up;
+        }
+        else if (y > Math.Abs(distanceX))
+        {
+          result = ImageBoxPanDirection.Down;
+        }
+        else
+        {
+          result = distanceX < 0 ? ImageBoxPanDirection.Left : ImageBoxPanDirection.Right;
+        }
       }
 
       return result;
@@ -4695,6 +5059,17 @@ namespace Cyotek.Windows.Forms
       }
 
       this.Invalidate();
+    }
+
+    private void KillTimer()
+    {
+      if (_freePanTimer != null)
+      {
+        _freePanTimer.Stop();
+        _freePanTimer.Tick -= this.FreePanTimerTickHandler;
+        _freePanTimer.Dispose();
+        _freePanTimer = null;
+      }
     }
 
     /// <summary>
@@ -4775,6 +5150,72 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Raises either the PanStart or PanEnd events
+    /// </summary>
+    /// <param name="panStyle">The new pan style.</param>
+    private void ProcessPanEvents(ImageBoxPanStyle panStyle)
+    {
+      if (_panStyle != panStyle)
+      {
+        this.KillTimer();
+
+        if (panStyle == ImageBoxPanStyle.None)
+        {
+          _panStyle = ImageBoxPanStyle.None;
+          this.Invalidate();
+          this.OnPanEnd(EventArgs.Empty);
+        }
+        else
+        {
+          CancelEventArgs args;
+
+          args = new CancelEventArgs();
+
+          this.OnPanStart(args);
+
+          if (!args.Cancel)
+          {
+            _panStyle = panStyle;
+
+            if (panStyle == ImageBoxPanStyle.Free)
+            {
+              ImageBox.LoadPanResources();
+
+              this.CreateTimer();
+            }
+
+            _startScrollPosition = this.AutoScrollPosition;
+          }
+
+          this.Invalidate();
+        }
+      }
+    }
+
+    /// <summary>
+    /// Sets the mouse cursor based on the current control state
+    /// </summary>
+    /// <param name="location">The location of the mouse in client co-ordinates.</param>
+    private void SetCursor(Point location)
+    {
+      Cursor cursor;
+
+      cursor = this.GetCursor(location);
+
+      if (_currentCursor != cursor)
+      {
+        _currentCursor = cursor;
+
+        // have to use this.Cursor and not Cursor.Current
+        // otherwise the cursor gets reset back to Default
+        // after clicking to initiate Free Pan
+        // As a result, the Cursor property has been hidden
+        // to discourage users setting it manually
+        this.Cursor = cursor;
+      }
+    }
+
+    /// <summary>
     /// Updates the current zoom.
     /// </summary>
     /// <param name="value">The new zoom value.</param>
@@ -4804,6 +5245,14 @@ namespace Cyotek.Windows.Forms
         this.OnZoomed(new ImageBoxZoomEventArgs(actions, source, previousZoom, this.Zoom));
       }
     }
+
+    #endregion
+
+    #region Other
+
+    private static Cursor _panAllCursor;
+
+    private static Bitmap _panAllSymbol;
 
     #endregion
   }

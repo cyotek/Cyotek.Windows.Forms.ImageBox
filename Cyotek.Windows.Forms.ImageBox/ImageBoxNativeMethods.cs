@@ -1,4 +1,15 @@
-﻿using System;
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
@@ -8,15 +19,6 @@ using System.Runtime.InteropServices;
 
 namespace Cyotek.Windows.Forms
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
   // ReSharper disable ClassNeverInstantiated.Global
   // ReSharper disable PartialTypeWithSinglePart
   internal partial class NativeMethods // partial for when linking this file into other assemblies
@@ -114,6 +116,9 @@ namespace Cyotek.Windows.Forms
 
     [DllImport("user32.dll", SetLastError = true)]
     public static extern int GetScrollInfo(IntPtr hwnd, int bar, [MarshalAs(UnmanagedType.LPStruct)] SCROLLINFO scrollInfo);
+
+    [DllImport("kernel32.dll")]
+    public static extern uint GetTickCount();
 
     [DllImport("user32.dll", SetLastError = true)]
     public static extern uint GetWindowLong(IntPtr hwnd, int index);
