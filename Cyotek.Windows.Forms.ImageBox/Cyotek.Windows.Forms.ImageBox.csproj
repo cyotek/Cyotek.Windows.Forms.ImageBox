@@ -36,11 +36,12 @@
 
   <!-- Package Support -->
 
-   <PropertyGroup> 
+   <PropertyGroup>
+     <PackageId>CyotekImageBox</PackageId>
      <Authors>Cyotek</Authors> 
      <Owners>Cyotek</Owners> 
      <VersionPrefix>2.0.0</VersionPrefix> 
-     <VersionSuffix>alpha.2</VersionSuffix> 
+     <VersionSuffix>alpha.3</VersionSuffix> 
      <PackageLicenseExpression>MIT</PackageLicenseExpression> 
      <PackageProjectUrl>https://github.com/cyotek/$(AssemblyName)</PackageProjectUrl> 
      <RepositoryUrl>https://github.com/cyotek/$(AssemblyName).git</RepositoryUrl> 
