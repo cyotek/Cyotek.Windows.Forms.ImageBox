@@ -79,10 +79,10 @@ namespace Cyotek.Windows.Forms.Demo
         versionLabel.Text = string.Format("Version {0}", info.FileVersion);
         copyrightLabel.Text = info.LegalCopyright;
 
-        this.AddReadme("changelog.md");
-        this.AddReadme("readme.md");
-        this.AddReadme("acknowledgements.md");
-        this.AddReadme("license.txt");
+        this.AddReadme("CHANGELOG.md");
+        this.AddReadme("README.md");
+        this.AddReadme("ACKNOWLEDGEMENTS.md");
+        this.AddReadme("LICENSE.txt");
 
         this.LoadDocumentForTab(docsTabControl.SelectedTab);
       }

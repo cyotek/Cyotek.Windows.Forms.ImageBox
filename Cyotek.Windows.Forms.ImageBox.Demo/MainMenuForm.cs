@@ -1,17 +1,19 @@
-﻿using System;
+// Cyotek ImageBox
+// http://cyotek.com/blog/tag/imagebox
+
+// Copyright (c) 2010-2021 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
+using System;
 using System.Windows.Forms;
 
 namespace Cyotek.Windows.Forms.Demo
 {
-  // Cyotek ImageBox
-  // Copyright (c) 2010-2015 Cyotek Ltd.
-  // http://cyotek.com
-  // http://cyotek.com/blog/tag/imagebox
-
-  // Licensed under the MIT License. See license.txt for the full text.
-
-  // If you use this control in your applications, attribution, donations or contributions are welcome.
-
   internal partial class MainMenuForm : AboutDialog
   {
     #region Constructors
@@ -76,6 +78,11 @@ namespace Cyotek.Windows.Forms.Demo
     private void minimapDemoButton_Click(object sender, EventArgs e)
     {
       this.ShowDemo<MiniMapDemoForm>();
+    }
+
+    private void panDemoButton_Click(object sender, EventArgs e)
+    {
+      this.ShowDemo<PanStylesDemoForm>();
     }
 
     private void pixelGridDemoButton_Click(object sender, EventArgs e)
