@@ -24,7 +24,9 @@ namespace Cyotek.Windows.Forms
   [DefaultProperty("Image")]
   [ToolboxBitmap(typeof(ImageBox), "ImageBox.bmp")]
   [ToolboxItem(true)]
-  /* [Designer("Cyotek.Windows.Forms.Design.ImageBoxDesigner", Cyotek.Windows.Forms.ImageBox.Design.dll, PublicKeyToken=58daa28b0b2de221")] */
+#if NET40_OR_GREATER
+  [Designer(typeof(Design.ImageBoxDesigner))]
+#endif
   public class ImageBox : VirtualScrollableControl
   {
     #region Constants
