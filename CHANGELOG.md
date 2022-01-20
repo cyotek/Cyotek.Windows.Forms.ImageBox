@@ -1,6 +1,6 @@
 # Cyotek ImageBox Change Log
 
-### 2.0.0 (WIP)
+## 2.0.0 (WIP)
 
 ### Changed
 
@@ -8,12 +8,21 @@
   .NET 4.6.2,.NET 4.7.2, .NET 4.8, .NET 5.0, NET 6.0 and .NET
   Core 3.1
 
+## 1.3.1
+
+### Fixed
+
+* Panning only worked if the horizontal scrollbar was present (#45)
+
 ## 1.3
+
 ### Added
+
 * Added `PanMode` property. This property allows you to determine if panning can be triggered by the left mouse button, the middle mouse button or both. This property replaces the `AutoPan` property.
 * Added `AllowFreePan` property. This property determines if panning only occurs when the mouse button is pressed, or if pressing the mouse button starts free panning and pressing any other button cancels the pan. Free panning only applies when using the middle mouse button.
 
 ### Deprecated
+
 * The `AutoPan` property has been deprecated and will be removed in a future version
 
 ## 1.2.2

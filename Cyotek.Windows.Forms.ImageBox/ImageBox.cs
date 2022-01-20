@@ -1,7 +1,7 @@
 // Cyotek ImageBox
 // http://cyotek.com/blog/tag/imagebox
 
-// Copyright (c) 2010-2021 Cyotek Ltd.
+// Copyright (c) 2010-2022 Cyotek Ltd.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
@@ -4834,7 +4834,7 @@ namespace Cyotek.Windows.Forms
 
     private bool CanPan(MouseButtons button)
     {
-      return (this.HScroll || this.HScroll) && (_panMode & (ImageBoxPanMode)button) != 0 && !this.ViewSize.IsEmpty && (_selectionMode == ImageBoxSelectionMode.None || button != MouseButtons.Left);
+      return (this.HScroll || this.VScroll) && (_panMode & (ImageBoxPanMode)button) != 0 && !this.ViewSize.IsEmpty && (_selectionMode == ImageBoxSelectionMode.None || button != MouseButtons.Left);
     }
 
     private void CreateTimer()
