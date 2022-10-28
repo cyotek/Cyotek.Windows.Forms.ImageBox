@@ -67,6 +67,8 @@ namespace Cyotek.Windows.Forms
 
     private static readonly object _eventLimitSelectionToImageChanged = new object();
 
+    private static readonly object _eventMouseWheelModeChanged = new object();
+
     private static readonly object _eventPanEnd = new object();
 
     private static readonly object _eventPanModeChanged = new object();
@@ -174,6 +176,8 @@ namespace Cyotek.Windows.Forms
     private bool _limitSelectionToImage;
 
     private double _mouseDownStart;
+
+    private ImageBoxMouseWheelMode _mouseWheelMode;
 
     private ImageBoxPanMode _panMode;
 
@@ -459,6 +463,16 @@ namespace Cyotek.Windows.Forms
     {
       add { this.Events.AddHandler(_eventLimitSelectionToImageChanged, value); }
       remove { this.Events.RemoveHandler(_eventLimitSelectionToImageChanged, value); }
+    }
+
+    /// <summary>
+    /// Occurs when the MouseWheelMode property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler MouseWheelModeChanged
+    {
+      add { this.Events.AddHandler(_eventMouseWheelModeChanged, value); }
+      remove { this.Events.RemoveHandler(_eventMouseWheelModeChanged, value); }
     }
 
     /// <summary>
@@ -1385,6 +1399,28 @@ namespace Cyotek.Windows.Forms
           _limitSelectionToImage = value;
 
           this.OnLimitSelectionToImageChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets the how the mouse wheel is handled
+    /// </summary>
+    /// <value>
+    /// The pan mode.
+    /// </value>
+    [Category("Behavior")]
+    [DefaultValue(typeof(ImageBoxMouseWheelMode), "Both")]
+    public virtual ImageBoxMouseWheelMode MouseWheelMode
+    {
+      get { return _mouseWheelMode; }
+      set
+      {
+        if (_mouseWheelMode != value)
+        {
+          _mouseWheelMode = value;
+
+          this.OnMouseWheelModeChanged(EventArgs.Empty);
         }
       }
     }
@@ -4062,19 +4098,61 @@ namespace Cyotek.Windows.Forms
     {
       base.OnMouseWheel(e);
 
-      if (this.AllowZoom && this.SizeMode == ImageBoxSizeMode.Normal)
+      void DoZoom()
       {
-        int spins;
-
-        // The MouseWheel event can contain multiple "spins" of the wheel so we need to adjust accordingly
-        spins = Math.Abs(e.Delta / SystemInformation.MouseWheelScrollDelta);
-
-        // TODO: Really should update the source method to handle multiple increments rather than calling it multiple times
-        for (int i = 0; i < spins; i++)
+        if (this.AllowZoom && this.SizeMode == ImageBoxSizeMode.Normal)
         {
-          this.ProcessMouseZoom(e.Delta > 0, e.Location);
+          int spins;
+
+          // The MouseWheel event can contain multiple "spins" of the wheel so we need to adjust accordingly
+          spins = Math.Abs(e.Delta / SystemInformation.MouseWheelScrollDelta);
+
+          // TODO: Really should update the source method to handle multiple increments rather than calling it multiple times
+          for (int i = 0; i < spins; i++)
+          {
+            this.ProcessMouseZoom(e.Delta > 0, e.Location);
+          }
         }
       }
+
+      if (MouseWheelMode == ImageBoxMouseWheelMode.Zoom)
+      {
+        DoZoom();
+      }
+      else if (MouseWheelMode == ImageBoxMouseWheelMode.ScrollAndZoom)
+      {
+        if (ModifierKeys == Keys.Control)
+        {
+          DoZoom();
+        }
+        else if (VerticalScroll.Visible && VerticalScroll.Enabled && ModifierKeys == Keys.None)
+        {
+          int scrollDelta = SystemInformation.MouseWheelScrollLines * VerticalScroll.SmallChange;
+          ScrollTo(HorizontalScroll.Value, VerticalScroll.Value + ((e.Delta > 0) ? -scrollDelta : scrollDelta));
+        }
+        else if (HorizontalScroll.Visible && HorizontalScroll.Enabled && ModifierKeys == Keys.Shift)
+        {
+          int scrollDelta = SystemInformation.MouseWheelScrollLines * HorizontalScroll.SmallChange;
+          ScrollTo(HorizontalScroll.Value + ((e.Delta > 0) ? -scrollDelta : scrollDelta), VerticalScroll.Value);
+        }
+      }
+      else
+      {
+        throw new NotImplementedException("Mouse wheel mode not implemented");
+      }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="MouseWheelModeChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnMouseWheelModeChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      handler = (EventHandler)this.Events[_eventMouseWheelModeChanged];
+
+      handler?.Invoke(this, e);
     }
 
     /// <summary>
