@@ -244,6 +244,7 @@ namespace Cyotek.Windows.Forms
       _allowFreePan = true;
       this.WheelScrollsControl = false;
       this.AllowZoom = true;
+      this.MouseWheelMode = ImageBoxMouseWheelMode.Zoom;
       this.LimitSelectionToImage = true;
       this.DropShadowSize = 3;
       this.ImageBorderStyle = ImageBoxBorderStyle.None;
@@ -1410,7 +1411,7 @@ namespace Cyotek.Windows.Forms
     /// The pan mode.
     /// </value>
     [Category("Behavior")]
-    [DefaultValue(typeof(ImageBoxMouseWheelMode), "Both")]
+    [DefaultValue(typeof(ImageBoxMouseWheelMode), "Zoom")]
     public virtual ImageBoxMouseWheelMode MouseWheelMode
     {
       get { return _mouseWheelMode; }
@@ -4098,47 +4099,26 @@ namespace Cyotek.Windows.Forms
     {
       base.OnMouseWheel(e);
 
-      void DoZoom()
-      {
-        if (this.AllowZoom && this.SizeMode == ImageBoxSizeMode.Normal)
-        {
-          int spins;
-
-          // The MouseWheel event can contain multiple "spins" of the wheel so we need to adjust accordingly
-          spins = Math.Abs(e.Delta / SystemInformation.MouseWheelScrollDelta);
-
-          // TODO: Really should update the source method to handle multiple increments rather than calling it multiple times
-          for (int i = 0; i < spins; i++)
-          {
-            this.ProcessMouseZoom(e.Delta > 0, e.Location);
-          }
-        }
-      }
-
       if (MouseWheelMode == ImageBoxMouseWheelMode.Zoom)
       {
-        DoZoom();
+        DoMouseWheelZoom(e);
       }
       else if (MouseWheelMode == ImageBoxMouseWheelMode.ScrollAndZoom)
       {
         if (ModifierKeys == Keys.Control)
         {
-          DoZoom();
+          DoMouseWheelZoom(e);
         }
-        else if (VerticalScroll.Visible && VerticalScroll.Enabled && ModifierKeys == Keys.None)
+        else if (VScroll && ModifierKeys == Keys.None)
         {
           int scrollDelta = SystemInformation.MouseWheelScrollLines * VerticalScroll.SmallChange;
           ScrollTo(HorizontalScroll.Value, VerticalScroll.Value + ((e.Delta > 0) ? -scrollDelta : scrollDelta));
         }
-        else if (HorizontalScroll.Visible && HorizontalScroll.Enabled && ModifierKeys == Keys.Shift)
+        else if (HScroll && ModifierKeys == Keys.Shift)
         {
           int scrollDelta = SystemInformation.MouseWheelScrollLines * HorizontalScroll.SmallChange;
           ScrollTo(HorizontalScroll.Value + ((e.Delta > 0) ? -scrollDelta : scrollDelta), VerticalScroll.Value);
         }
-      }
-      else
-      {
-        throw new NotImplementedException("Mouse wheel mode not implemented");
       }
     }
 
@@ -4928,6 +4908,21 @@ namespace Cyotek.Windows.Forms
       _freePanTimer.Tick += this.FreePanTimerTickHandler;
 
       _freePanTimer.Start();
+    }
+
+    private void DoMouseWheelZoom(MouseEventArgs e)
+    {
+      if (this.AllowZoom && this.SizeMode == ImageBoxSizeMode.Normal)
+      {
+        // The MouseWheel event can contain multiple "spins" of the wheel so we need to adjust accordingly
+        int spins = Math.Abs(e.Delta / SystemInformation.MouseWheelScrollDelta);
+
+        // TODO: Really should update the source method to handle multiple increments rather than calling it multiple times
+        for (int i = 0; i < spins; i++)
+        {
+          this.ProcessMouseZoom(e.Delta > 0, e.Location);
+        }
+      }
     }
 
     private void DrawPanAllSymbol(PaintEventArgs e)

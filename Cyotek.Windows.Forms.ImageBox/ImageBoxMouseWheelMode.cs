@@ -6,6 +6,11 @@ namespace Cyotek.Windows.Forms
   public enum ImageBoxMouseWheelMode
   {
     /// <summary>
+    /// Mouse wheel not handled
+    /// </summary>
+    None,
+
+    /// <summary>
     /// Mouse wheel zooms
     /// </summary>
     Zoom,
