@@ -67,6 +67,8 @@ namespace Cyotek.Windows.Forms
 
     private static readonly object _eventLimitSelectionToImageChanged = new object();
 
+    private static readonly object _eventMouseWheelModeChanged = new object();
+
     private static readonly object _eventPanEnd = new object();
 
     private static readonly object _eventPanModeChanged = new object();
@@ -175,6 +177,8 @@ namespace Cyotek.Windows.Forms
 
     private double _mouseDownStart;
 
+    private ImageBoxMouseWheelMode _mouseWheelMode;
+
     private ImageBoxPanMode _panMode;
 
     private ImageBoxPanStyle _panStyle;
@@ -240,6 +244,7 @@ namespace Cyotek.Windows.Forms
       _allowFreePan = true;
       this.WheelScrollsControl = false;
       this.AllowZoom = true;
+      this.MouseWheelMode = ImageBoxMouseWheelMode.Zoom;
       this.LimitSelectionToImage = true;
       this.DropShadowSize = 3;
       this.ImageBorderStyle = ImageBoxBorderStyle.None;
@@ -459,6 +464,16 @@ namespace Cyotek.Windows.Forms
     {
       add { this.Events.AddHandler(_eventLimitSelectionToImageChanged, value); }
       remove { this.Events.RemoveHandler(_eventLimitSelectionToImageChanged, value); }
+    }
+
+    /// <summary>
+    /// Occurs when the MouseWheelMode property value changes
+    /// </summary>
+    [Category("Property Changed")]
+    public event EventHandler MouseWheelModeChanged
+    {
+      add { this.Events.AddHandler(_eventMouseWheelModeChanged, value); }
+      remove { this.Events.RemoveHandler(_eventMouseWheelModeChanged, value); }
     }
 
     /// <summary>
@@ -1385,6 +1400,28 @@ namespace Cyotek.Windows.Forms
           _limitSelectionToImage = value;
 
           this.OnLimitSelectionToImageChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets the how the mouse wheel is handled
+    /// </summary>
+    /// <value>
+    /// The mouse wheel mode.
+    /// </value>
+    [Category("Behavior")]
+    [DefaultValue(typeof(ImageBoxMouseWheelMode), "Zoom")]
+    public virtual ImageBoxMouseWheelMode MouseWheelMode
+    {
+      get { return _mouseWheelMode; }
+      set
+      {
+        if (_mouseWheelMode != value)
+        {
+          _mouseWheelMode = value;
+
+          this.OnMouseWheelModeChanged(EventArgs.Empty);
         }
       }
     }
@@ -4062,19 +4099,40 @@ namespace Cyotek.Windows.Forms
     {
       base.OnMouseWheel(e);
 
-      if (this.AllowZoom && this.SizeMode == ImageBoxSizeMode.Normal)
+      if (MouseWheelMode == ImageBoxMouseWheelMode.Zoom)
       {
-        int spins;
-
-        // The MouseWheel event can contain multiple "spins" of the wheel so we need to adjust accordingly
-        spins = Math.Abs(e.Delta / SystemInformation.MouseWheelScrollDelta);
-
-        // TODO: Really should update the source method to handle multiple increments rather than calling it multiple times
-        for (int i = 0; i < spins; i++)
+        DoMouseWheelZoom(e);
+      }
+      else if (MouseWheelMode == ImageBoxMouseWheelMode.ScrollAndZoom)
+      {
+        if (ModifierKeys == Keys.Control)
         {
-          this.ProcessMouseZoom(e.Delta > 0, e.Location);
+          DoMouseWheelZoom(e);
+        }
+        else if (VScroll && ModifierKeys == Keys.None)
+        {
+          int scrollDelta = SystemInformation.MouseWheelScrollLines * VerticalScroll.SmallChange;
+          ScrollTo(HorizontalScroll.Value, VerticalScroll.Value + ((e.Delta > 0) ? -scrollDelta : scrollDelta));
+        }
+        else if (HScroll && ModifierKeys == Keys.Shift)
+        {
+          int scrollDelta = SystemInformation.MouseWheelScrollLines * HorizontalScroll.SmallChange;
+          ScrollTo(HorizontalScroll.Value + ((e.Delta > 0) ? -scrollDelta : scrollDelta), VerticalScroll.Value);
         }
       }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="MouseWheelModeChanged" /> event.
+    /// </summary>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    protected virtual void OnMouseWheelModeChanged(EventArgs e)
+    {
+      EventHandler handler;
+
+      handler = (EventHandler)this.Events[_eventMouseWheelModeChanged];
+
+      handler?.Invoke(this, e);
     }
 
     /// <summary>
@@ -4850,6 +4908,21 @@ namespace Cyotek.Windows.Forms
       _freePanTimer.Tick += this.FreePanTimerTickHandler;
 
       _freePanTimer.Start();
+    }
+
+    private void DoMouseWheelZoom(MouseEventArgs e)
+    {
+      if (this.AllowZoom && this.SizeMode == ImageBoxSizeMode.Normal)
+      {
+        // The MouseWheel event can contain multiple "spins" of the wheel so we need to adjust accordingly
+        int spins = Math.Abs(e.Delta / SystemInformation.MouseWheelScrollDelta);
+
+        // TODO: Really should update the source method to handle multiple increments rather than calling it multiple times
+        for (int i = 0; i < spins; i++)
+        {
+          this.ProcessMouseZoom(e.Delta > 0, e.Location);
+        }
+      }
     }
 
     private void DrawPanAllSymbol(PaintEventArgs e)
