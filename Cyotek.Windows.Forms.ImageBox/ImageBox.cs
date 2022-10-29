@@ -1408,7 +1408,7 @@ namespace Cyotek.Windows.Forms
     /// Gets or sets the how the mouse wheel is handled
     /// </summary>
     /// <value>
-    /// The pan mode.
+    /// The mouse wheel mode.
     /// </value>
     [Category("Behavior")]
     [DefaultValue(typeof(ImageBoxMouseWheelMode), "Zoom")]
