@@ -1,5 +1,16 @@
 # Cyotek ImageBox Change Log
 
+## 1.4.0
+
+### Added
+
+* Added new `MouseWheelMode` property to control how the mouse
+  wheel is used to interact with the control. When set to `Zoom`
+  (default), the wheel will scroll the control in and out. When
+  set to `ScrollAndZoom`, the wheel scrolls the control
+  vertically. Holding down `Shift` will scroll horizontally, or
+  `Control` to zoom (#18).
+
 ## 1.3.1
 
 ### Fixed
