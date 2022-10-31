@@ -18,6 +18,6 @@ namespace Cyotek.Windows.Forms
     /// <summary>
     /// Mouse wheel scrolls vertically, Shift + mouse wheel scrolls horizontally and Ctrl + mouse wheel zooms
     /// </summary>
-    ScrollAndZoom
+    ScrollAndZoom = 3
   }
 }
