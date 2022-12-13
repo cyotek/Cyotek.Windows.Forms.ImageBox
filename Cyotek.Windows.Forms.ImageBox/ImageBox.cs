@@ -4025,7 +4025,10 @@ namespace Cyotek.Windows.Forms
         else
         {
           _mouseDownStart = NativeMethods.GetTickCount();
-          this.ProcessPanning(e);
+          if (AllowFreePan && e.Button is MouseButtons.Middle)
+          {
+            this.ProcessPanning(e);
+          }
         }
       }
 
