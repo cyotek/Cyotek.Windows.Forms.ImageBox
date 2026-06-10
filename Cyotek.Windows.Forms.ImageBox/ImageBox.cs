@@ -4093,6 +4093,27 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    ///  Processes Windows messages
+    /// </summary>
+    /// <param name="msg">
+    ///   The Windows message to process
+    /// </param>
+    protected override void WndProc(ref Message msg)
+    {
+      //Handle horizontal mouse wheel scrolls
+      const int WM_MOUSEHWHEEL = 0x020E;
+      if (msg.Msg == WM_MOUSEHWHEEL && MouseWheelMode == ImageBoxMouseWheelMode.ScrollAndZoom)
+      {
+        int delta = (short)((msg.WParam.ToInt64() >> 16) & 0xffff);
+        int scrollDelta = SystemInformation.MouseWheelScrollLines * HorizontalScroll.SmallChange;
+        ScrollTo(HorizontalScroll.Value + ((delta > 0) ? -scrollDelta : scrollDelta), VerticalScroll.Value);
+        return;
+      }
+
+      base.WndProc(ref msg);
+    }
+
+    /// <summary>
     ///   Raises the <see cref="System.Windows.Forms.Control.MouseWheel" /> event.
     /// </summary>
     /// <param name="e">
@@ -4126,9 +4147,11 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
-    /// Raises the <see cref="MouseWheelModeChanged" /> event.
+    ///   Raises the <see cref="MouseWheelModeChanged" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <param name="e">
+    ///   The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
     protected virtual void OnMouseWheelModeChanged(EventArgs e)
     {
       EventHandler handler;
