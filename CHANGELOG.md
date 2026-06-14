@@ -7,17 +7,27 @@
 * Add new `SelectionFillOpacity` property, which is combined
   with `SelectionColor` to define the flood fill of selected
   regions. Set to `0` to disable fill and just rely on the
-  border.
+  border (#57).
 * Add new `UsePixelAlignedSelection` property. When `false`
   (default), the original selection behaviour is used (which
-  would allow sub pixel selection when zoomed). When
-  `true`, the selection will be aligned to the nearest pixel.
+  would allow sub pixel selection when zoomed). When `true`, the
+  selection will be aligned to the nearest pixel (may be related
+  to #12).
 
 ### Changed
 
 * The `ImageBox` control now allows horizontal scrolling using
   tilt or horizontal mouse wheels.
-* Pens and brushes are now cached
+* Pens and brushes are now cached.
+
+### Fixed
+
+* Speculative fix for incorrect offset when initiating selection
+  regions (#57)
+* Fixes an issue where a stray `MouseUp` could be processed,
+  causing an unexpected zoom or selection reset. Known cause is
+  double clicking window titles so the `ImageBox` then appears
+  under the cursor (#33).
 
 ## 1.4.0
 

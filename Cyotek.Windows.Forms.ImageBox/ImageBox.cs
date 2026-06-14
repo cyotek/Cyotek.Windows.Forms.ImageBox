@@ -179,7 +179,11 @@ namespace Cyotek.Windows.Forms
 
     private bool _limitSelectionToImage;
 
+    private MouseButtons _mouseDownButton;
+
     private double _mouseDownStart;
+
+    private bool _mouseDownValid;
 
     private ImageBoxMouseWheelMode _mouseWheelMode;
 
@@ -4065,6 +4069,9 @@ namespace Cyotek.Windows.Forms
 
       if (e.Button != MouseButtons.None)
       {
+        _mouseDownButton = e.Button;
+        _mouseDownValid = true;
+
         if (_panStyle == ImageBoxPanStyle.Free)
         {
           // already panning, abort
@@ -4116,8 +4123,22 @@ namespace Cyotek.Windows.Forms
     protected override void OnMouseUp(MouseEventArgs e)
     {
       bool doNotProcessClick;
+      bool isValidMouseUp;
 
       base.OnMouseUp(e);
+
+      // this guards against an issue where if you double click the window title bar,
+      // if the ImageBox is now underneath the mouse after the maximize, the mouse up
+      // event will fire which could cause a spurious zoom in, or reset the selection
+      // see #33
+      isValidMouseUp = _mouseDownValid && _mouseDownButton == e.Button;
+      _mouseDownValid = false;
+      _mouseDownButton = MouseButtons.None;
+
+      if (!isValidMouseUp)
+      {
+        return;
+      }
 
       doNotProcessClick = _panStyle != ImageBoxPanStyle.None || this.IsSelecting;
 
