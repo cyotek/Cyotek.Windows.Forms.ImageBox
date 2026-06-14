@@ -1,7 +1,7 @@
 // Cyotek ImageBox
 // http://cyotek.com/blog/tag/imagebox
 
-// Copyright (c) 2010-2021 Cyotek Ltd.
+// Copyright (c) 2010-2026 Cyotek Ltd.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
@@ -119,6 +119,8 @@ namespace Cyotek.Windows.Forms
 
     private static readonly object _eventZoomLevelsChanged = new object();
 
+    private const byte _defaultSelectionFillOpacity = 128;
+
     private const int _freePanTimerInterval = 250;
 
     private const int _panAllDeadSize = 32;
@@ -173,9 +175,15 @@ namespace Cyotek.Windows.Forms
 
     private bool _invertMouse;
 
+    private bool _isSelecting;
+
     private bool _limitSelectionToImage;
 
+    private MouseButtons _mouseDownButton;
+
     private double _mouseDownStart;
+
+    private bool _mouseDownValid;
 
     private ImageBoxMouseWheelMode _mouseWheelMode;
 
@@ -190,6 +198,8 @@ namespace Cyotek.Windows.Forms
     private bool _scaleText;
 
     private Color _selectionColor;
+
+    private byte _selectionFillOpacity;
 
     private ImageBoxSelectionMode _selectionMode;
 
@@ -213,9 +223,23 @@ namespace Cyotek.Windows.Forms
 
     private Padding _textPadding;
 
+    private SolidBrush _backColorBrush;
+
+    private Pen _imageBorderPen;
+
+    private SolidBrush _imageBorderBrush;
+
+    private Pen _pixelGridPen;
+
+    private Pen _selectionPen;
+
+    private SolidBrush _selectionFillBrush;
+
     private Brush _texture;
 
     private int _updateCount;
+
+    private bool _usePixelAlignedSelection;
 
     private bool _virtualMode;
 
@@ -224,7 +248,6 @@ namespace Cyotek.Windows.Forms
     private int _zoom;
 
     private ZoomLevelCollection _zoomLevels;
-    private bool _isSelecting;
 
     #endregion
 
@@ -268,6 +291,7 @@ namespace Cyotek.Windows.Forms
       this.TextAlign = ContentAlignment.MiddleCenter;
       this.TextBackColor = Color.Transparent;
       this.TextDisplayMode = ImageBoxGridDisplayMode.Client;
+      _selectionFillOpacity = _defaultSelectionFillOpacity;
       this.EndUpdate();
       // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
@@ -1531,6 +1555,27 @@ namespace Cyotek.Windows.Forms
     }
 
     /// <summary>
+    /// Gets or sets the opacticty of <see cref="SelectionColor"/> for filling selection regions.
+    /// </summary>
+    /// <value> The selection fill opacity, or <c>0</c> to disable fill. </value>
+    [Category("Appearance")]
+    [DefaultValue(_defaultSelectionFillOpacity)]
+    public virtual byte SelectionFillOpacity
+    {
+      get { return _selectionFillOpacity; }
+      set
+      {
+        if (_selectionFillOpacity != value)
+        {
+          _selectionFillOpacity = value;
+
+          this.InvalidateSelectionResources();
+          this.Invalidate();
+        }
+      }
+    }
+
+    /// <summary>
     ///   Gets or sets the selection mode.
     /// </summary>
     /// <value>
@@ -1572,6 +1617,20 @@ namespace Cyotek.Windows.Forms
           this.OnSelectionRegionChanged(EventArgs.Empty);
         }
       }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether drag selections align to full image pixels.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if drag selections are pixel aligned; otherwise, <c>false</c> for legacy sub-pixel selection behavior.
+    /// </value>
+    [Category("Behavior")]
+    [DefaultValue(false)]
+    public virtual bool UsePixelAlignedSelection
+    {
+      get { return _usePixelAlignedSelection; }
+      set { _usePixelAlignedSelection = value; }
     }
 
     /// <summary>
@@ -2972,6 +3031,11 @@ namespace Cyotek.Windows.Forms
           ImageAnimator.StopAnimate(this.Image, this.OnFrameChangedHandler);
         }
 
+        this.InvalidateBackColorResources();
+        this.InvalidateImageBorderResources();
+        this.InvalidatePixelGridResources();
+        this.InvalidateSelectionResources();
+
         if (_texture != null)
         {
           _texture.Dispose();
@@ -3000,10 +3064,7 @@ namespace Cyotek.Windows.Forms
 
       innerRectangle = this.GetInsideViewPort();
 
-      using (SolidBrush brush = new SolidBrush(this.BackColor))
-      {
-        e.Graphics.FillRectangle(brush, innerRectangle);
-      }
+      e.Graphics.FillRectangle(this.GetBackColorBrush(), innerRectangle);
 
       if (_texture != null && this.GridDisplayMode != ImageBoxGridDisplayMode.None)
       {
@@ -3036,14 +3097,11 @@ namespace Cyotek.Windows.Forms
       rightEdge = new Rectangle(viewPort.Right + 1, viewPort.Top + this.DropShadowSize, this.DropShadowSize, viewPort.Height);
       bottomEdge = new Rectangle(viewPort.Left + this.DropShadowSize, viewPort.Bottom + 1, viewPort.Width + 1, this.DropShadowSize);
 
-      using (Brush brush = new SolidBrush(this.ImageBorderColor))
-      {
-        g.FillRectangles(brush, new[]
-                                {
-                                  rightEdge,
-                                  bottomEdge
-                                });
-      }
+      g.FillRectangles(this.GetImageBorderBrush(), new[]
+                                               {
+                                                 rightEdge,
+                                                 bottomEdge
+                                               });
     }
 
     /// <summary>
@@ -3135,10 +3193,7 @@ namespace Cyotek.Windows.Forms
         viewPort = this.GetImageViewPort();
         viewPort = new Rectangle(viewPort.Left - 1, viewPort.Top - 1, viewPort.Width + 1, viewPort.Height + 1);
 
-        using (Pen borderPen = new Pen(this.ImageBorderColor))
-        {
-          graphics.DrawRectangle(borderPen, viewPort);
-        }
+        graphics.DrawRectangle(this.GetImageBorderPen(), viewPort);
 
         switch (this.ImageBorderStyle)
         {
@@ -3382,28 +3437,24 @@ namespace Cyotek.Windows.Forms
         Rectangle viewport;
         float offsetX;
         float offsetY;
+        Pen pen;
 
         viewport = this.GetImageViewPort();
         offsetX = Math.Abs(this.AutoScrollPosition.X) % pixelSize;
         offsetY = Math.Abs(this.AutoScrollPosition.Y) % pixelSize;
+        pen = this.GetPixelGridPen();
 
-        using (Pen pen = new Pen(this.PixelGridColor)
+        for (float x = viewport.Left + pixelSize - offsetX; x < viewport.Right; x += pixelSize)
         {
-          DashStyle = DashStyle.Dot
-        })
-        {
-          for (float x = viewport.Left + pixelSize - offsetX; x < viewport.Right; x += pixelSize)
-          {
-            g.DrawLine(pen, x, viewport.Top, x, viewport.Bottom);
-          }
-
-          for (float y = viewport.Top + pixelSize - offsetY; y < viewport.Bottom; y += pixelSize)
-          {
-            g.DrawLine(pen, viewport.Left, y, viewport.Right, y);
-          }
-
-          g.DrawRectangle(pen, viewport);
+          g.DrawLine(pen, x, viewport.Top, x, viewport.Bottom);
         }
+
+        for (float y = viewport.Top + pixelSize - offsetY; y < viewport.Bottom; y += pixelSize)
+        {
+          g.DrawLine(pen, viewport.Left, y, viewport.Right, y);
+        }
+
+        g.DrawRectangle(pen, viewport);
       }
     }
 
@@ -3416,20 +3467,19 @@ namespace Cyotek.Windows.Forms
     protected virtual void DrawSelection(PaintEventArgs e)
     {
       RectangleF rect;
+      Brush selectionFillBrush;
 
       e.Graphics.SetClip(this.GetInsideViewPort(true));
 
       rect = this.GetOffsetRectangle(this.SelectionRegion);
+      selectionFillBrush = this.GetSelectionFillBrush();
 
-      using (Brush brush = new SolidBrush(Color.FromArgb(128, this.SelectionColor)))
+      if (selectionFillBrush != null)
       {
-        e.Graphics.FillRectangle(brush, rect);
+        e.Graphics.FillRectangle(selectionFillBrush, rect);
       }
 
-      using (Pen pen = new Pen(this.SelectionColor))
-      {
-        e.Graphics.DrawRectangle(pen, rect.X, rect.Y, rect.Width, rect.Height);
-      }
+      e.Graphics.DrawRectangle(this.GetSelectionPen(), rect.X, rect.Y, rect.Width, rect.Height);
 
       e.Graphics.ResetClip();
     }
@@ -3709,6 +3759,7 @@ namespace Cyotek.Windows.Forms
     {
       base.OnBackColorChanged(e);
 
+      this.InvalidateBackColorResources();
       this.Invalidate();
     }
 
@@ -3876,6 +3927,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
+      this.InvalidateImageBorderResources();
       this.Invalidate();
 
       handler = (EventHandler)this.Events[_eventImageBorderColorChanged];
@@ -4017,6 +4069,9 @@ namespace Cyotek.Windows.Forms
 
       if (e.Button != MouseButtons.None)
       {
+        _mouseDownButton = e.Button;
+        _mouseDownValid = true;
+
         if (_panStyle == ImageBoxPanStyle.Free)
         {
           // already panning, abort
@@ -4029,6 +4084,11 @@ namespace Cyotek.Windows.Forms
           {
             this.ProcessPanning(e);
           }
+        }
+
+        if (!this.IsPanning && this.SelectionMode != ImageBoxSelectionMode.None && e.Button == MouseButtons.Left && !this.IsSelecting)
+        {
+          this.StartDrag(e);
         }
       }
 
@@ -4063,8 +4123,22 @@ namespace Cyotek.Windows.Forms
     protected override void OnMouseUp(MouseEventArgs e)
     {
       bool doNotProcessClick;
+      bool isValidMouseUp;
 
       base.OnMouseUp(e);
+
+      // this guards against an issue where if you double click the window title bar,
+      // if the ImageBox is now underneath the mouse after the maximize, the mouse up
+      // event will fire which could cause a spurious zoom in, or reset the selection
+      // see #33
+      isValidMouseUp = _mouseDownValid && _mouseDownButton == e.Button;
+      _mouseDownValid = false;
+      _mouseDownButton = MouseButtons.None;
+
+      if (!isValidMouseUp)
+      {
+        return;
+      }
 
       doNotProcessClick = _panStyle != ImageBoxPanStyle.None || this.IsSelecting;
 
@@ -4077,6 +4151,7 @@ namespace Cyotek.Windows.Forms
       {
         this.EndDrag();
       }
+
       this.WasDragCancelled = false;
 
       if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && _panStyle == ImageBoxPanStyle.None && this.SizeMode == ImageBoxSizeMode.Normal)
@@ -4292,6 +4367,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
+      this.InvalidatePixelGridResources();
       this.Invalidate();
 
       handler = (EventHandler)this.Events[_eventPixelGridColorChanged];
@@ -4403,6 +4479,9 @@ namespace Cyotek.Windows.Forms
     protected virtual void OnSelectionColorChanged(EventArgs e)
     {
       EventHandler handler;
+
+      this.InvalidateSelectionResources();
+      this.Invalidate();
 
       handler = (EventHandler)this.Events[_eventSelectionColorChanged];
 
@@ -4807,66 +4886,18 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected virtual void ProcessSelection(MouseEventArgs e)
     {
-      if (this.SelectionMode != ImageBoxSelectionMode.None && e.Button == MouseButtons.Left && !this.WasDragCancelled)
+      if (this.IsSelecting)
       {
-        if (!this.IsSelecting)
+        RectangleF selection = _usePixelAlignedSelection
+          ? this.GetPixelAlignedSelection(e)
+          : this.GetSubPixelSelection(e);
+
+        if (this.LimitSelectionToImage)
         {
-          this.StartDrag(e);
+          selection = this.FitRectangle(selection);
         }
 
-        if (this.IsSelecting)
-        {
-          float x;
-          float y;
-          float w;
-          float h;
-          Point imageOffset;
-          RectangleF selection;
-
-          imageOffset = this.GetImageViewPort().
-                             Location;
-
-          if (e.X < _startMousePosition.X)
-          {
-            x = e.X;
-            w = _startMousePosition.X - e.X;
-          }
-          else
-          {
-            x = _startMousePosition.X;
-            w = e.X - _startMousePosition.X;
-          }
-
-          if (e.Y < _startMousePosition.Y)
-          {
-            y = e.Y;
-            h = _startMousePosition.Y - e.Y;
-          }
-          else
-          {
-            y = _startMousePosition.Y;
-            h = e.Y - _startMousePosition.Y;
-          }
-
-          x = x - imageOffset.X - this.AutoScrollPosition.X;
-          y = y - imageOffset.Y - this.AutoScrollPosition.Y;
-
-          x = x / (float)this.ZoomFactor;
-          y = y / (float)this.ZoomFactor;
-          w = w / (float)this.ZoomFactor;
-          h = h / (float)this.ZoomFactor;
-
-          if (w != 0 && h != 0)
-          {
-            selection = new RectangleF(x, y, w, h);
-            if (this.LimitSelectionToImage)
-            {
-              selection = this.FitRectangle(selection);
-            }
-
-            this.SelectionRegion = selection;
-          }
-        }
+        this.SelectionRegion = selection;
       }
     }
 
@@ -5002,6 +5033,16 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    private SolidBrush GetBackColorBrush()
+    {
+      if (_backColorBrush == null)
+      {
+        _backColorBrush = new SolidBrush(this.BackColor);
+      }
+
+      return _backColorBrush;
+    }
+
     /// <summary>
     /// Gets the distance between two points.
     /// </summary>
@@ -5043,6 +5084,27 @@ namespace Cyotek.Windows.Forms
 
       return Convert.ToInt32(distance);
     }
+
+    private SolidBrush GetImageBorderBrush()
+    {
+      if (_imageBorderBrush == null)
+      {
+        _imageBorderBrush = new SolidBrush(this.ImageBorderColor);
+      }
+
+      return _imageBorderBrush;
+    }
+
+    private Pen GetImageBorderPen()
+    {
+      if (_imageBorderPen == null)
+      {
+        _imageBorderPen = new Pen(this.ImageBorderColor);
+      }
+
+      return _imageBorderPen;
+    }
+
 
     /// <summary>
     /// Gets the size of the image.
@@ -5110,6 +5172,112 @@ namespace Cyotek.Windows.Forms
       return result;
     }
 
+    private RectangleF GetPixelAlignedSelection(MouseEventArgs e)
+    {
+      int x;
+      int y;
+      int r;
+      int b;
+      int w;
+      int h;
+      Point startPixel;
+      Point cursorPixel;
+
+      startPixel = this.PointToImage(_startMousePosition);
+      cursorPixel = this.PointToImage(e.Location);
+
+      x = Math.Min(startPixel.X, cursorPixel.X);
+      y = Math.Min(startPixel.Y, cursorPixel.Y);
+      r = Math.Max(startPixel.X, cursorPixel.X);
+      b = Math.Max(startPixel.Y, cursorPixel.Y);
+
+      w = r - x + 1;
+      h = b - y + 1;
+
+      return w <= 0 || h <= 0
+        ? RectangleF.Empty
+        : new RectangleF(x, y, w, h);
+    }
+
+    private Pen GetPixelGridPen()
+    {
+      if (_pixelGridPen == null)
+      {
+        _pixelGridPen = new Pen(this.PixelGridColor)
+        {
+          DashStyle = DashStyle.Dot
+        };
+      }
+
+      return _pixelGridPen;
+    }
+
+    private SolidBrush GetSelectionFillBrush()
+    {
+      if (_selectionFillOpacity > 0 && _selectionFillBrush == null)
+      {
+        _selectionFillBrush = new SolidBrush(Color.FromArgb(_selectionFillOpacity, this.SelectionColor));
+      }
+
+      return _selectionFillBrush;
+    }
+
+    private Pen GetSelectionPen()
+    {
+      if (_selectionPen == null)
+      {
+        _selectionPen = new Pen(this.SelectionColor);
+      }
+
+      return _selectionPen;
+    }
+
+    private RectangleF GetSubPixelSelection(MouseEventArgs e)
+    {
+      float x;
+      float y;
+      float w;
+      float h;
+      Point imageOffset;
+
+      imageOffset = this.GetImageViewPort().
+                         Location;
+
+      if (e.X < _startMousePosition.X)
+      {
+        x = e.X;
+        w = _startMousePosition.X - e.X;
+      }
+      else
+      {
+        x = _startMousePosition.X;
+        w = e.X - _startMousePosition.X;
+      }
+
+      if (e.Y < _startMousePosition.Y)
+      {
+        y = e.Y;
+        h = _startMousePosition.Y - e.Y;
+      }
+      else
+      {
+        y = _startMousePosition.Y;
+        h = e.Y - _startMousePosition.Y;
+      }
+
+      x = x - imageOffset.X - this.AutoScrollPosition.X;
+      y = y - imageOffset.Y - this.AutoScrollPosition.Y;
+
+      x = x / (float)this.ZoomFactor;
+      y = y / (float)this.ZoomFactor;
+      w = w / (float)this.ZoomFactor;
+      h = h / (float)this.ZoomFactor;
+
+      return w == 0 || h == 0
+        ? RectangleF.Empty
+        : new RectangleF(x, y, w, h);
+    }
+
     /// <summary>
     /// Returns an appropriate zoom level based on the specified action, relative to the current zoom level.
     /// </summary>
@@ -5138,6 +5306,34 @@ namespace Cyotek.Windows.Forms
       }
 
       return result;
+    }
+
+    private void InvalidateBackColorResources()
+    {
+      _backColorBrush?.Dispose();
+      _backColorBrush = null;
+    }
+
+    private void InvalidateImageBorderResources()
+    {
+      _imageBorderBrush?.Dispose();
+      _imageBorderBrush = null;
+      _imageBorderPen?.Dispose();
+      _imageBorderPen = null;
+    }
+
+    private void InvalidatePixelGridResources()
+    {
+      _pixelGridPen?.Dispose();
+      _pixelGridPen = null;
+    }
+
+    private void InvalidateSelectionResources()
+    {
+      _selectionFillBrush?.Dispose();
+      _selectionFillBrush = null;
+      _selectionPen?.Dispose();
+      _selectionPen = null;
     }
 
     /// <summary>
