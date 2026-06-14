@@ -219,6 +219,18 @@ namespace Cyotek.Windows.Forms
 
     private Padding _textPadding;
 
+    private SolidBrush _backColorBrush;
+
+    private Pen _imageBorderPen;
+
+    private SolidBrush _imageBorderBrush;
+
+    private Pen _pixelGridPen;
+
+    private Pen _selectionPen;
+
+    private SolidBrush _selectionFillBrush;
+
     private Brush _texture;
 
     private int _updateCount;
@@ -1553,6 +1565,7 @@ namespace Cyotek.Windows.Forms
         {
           _selectionFillOpacity = value;
 
+          this.InvalidateSelectionResources();
           this.Invalidate();
         }
       }
@@ -3014,6 +3027,11 @@ namespace Cyotek.Windows.Forms
           ImageAnimator.StopAnimate(this.Image, this.OnFrameChangedHandler);
         }
 
+        this.InvalidateBackColorResources();
+        this.InvalidateImageBorderResources();
+        this.InvalidatePixelGridResources();
+        this.InvalidateSelectionResources();
+
         if (_texture != null)
         {
           _texture.Dispose();
@@ -3042,10 +3060,7 @@ namespace Cyotek.Windows.Forms
 
       innerRectangle = this.GetInsideViewPort();
 
-      using (SolidBrush brush = new SolidBrush(this.BackColor))
-      {
-        e.Graphics.FillRectangle(brush, innerRectangle);
-      }
+      e.Graphics.FillRectangle(this.GetBackColorBrush(), innerRectangle);
 
       if (_texture != null && this.GridDisplayMode != ImageBoxGridDisplayMode.None)
       {
@@ -3078,14 +3093,11 @@ namespace Cyotek.Windows.Forms
       rightEdge = new Rectangle(viewPort.Right + 1, viewPort.Top + this.DropShadowSize, this.DropShadowSize, viewPort.Height);
       bottomEdge = new Rectangle(viewPort.Left + this.DropShadowSize, viewPort.Bottom + 1, viewPort.Width + 1, this.DropShadowSize);
 
-      using (Brush brush = new SolidBrush(this.ImageBorderColor))
-      {
-        g.FillRectangles(brush, new[]
-                                {
-                                  rightEdge,
-                                  bottomEdge
-                                });
-      }
+      g.FillRectangles(this.GetImageBorderBrush(), new[]
+                                               {
+                                                 rightEdge,
+                                                 bottomEdge
+                                               });
     }
 
     /// <summary>
@@ -3177,10 +3189,7 @@ namespace Cyotek.Windows.Forms
         viewPort = this.GetImageViewPort();
         viewPort = new Rectangle(viewPort.Left - 1, viewPort.Top - 1, viewPort.Width + 1, viewPort.Height + 1);
 
-        using (Pen borderPen = new Pen(this.ImageBorderColor))
-        {
-          graphics.DrawRectangle(borderPen, viewPort);
-        }
+        graphics.DrawRectangle(this.GetImageBorderPen(), viewPort);
 
         switch (this.ImageBorderStyle)
         {
@@ -3424,28 +3433,24 @@ namespace Cyotek.Windows.Forms
         Rectangle viewport;
         float offsetX;
         float offsetY;
+        Pen pen;
 
         viewport = this.GetImageViewPort();
         offsetX = Math.Abs(this.AutoScrollPosition.X) % pixelSize;
         offsetY = Math.Abs(this.AutoScrollPosition.Y) % pixelSize;
+        pen = this.GetPixelGridPen();
 
-        using (Pen pen = new Pen(this.PixelGridColor)
+        for (float x = viewport.Left + pixelSize - offsetX; x < viewport.Right; x += pixelSize)
         {
-          DashStyle = DashStyle.Dot
-        })
-        {
-          for (float x = viewport.Left + pixelSize - offsetX; x < viewport.Right; x += pixelSize)
-          {
-            g.DrawLine(pen, x, viewport.Top, x, viewport.Bottom);
-          }
-
-          for (float y = viewport.Top + pixelSize - offsetY; y < viewport.Bottom; y += pixelSize)
-          {
-            g.DrawLine(pen, viewport.Left, y, viewport.Right, y);
-          }
-
-          g.DrawRectangle(pen, viewport);
+          g.DrawLine(pen, x, viewport.Top, x, viewport.Bottom);
         }
+
+        for (float y = viewport.Top + pixelSize - offsetY; y < viewport.Bottom; y += pixelSize)
+        {
+          g.DrawLine(pen, viewport.Left, y, viewport.Right, y);
+        }
+
+        g.DrawRectangle(pen, viewport);
       }
     }
 
@@ -3458,23 +3463,19 @@ namespace Cyotek.Windows.Forms
     protected virtual void DrawSelection(PaintEventArgs e)
     {
       RectangleF rect;
+      Brush selectionFillBrush;
 
       e.Graphics.SetClip(this.GetInsideViewPort(true));
 
       rect = this.GetOffsetRectangle(this.SelectionRegion);
+      selectionFillBrush = this.GetSelectionFillBrush();
 
-      if (_selectionFillOpacity > 0)
+      if (selectionFillBrush != null)
       {
-        using (Brush brush = new SolidBrush(Color.FromArgb(_selectionFillOpacity, this.SelectionColor)))
-        {
-          e.Graphics.FillRectangle(brush, rect);
-        }
+        e.Graphics.FillRectangle(selectionFillBrush, rect);
       }
 
-      using (Pen pen = new Pen(this.SelectionColor))
-      {
-        e.Graphics.DrawRectangle(pen, rect.X, rect.Y, rect.Width, rect.Height);
-      }
+      e.Graphics.DrawRectangle(this.GetSelectionPen(), rect.X, rect.Y, rect.Width, rect.Height);
 
       e.Graphics.ResetClip();
     }
@@ -3754,6 +3755,7 @@ namespace Cyotek.Windows.Forms
     {
       base.OnBackColorChanged(e);
 
+      this.InvalidateBackColorResources();
       this.Invalidate();
     }
 
@@ -3921,6 +3923,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
+      this.InvalidateImageBorderResources();
       this.Invalidate();
 
       handler = (EventHandler)this.Events[_eventImageBorderColorChanged];
@@ -4343,6 +4346,7 @@ namespace Cyotek.Windows.Forms
     {
       EventHandler handler;
 
+      this.InvalidatePixelGridResources();
       this.Invalidate();
 
       handler = (EventHandler)this.Events[_eventPixelGridColorChanged];
@@ -4454,6 +4458,9 @@ namespace Cyotek.Windows.Forms
     protected virtual void OnSelectionColorChanged(EventArgs e)
     {
       EventHandler handler;
+
+      this.InvalidateSelectionResources();
+      this.Invalidate();
 
       handler = (EventHandler)this.Events[_eventSelectionColorChanged];
 
@@ -5005,6 +5012,16 @@ namespace Cyotek.Windows.Forms
       }
     }
 
+    private SolidBrush GetBackColorBrush()
+    {
+      if (_backColorBrush == null)
+      {
+        _backColorBrush = new SolidBrush(this.BackColor);
+      }
+
+      return _backColorBrush;
+    }
+
     /// <summary>
     /// Gets the distance between two points.
     /// </summary>
@@ -5046,6 +5063,27 @@ namespace Cyotek.Windows.Forms
 
       return Convert.ToInt32(distance);
     }
+
+    private SolidBrush GetImageBorderBrush()
+    {
+      if (_imageBorderBrush == null)
+      {
+        _imageBorderBrush = new SolidBrush(this.ImageBorderColor);
+      }
+
+      return _imageBorderBrush;
+    }
+
+    private Pen GetImageBorderPen()
+    {
+      if (_imageBorderPen == null)
+      {
+        _imageBorderPen = new Pen(this.ImageBorderColor);
+      }
+
+      return _imageBorderPen;
+    }
+
 
     /// <summary>
     /// Gets the size of the image.
@@ -5140,6 +5178,39 @@ namespace Cyotek.Windows.Forms
         : new RectangleF(x, y, w, h);
     }
 
+    private Pen GetPixelGridPen()
+    {
+      if (_pixelGridPen == null)
+      {
+        _pixelGridPen = new Pen(this.PixelGridColor)
+        {
+          DashStyle = DashStyle.Dot
+        };
+      }
+
+      return _pixelGridPen;
+    }
+
+    private SolidBrush GetSelectionFillBrush()
+    {
+      if (_selectionFillOpacity > 0 && _selectionFillBrush == null)
+      {
+        _selectionFillBrush = new SolidBrush(Color.FromArgb(_selectionFillOpacity, this.SelectionColor));
+      }
+
+      return _selectionFillBrush;
+    }
+
+    private Pen GetSelectionPen()
+    {
+      if (_selectionPen == null)
+      {
+        _selectionPen = new Pen(this.SelectionColor);
+      }
+
+      return _selectionPen;
+    }
+
     private RectangleF GetSubPixelSelection(MouseEventArgs e)
     {
       float x;
@@ -5214,6 +5285,34 @@ namespace Cyotek.Windows.Forms
       }
 
       return result;
+    }
+
+    private void InvalidateBackColorResources()
+    {
+      _backColorBrush?.Dispose();
+      _backColorBrush = null;
+    }
+
+    private void InvalidateImageBorderResources()
+    {
+      _imageBorderBrush?.Dispose();
+      _imageBorderBrush = null;
+      _imageBorderPen?.Dispose();
+      _imageBorderPen = null;
+    }
+
+    private void InvalidatePixelGridResources()
+    {
+      _pixelGridPen?.Dispose();
+      _pixelGridPen = null;
+    }
+
+    private void InvalidateSelectionResources()
+    {
+      _selectionFillBrush?.Dispose();
+      _selectionFillBrush = null;
+      _selectionPen?.Dispose();
+      _selectionPen = null;
     }
 
     /// <summary>

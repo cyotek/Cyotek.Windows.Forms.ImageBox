@@ -17,6 +17,7 @@
 
 * The `ImageBox` control now allows horizontal scrolling using
   tilt or horizontal mouse wheels.
+* Pens and brushes are now cached
 
 ## 1.4.0
 
