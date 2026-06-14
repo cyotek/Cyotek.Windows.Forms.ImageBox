@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -65,6 +65,7 @@ namespace Cyotek.Windows.Forms.Demo
       _dragHandles = new DragHandleCollection();
       _dragHandleSize = 8;
       _maximumSelectionSize = Size.Empty;
+      base.UsePixelAlignedSelection = true;
       this.PositionDragHandles();
     }
 
@@ -209,6 +210,13 @@ namespace Cyotek.Windows.Forms.Demo
     {
       get { return _previousSelectionRegion; }
       protected set { _previousSelectionRegion = value; }
+    }
+
+    [DefaultValue(true)]
+    public override bool UsePixelAlignedSelection
+    {
+      get => base.UsePixelAlignedSelection;
+      set => base.UsePixelAlignedSelection = value;
     }
 
     protected Point DragOrigin

@@ -2,6 +2,13 @@
 
 ## 1.5.0
 
+### Added
+
+* Add new `UsePixelAlignedSelection` property. When `false`
+  (default), the original selection behaviour is used (which
+  would allow sub pixel selection when zoomed). When
+  `true`, the selection will be aligned to the nearest pixel.
+
 ### Changed
 
 * The `ImageBox` control now allows horizontal scrolling using

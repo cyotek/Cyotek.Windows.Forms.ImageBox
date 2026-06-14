@@ -173,6 +173,8 @@ namespace Cyotek.Windows.Forms
 
     private bool _invertMouse;
 
+    private bool _isSelecting;
+
     private bool _limitSelectionToImage;
 
     private double _mouseDownStart;
@@ -217,6 +219,8 @@ namespace Cyotek.Windows.Forms
 
     private int _updateCount;
 
+    private bool _usePixelAlignedSelection;
+
     private bool _virtualMode;
 
     private Size _virtualSize;
@@ -224,7 +228,6 @@ namespace Cyotek.Windows.Forms
     private int _zoom;
 
     private ZoomLevelCollection _zoomLevels;
-    private bool _isSelecting;
 
     #endregion
 
@@ -1572,6 +1575,20 @@ namespace Cyotek.Windows.Forms
           this.OnSelectionRegionChanged(EventArgs.Empty);
         }
       }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether drag selections align to full image pixels.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if drag selections are pixel aligned; otherwise, <c>false</c> for legacy sub-pixel selection behavior.
+    /// </value>
+    [Category("Behavior")]
+    [DefaultValue(false)]
+    public virtual bool UsePixelAlignedSelection
+    {
+      get { return _usePixelAlignedSelection; }
+      set { _usePixelAlignedSelection = value; }
     }
 
     /// <summary>
@@ -4815,56 +4832,16 @@ namespace Cyotek.Windows.Forms
     {
       if (this.IsSelecting)
       {
-        float x;
-        float y;
-        float w;
-        float h;
-        Point imageOffset;
-        RectangleF selection;
+        RectangleF selection = _usePixelAlignedSelection
+          ? this.GetPixelAlignedSelection(e)
+          : this.GetSubPixelSelection(e);
 
-        imageOffset = this.GetImageViewPort().
-                           Location;
-
-        if (e.X < _startMousePosition.X)
+        if (this.LimitSelectionToImage)
         {
-          x = e.X;
-          w = _startMousePosition.X - e.X;
-        }
-        else
-        {
-          x = _startMousePosition.X;
-          w = e.X - _startMousePosition.X;
+          selection = this.FitRectangle(selection);
         }
 
-        if (e.Y < _startMousePosition.Y)
-        {
-          y = e.Y;
-          h = _startMousePosition.Y - e.Y;
-        }
-        else
-        {
-          y = _startMousePosition.Y;
-          h = e.Y - _startMousePosition.Y;
-        }
-
-        x = x - imageOffset.X - this.AutoScrollPosition.X;
-        y = y - imageOffset.Y - this.AutoScrollPosition.Y;
-
-        x = x / (float)this.ZoomFactor;
-        y = y / (float)this.ZoomFactor;
-        w = w / (float)this.ZoomFactor;
-        h = h / (float)this.ZoomFactor;
-
-        if (w != 0 && h != 0)
-        {
-          selection = new RectangleF(x, y, w, h);
-          if (this.LimitSelectionToImage)
-          {
-            selection = this.FitRectangle(selection);
-          }
-
-          this.SelectionRegion = selection;
-        }
+        this.SelectionRegion = selection;
       }
     }
 
@@ -5106,6 +5083,79 @@ namespace Cyotek.Windows.Forms
       }
 
       return result;
+    }
+
+    private RectangleF GetPixelAlignedSelection(MouseEventArgs e)
+    {
+      int x;
+      int y;
+      int r;
+      int b;
+      int w;
+      int h;
+      Point startPixel;
+      Point cursorPixel;
+
+      startPixel = this.PointToImage(_startMousePosition);
+      cursorPixel = this.PointToImage(e.Location);
+
+      x = Math.Min(startPixel.X, cursorPixel.X);
+      y = Math.Min(startPixel.Y, cursorPixel.Y);
+      r = Math.Max(startPixel.X, cursorPixel.X);
+      b = Math.Max(startPixel.Y, cursorPixel.Y);
+
+      w = r - x + 1;
+      h = b - y + 1;
+
+      return w <= 0 || h <= 0
+        ? RectangleF.Empty
+        : new RectangleF(x, y, w, h);
+    }
+
+    private RectangleF GetSubPixelSelection(MouseEventArgs e)
+    {
+      float x;
+      float y;
+      float w;
+      float h;
+      Point imageOffset;
+
+      imageOffset = this.GetImageViewPort().
+                         Location;
+
+      if (e.X < _startMousePosition.X)
+      {
+        x = e.X;
+        w = _startMousePosition.X - e.X;
+      }
+      else
+      {
+        x = _startMousePosition.X;
+        w = e.X - _startMousePosition.X;
+      }
+
+      if (e.Y < _startMousePosition.Y)
+      {
+        y = e.Y;
+        h = _startMousePosition.Y - e.Y;
+      }
+      else
+      {
+        y = _startMousePosition.Y;
+        h = e.Y - _startMousePosition.Y;
+      }
+
+      x = x - imageOffset.X - this.AutoScrollPosition.X;
+      y = y - imageOffset.Y - this.AutoScrollPosition.Y;
+
+      x = x / (float)this.ZoomFactor;
+      y = y / (float)this.ZoomFactor;
+      w = w / (float)this.ZoomFactor;
+      h = h / (float)this.ZoomFactor;
+
+      return w == 0 || h == 0
+        ? RectangleF.Empty
+        : new RectangleF(x, y, w, h);
     }
 
     /// <summary>
