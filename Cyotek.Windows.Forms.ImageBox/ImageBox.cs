@@ -4030,6 +4030,11 @@ namespace Cyotek.Windows.Forms
             this.ProcessPanning(e);
           }
         }
+
+        if (!this.IsPanning && this.SelectionMode != ImageBoxSelectionMode.None && e.Button == MouseButtons.Left && !this.IsSelecting)
+        {
+          this.StartDrag(e);
+        }
       }
 
       this.SetCursor(e.Location);
@@ -4077,6 +4082,7 @@ namespace Cyotek.Windows.Forms
       {
         this.EndDrag();
       }
+
       this.WasDragCancelled = false;
 
       if (!doNotProcessClick && this.AllowZoom && this.AllowClickZoom && _panStyle == ImageBoxPanStyle.None && this.SizeMode == ImageBoxSizeMode.Normal)
@@ -4807,65 +4813,57 @@ namespace Cyotek.Windows.Forms
     /// </param>
     protected virtual void ProcessSelection(MouseEventArgs e)
     {
-      if (this.SelectionMode != ImageBoxSelectionMode.None && e.Button == MouseButtons.Left && !this.WasDragCancelled)
+      if (this.IsSelecting)
       {
-        if (!this.IsSelecting)
+        float x;
+        float y;
+        float w;
+        float h;
+        Point imageOffset;
+        RectangleF selection;
+
+        imageOffset = this.GetImageViewPort().
+                           Location;
+
+        if (e.X < _startMousePosition.X)
         {
-          this.StartDrag(e);
+          x = e.X;
+          w = _startMousePosition.X - e.X;
+        }
+        else
+        {
+          x = _startMousePosition.X;
+          w = e.X - _startMousePosition.X;
         }
 
-        if (this.IsSelecting)
+        if (e.Y < _startMousePosition.Y)
         {
-          float x;
-          float y;
-          float w;
-          float h;
-          Point imageOffset;
-          RectangleF selection;
+          y = e.Y;
+          h = _startMousePosition.Y - e.Y;
+        }
+        else
+        {
+          y = _startMousePosition.Y;
+          h = e.Y - _startMousePosition.Y;
+        }
 
-          imageOffset = this.GetImageViewPort().
-                             Location;
+        x = x - imageOffset.X - this.AutoScrollPosition.X;
+        y = y - imageOffset.Y - this.AutoScrollPosition.Y;
 
-          if (e.X < _startMousePosition.X)
-          {
-            x = e.X;
-            w = _startMousePosition.X - e.X;
-          }
-          else
-          {
-            x = _startMousePosition.X;
-            w = e.X - _startMousePosition.X;
-          }
+        x = x / (float)this.ZoomFactor;
+        y = y / (float)this.ZoomFactor;
+        w = w / (float)this.ZoomFactor;
+        h = h / (float)this.ZoomFactor;
 
-          if (e.Y < _startMousePosition.Y)
+        if (w != 0 && h != 0)
+        {
+          selection = new RectangleF(x, y, w, h);
+          if (this.LimitSelectionToImage)
           {
-            y = e.Y;
-            h = _startMousePosition.Y - e.Y;
-          }
-          else
-          {
-            y = _startMousePosition.Y;
-            h = e.Y - _startMousePosition.Y;
+            selection = this.FitRectangle(selection);
           }
 
-          x = x - imageOffset.X - this.AutoScrollPosition.X;
-          y = y - imageOffset.Y - this.AutoScrollPosition.Y;
-
-          x = x / (float)this.ZoomFactor;
-          y = y / (float)this.ZoomFactor;
-          w = w / (float)this.ZoomFactor;
-          h = h / (float)this.ZoomFactor;
-
-          if (w != 0 && h != 0)
-          {
-            selection = new RectangleF(x, y, w, h);
-            if (this.LimitSelectionToImage)
-            {
-              selection = this.FitRectangle(selection);
-            }
-
-            this.SelectionRegion = selection;
-          }
+          this.SelectionRegion = selection;
         }
       }
     }
