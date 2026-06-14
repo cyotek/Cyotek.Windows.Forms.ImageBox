@@ -119,6 +119,8 @@ namespace Cyotek.Windows.Forms
 
     private static readonly object _eventZoomLevelsChanged = new object();
 
+    private const byte _defaultSelectionFillOpacity = 128;
+
     private const int _freePanTimerInterval = 250;
 
     private const int _panAllDeadSize = 32;
@@ -192,6 +194,8 @@ namespace Cyotek.Windows.Forms
     private bool _scaleText;
 
     private Color _selectionColor;
+
+    private byte _selectionFillOpacity;
 
     private ImageBoxSelectionMode _selectionMode;
 
@@ -271,6 +275,7 @@ namespace Cyotek.Windows.Forms
       this.TextAlign = ContentAlignment.MiddleCenter;
       this.TextBackColor = Color.Transparent;
       this.TextDisplayMode = ImageBoxGridDisplayMode.Client;
+      _selectionFillOpacity = _defaultSelectionFillOpacity;
       this.EndUpdate();
       // ReSharper restore DoNotCallOverridableMethodsInConstructor
     }
@@ -1529,6 +1534,26 @@ namespace Cyotek.Windows.Forms
           _selectionColor = value;
 
           this.OnSelectionColorChanged(EventArgs.Empty);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets the opacticty of <see cref="SelectionColor"/> for filling selection regions.
+    /// </summary>
+    /// <value> The selection fill opacity, or <c>0</c> to disable fill. </value>
+    [Category("Appearance")]
+    [DefaultValue(_defaultSelectionFillOpacity)]
+    public virtual byte SelectionFillOpacity
+    {
+      get { return _selectionFillOpacity; }
+      set
+      {
+        if (_selectionFillOpacity != value)
+        {
+          _selectionFillOpacity = value;
+
+          this.Invalidate();
         }
       }
     }
@@ -3438,9 +3463,12 @@ namespace Cyotek.Windows.Forms
 
       rect = this.GetOffsetRectangle(this.SelectionRegion);
 
-      using (Brush brush = new SolidBrush(Color.FromArgb(128, this.SelectionColor)))
+      if (_selectionFillOpacity > 0)
       {
-        e.Graphics.FillRectangle(brush, rect);
+        using (Brush brush = new SolidBrush(Color.FromArgb(_selectionFillOpacity, this.SelectionColor)))
+        {
+          e.Graphics.FillRectangle(brush, rect);
+        }
       }
 
       using (Pen pen = new Pen(this.SelectionColor))

@@ -4,6 +4,10 @@
 
 ### Added
 
+* Add new `SelectionFillOpacity` property, which is combined
+  with `SelectionColor` to define the flood fill of selected
+  regions. Set to `0` to disable fill and just rely on the
+  border.
 * Add new `UsePixelAlignedSelection` property. When `false`
   (default), the original selection behaviour is used (which
   would allow sub pixel selection when zoomed). When
