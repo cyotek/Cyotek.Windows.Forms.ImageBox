@@ -1,7 +1,7 @@
 // Cyotek ImageBox
 // http://cyotek.com/blog/tag/imagebox
 
-// Copyright (c) 2010-2021 Cyotek Ltd.
+// Copyright (c) 2010-2026 Cyotek Ltd.
 
 // This work is licensed under the MIT License.
 // See LICENSE.TXT for the full text
